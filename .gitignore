@@ -9,7 +9,6 @@ __pycache__/
 .env
 *.sqlite3
 *.db
-*.bak
 *.swp
 *.swo
 *.tmp

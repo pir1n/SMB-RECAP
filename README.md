@@ -1,6 +1,6 @@
 ## Project Structure
 
-Please make environment for python before to run
+Please make environment for python before running
 
 ```
 $ python -m venv .venv

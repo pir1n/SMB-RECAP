@@ -1,5 +1,11 @@
 ## Project Structure
 
+Please make environment for python before to run
+
+```
+$ python -m venv .venv
+```
+
 ```
 SMBmount
 ├── README.md

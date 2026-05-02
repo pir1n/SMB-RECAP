@@ -1,14 +1,29 @@
-def export_files(file_table):
-    result = []
+def export_files(file_table, tree):
+    files = []
 
-    for file_id, f in file_table.files.items():
-        result.append({
-            "file_id": file_id,
+    for f in file_table.files.values():
+        versions = []
+
+        for v in f.versions.versions:
+            versions.append({
+                "version": v.version_id,
+                "size": v.size,
+                "modified": v.modified,
+                "chunks": v.chunks
+            })
+
+        files.append({
+            "file_id": f.file_id,
             "path": f.path,
-            "size": f.size,
-            "chunks": f.chunks,
+            "metadata": {
+                "created": f.metadata.created,
+                "modified": f.metadata.modified,
+                "size": f.metadata.size,
+            },
+            "versions": versions
         })
 
     return {
-        "files": result
+        "files": files,
+        "tree": tree
     }

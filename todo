@@ -1,2 +1,6 @@
 1. Trong file pcap_reader.py việc nó đọc sai các fields và đọc thiếu nhiều fields khi so lại với packet được đọc trên wireshark ví dụ như packet 624 fields smb2_is_response nó phải là false chứ không phải true vì trong wireshark nó là read_request mà trong read_request là phải có file_id nhưng nó lại không đọc được 
     ảo hơn nữa là file_id không có nhưng nó map được file_id mapped_file_id tui dùng cho response do lúc trước nó không có file_id trong response
+
+
+
+2. Fix response_to filename file_id

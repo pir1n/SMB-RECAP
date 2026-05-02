@@ -12,6 +12,7 @@ from scapy.layers.smb2 import SMB2_Read_Request, SMB2_Read_Response
 from scapy.layers.smb2 import SMB2_Write_Request, SMB2_Write_Response
 from scapy.sessions import TCPSession
 
+from smbmount.reconstruct.hierarchy import build_tree
 
 SMB2_COMMAND_MAP = {
     "0": "NEGOTIATE",
@@ -200,8 +201,8 @@ def get_smb2_info(smb2_layer: Any) -> Dict[str, Any]:
 
     try:
         cmd = safe_get(smb2_layer, "Command")
-        msg_id = safe_get(smb2_layer, "MessageId")
-        tree_id = safe_get(smb2_layer, "TreeId")
+        msg_id = safe_get(smb2_layer, "MID")
+        tree_id = safe_get(smb2_layer, "TID")
         session_id = safe_get(smb2_layer, "SessionId")
         flags = safe_get(smb2_layer, "Flags")
         status = safe_get(smb2_layer, "Status")
@@ -223,9 +224,6 @@ def get_smb2_info(smb2_layer: Any) -> Dict[str, Any]:
     return result
 
 def get_smb2_payload(smb2_layer: Any) -> Dict[str, Any]:
-    """
-    Extract SMB2 payload từ scapy SMB2 layers (Create/Read/Write).
-    """
     result = {
         "smb2_file_id": None,
         "smb2_filename": None,
@@ -238,33 +236,45 @@ def get_smb2_payload(smb2_layer: Any) -> Dict[str, Any]:
         return result
 
     try:
-        # Handle CREATE request
         if isinstance(smb2_layer, SMB2_Create_Request):
-            result["smb2_filename"] = safe_get(smb2_layer, "FileName")
+            # Filename nằm trong Buffer, không phải FileName
+            buffer = safe_get(smb2_layer, "Buffer", [])
+            for name, val in buffer:
+                if name == "Name":
+                    result["smb2_filename"] = val
+                    break
 
-        # Handle CREATE response
         elif isinstance(smb2_layer, SMB2_Create_Response):
-            result["smb2_file_id"] = safe_get(smb2_layer, "FileId")
+            # FileId phải convert sang bytes để dùng làm key
+            fid = safe_get(smb2_layer, "FileId")
+            result["smb2_file_id"] = bytes(fid) if fid is not None else None
 
-        # Handle READ request
         elif isinstance(smb2_layer, SMB2_Read_Request):
-            result["smb2_file_id"] = safe_get(smb2_layer, "FileId")
+            fid = safe_get(smb2_layer, "FileId")
+            result["smb2_file_id"] = bytes(fid) if fid is not None else None
             result["smb2_offset"] = safe_int(safe_get(smb2_layer, "Offset"))
             result["smb2_length"] = safe_int(safe_get(smb2_layer, "Length"))
 
-        # Handle READ response
         elif isinstance(smb2_layer, SMB2_Read_Response):
-            result["smb2_read_blob"] = safe_get(smb2_layer, "Buffer")
+            # Extract data từ Buffer tuple list
+            buffer = safe_get(smb2_layer, "Buffer", [])
+            data_len = safe_int(safe_get(smb2_layer, "DataLen"), 0)
+            for name, val in buffer:
+                if name == "Data":
+                    result["smb2_read_blob"] = val[:data_len] if data_len else val
+                    break
 
-        # Handle WRITE request
         elif isinstance(smb2_layer, SMB2_Write_Request):
-            result["smb2_file_id"] = safe_get(smb2_layer, "FileId")
+            fid = safe_get(smb2_layer, "FileId")
+            result["smb2_file_id"] = bytes(fid) if fid is not None else None
             result["smb2_offset"] = safe_int(safe_get(smb2_layer, "Offset"))
             result["smb2_length"] = safe_int(safe_get(smb2_layer, "Length"))
-
-        # Handle WRITE response
-        elif isinstance(smb2_layer, SMB2_Write_Response):
-            pass
+            # Extract write data
+            buffer = safe_get(smb2_layer, "Buffer", [])
+            for name, val in buffer:
+                if name == "Data":
+                    result["smb2_read_blob"] = val
+                    break
 
     except Exception:
         pass
@@ -278,58 +288,123 @@ def read_pcap_basic(input_pcap: str) -> List[Dict[str, Any]]:
     Hiển thị progress percent.
     """
     input_path = Path(input_pcap)
-
     if not input_path.exists():
         raise FileNotFoundError(f"Không tìm thấy file PCAP: {input_pcap}")
 
     packets: List[Dict[str, Any]] = []
 
-    try:
-        print("Loading PCAP file...")
-        capture = rdpcap(str(input_path))
-        total_packets = len(capture)
-        print(f"Total packets loaded: {total_packets}")
-    except Exception as e:
-        raise Exception(f"Lỗi khi đọc PCAP: {e}")
+    print("Loading PCAP file...")
+    capture_raw = rdpcap(str(input_path))
+    # capture_tcp = sniff(offline=str(input_path), session=TCPSession)
+    
+    # Build tcp_responses lookup cho READ fallback
+    # New Fix [
+    tcp_responses = {}
+
+    for p in capture_raw:
+        if not p.haslayer(SMB2_Header):
+            continue
+
+        hdr = p[SMB2_Header]
+        is_response = bool((hdr.Flags or 0) & 0x01)
+
+        if is_response and hdr.Command == 8:  # READ response
+            tcp_responses[hdr.MID] = p
+    # New Fix ]
+
+    total_packets = len(capture_raw)
+    print(f"Total packets loaded: {total_packets}")
 
     packet_counter = 0
     smb2_counter = 0
-    
-    for idx, packet in enumerate(capture):
-        # Print progress every 10 packets or on last packet
+    records_before = len(packets)
+
+    for idx, packet in enumerate(capture_raw):
         if (idx + 1) % 10 == 0 or idx == total_packets - 1:
             print_progress(idx + 1, total_packets, "Reading packets")
-        
+
         if not packet.haslayer(SMB2_Header):
             continue
 
         packet_counter += 1
-        
-        # Get basic packet info (IP/TCP/timestamp)
         basic_info = get_basic_packet_info(packet)
-        basic_info["frame_number"] = packet_counter
+        # basic_info["frame_number"] = packet_counter
+        basic_info["frame_number"] = idx + 1
 
-        # Extract all SMB2 layers in this packet
-        smb2_layers = []
-        current_layer = packet[SMB2_Header]
-        
-        while current_layer is not None:
-            smb2_layers.append(current_layer)
-            # Try to get next SMB2 layer
-            if current_layer.haslayer(SMB2_Header):
-                current_layer = current_layer[SMB2_Header]
+        # Extract SMB2 layer + payload layer bên dưới
+        raw_bytes = bytes(packet[SMB2_Header])
+        pos = 0
+        while pos < len(raw_bytes):
+            magic = raw_bytes.find(b'\xfeSMB', pos)
+            if magic == -1:
+                break
+
+            smb2_hdr = SMB2_Header(raw_bytes[magic:])
+            mid = safe_get(smb2_hdr, "MID")
+            is_response = bool((safe_get(smb2_hdr, "Flags") or 0) & 0x01)
+            cmd = safe_get(smb2_hdr, "Command")
+
+            if is_response and str(cmd) == "8" and mid in tcp_responses:
+                payload_pkt = tcp_responses[mid]
             else:
-                current_layer = None
+                payload_pkt = smb2_hdr
 
-        # Process each SMB2 layer
-        for smb2_layer in smb2_layers:
+            payload_layer = None
+            for layer_cls in [SMB2_Create_Request, SMB2_Create_Response,
+                              SMB2_Read_Request, SMB2_Read_Response,
+                              SMB2_Write_Request, SMB2_Write_Response]:
+                if payload_pkt.haslayer(layer_cls):
+                    payload_layer = payload_pkt[layer_cls]
+                    break
+
             record = basic_info.copy()
-            record.update(get_smb2_info(smb2_layer))
-            record.update(get_smb2_payload(smb2_layer))
+            record.update(get_smb2_info(smb2_hdr))
+            record.update(get_smb2_payload(payload_layer))
             packets.append(record)
             smb2_counter += 1
 
+            # Advance đến SMB2 message tiếp theo
+            next_cmd = safe_get(smb2_hdr, "NextCommand")
+            if next_cmd and int(next_cmd) > 0:
+                pos = magic + int(next_cmd)
+            else:
+                break
+        
+
+    records_after = len(packets)
+    if records_after - records_before > 3:
+        print(f"Packet {idx+1}: {records_after - records_before} records")
     print(f"\nExtraction complete: {packet_counter} packets with SMB2, {smb2_counter} SMB2 records extracted")
+    
+    # # Đếm compound packets
+    # compound_count = 0
+    # for p in capture_raw:
+    #     if not p.haslayer(SMB2_Header):
+    #         continue
+    #     # Check nếu có nhiều SMB2 header liên tiếp
+    #     raw_bytes = bytes(p[SMB2_Header])
+    #     count = raw_bytes.count(b'\xfeSMB')  # SMB2 magic bytes
+    #     if count > 1:
+    #         compound_count += 1
+    #         print(f"Compound packet: {count} SMB2 messages")
+
+    # print(f"Total compound packets: {compound_count}")
+    
+    # # Check field names
+    # for p in capture_raw:
+    #     if p.haslayer(SMB2_Header):
+    #         print("SMB2 fields:", p[SMB2_Header].fields.keys())
+    #         break
+
+    # # Check compound packets extracted
+    # extracted_mids = set(r["smb2_message_id"] for r in packets)
+    # print(f"Unique MIDs extracted: {len(extracted_mids)}")
+    
+    # from collections import Counter
+    # mid_counts = Counter(r["smb2_message_id"] for r in packets)
+    # print("MID distribution:", dict(mid_counts.most_common(10)))
+    # print(f"Total records: {len(packets)}, Unique MIDs: {len(mid_counts)}")
+    
     return packets
 
 
@@ -358,10 +433,14 @@ def enrich_with_request_mapping(packets: List[Dict[str, Any]]) -> List[Dict[str,
                 continue
 
             # copy thông tin quan trọng từ request
-            pkt["mapped_file_id"] = req.get("smb2_file_id")
-            pkt["mapped_offset"] = req.get("smb2_offset")
-            pkt["mapped_length"] = req.get("smb2_length")
-            pkt["mapped_filename"] = req.get("smb2_filename")
+            if req.get("smb2_file_id") != None:
+                pkt["smb2_file_id"] = req.get("smb2_file_id")
+            if req.get("smb2_offset") != None: 
+                pkt["smb2_offset"] = req.get("smb2_offset")
+            if req.get("smb2_length") != None:
+                pkt["smb2_length"] = req.get("smb2_length")
+            if req.get("smb2_filename") != None:
+                pkt["smb2_filename"] = req.get("smb2_filename")
 
     return packets
 
@@ -372,9 +451,33 @@ def write_json(data: Any, output_path: str) -> None:
     path = Path(output_path)
     path.parent.mkdir(parents=True, exist_ok=True)
 
-    with path.open("w", encoding="utf-8") as f:
-        json.dump(data, f, indent=2, ensure_ascii=False)
+    def default_serializer(obj):
+        if isinstance(obj, bytes):
+            return obj.hex()
+        if hasattr(obj, '__float__'):
+            return float(obj)
+        if hasattr(obj, '__int__'):
+            return int(obj)
+        return str(obj)
 
+    with path.open("w", encoding="utf-8") as f:
+        json.dump(data, f, indent=2, ensure_ascii=False, default=default_serializer)
+
+
+def parse_pcap_to_json(input_pcap: str, output_json: str) -> None:
+    packets = read_pcap_basic(input_pcap)
+    packets = enrich_with_request_mapping(packets)
+    
+    from smbmount.reconstruct.content import process_packets
+    from smbmount.output.fs_export import export_files
+
+    file_table = process_packets(packets)
+
+    tree = build_tree(file_table)
+
+    result = export_files(file_table, tree)
+
+    write_json(result, output_json)
 
 # def parse_pcap_to_json(input_pcap: str, output_json: str) -> None:
 #     packets = read_pcap_basic(input_pcap)
@@ -391,10 +494,10 @@ def write_json(data: Any, output_path: str) -> None:
 
 #     write_json(result, output_json)
 
-def parse_pcap_to_json(input_pcap: str, output_json: str) -> None:
-    """
-    Hàm chính cho CLI gọi.
-    """
-    packets = read_pcap_basic(input_pcap)
-    packets = enrich_with_request_mapping(packets)
-    write_json(packets, output_json)
+# def parse_pcap_to_json(input_pcap: str, output_json: str) -> None:
+#     """
+#     Hàm chính cho CLI gọi.
+#     """
+#     packets = read_pcap_basic(input_pcap)
+#     packets = enrich_with_request_mapping(packets)
+#     write_json(packets, output_json)

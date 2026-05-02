@@ -1,17 +1,20 @@
 from typing import Dict
+from smbmount.reconstruct.metadata import FileMetadata
+from smbmount.reconstruct.versioning import VersionManager
 
 
 class FileObject:
     def __init__(self, file_id: str):
         self.file_id = file_id
         self.path = None
-        self.chunks = []
-        self.size = 0
+        self.metadata = FileMetadata()
+        self.versions = VersionManager()
 
-    def add_chunk(self, offset: int, length: int):
-        self.chunks.append((offset, length))
-        if offset is not None and length is not None:
-            self.size = max(self.size, offset + length)
+    def update_metadata(self, pkt):
+        self.metadata.update_from_packet(pkt)
+
+    def write(self, offset, length, timestamp):
+        self.versions.add_write(offset, length, timestamp)
 
 
 class FileTable:

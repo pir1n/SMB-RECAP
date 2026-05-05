@@ -7,8 +7,12 @@ def process_packets(packets):
     for pkt in packets:
         cmd = pkt.get("smb2_command_name")
         file_id = pkt.get("smb2_file_id")
-        ts = pkt.get("timestamp")
-
+        last_write = pkt.get("smb2_last_write_time")
+        # is_response = pkt.get("smb2_is_response")
+        
+        # print(last_write, is_response)
+        
+        
         if not file_id:
             continue
 
@@ -29,6 +33,6 @@ def process_packets(packets):
             length = pkt.get("smb2_length")
 
             if offset is not None and length is not None and pkt.get("smb2_is_response") is True:
-                file_obj.write(offset, length, ts)
+                file_obj.write(offset, length, last_write)
 
     return table

@@ -6,3 +6,5 @@
 2. Fix response_to filename file_id (fixed)
 
 3. Code parse filesystemtree, metadata và versioning (cần xem lại logic của phần code này) versioning đang lấy timestamp dựa trên timestamp packet chứ không phải timestamp query_info cần code lại metadata. 
+
+4. Giải quyết vấn đề modified time trong output của versioning!!. Thử mapping last_write_time last_change_time từ create_response trước đó của packet CREATE vào write request packet / read  response packet theo File_id

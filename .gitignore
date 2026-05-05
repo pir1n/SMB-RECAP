@@ -48,3 +48,7 @@ build/
 *.log
 .venv/
 checklist_todo_by_chatgpt
+*.index
+debug*
+sample2.json
+smb_packet.py

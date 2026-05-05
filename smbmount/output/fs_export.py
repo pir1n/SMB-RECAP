@@ -18,6 +18,7 @@ def export_files(file_table, tree):
             "metadata": {
                 "created": f.metadata.created,
                 "modified": f.metadata.modified,
+                "accessed": f.metadata.accessed,
                 "size": f.metadata.size,
             },
             "versions": versions

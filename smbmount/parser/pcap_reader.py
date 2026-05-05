@@ -545,20 +545,20 @@ def write_json(data: Any, output_path: str) -> None:
         json.dump(data, f, indent=2, ensure_ascii=False, default=default_serializer)
 
 
-# def parse_pcap_to_json(input_pcap: str, output_json: str) -> None:
-#     packets = read_pcap_basic(input_pcap)
-#     packets = enrich_with_request_mapping(packets)
+def parse_pcap_to_json(input_pcap: str, output_json: str) -> None:
+    packets = read_pcap_basic(input_pcap)
+    packets = enrich_with_request_mapping(packets)
     
-#     from smbmount.reconstruct.content import process_packets
-#     from smbmount.output.fs_export import export_files
+    from smbmount.reconstruct.content import process_packets
+    from smbmount.output.fs_export import export_files
 
-#     file_table = process_packets(packets)
+    file_table = process_packets(packets)
 
-#     tree = build_tree(file_table)
+    tree = build_tree(file_table)
 
-#     result = export_files(file_table, tree)
+    result = export_files(file_table, tree)
 
-#     write_json(result, output_json)
+    write_json(result, output_json)
 
 # def parse_pcap_to_json(input_pcap: str, output_json: str) -> None:
 #     packets = read_pcap_basic(input_pcap)
@@ -575,10 +575,10 @@ def write_json(data: Any, output_path: str) -> None:
 
 #     write_json(result, output_json)
 
-def parse_pcap_to_json(input_pcap: str, output_json: str) -> None:
-    """
-    Hàm chính cho CLI gọi.
-    """
-    packets = read_pcap_basic(input_pcap)
-    packets = enrich_with_request_mapping(packets)
-    write_json(packets, output_json)
+# def parse_pcap_to_json(input_pcap: str, output_json: str) -> None:
+#     """
+#     Hàm chính cho CLI gọi.
+#     """
+#     packets = read_pcap_basic(input_pcap)
+#     packets = enrich_with_request_mapping(packets)
+#     write_json(packets, output_json)

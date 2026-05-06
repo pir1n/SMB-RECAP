@@ -8,3 +8,5 @@
 3. Code parse filesystemtree, metadata và versioning (cần xem lại logic của phần code này) versioning đang lấy timestamp dựa trên timestamp packet chứ không phải timestamp query_info cần code lại metadata. 
 
 4. Giải quyết vấn đề modified time trong output của versioning!!. Thử mapping last_write_time last_change_time từ create_response trước đó của packet CREATE vào write request packet / read  response packet theo File_id
+
+5. Tạo thêm test to to để xác định version chính xác hơn, khai thác vô GetInfo (query_info) để kiếm last_write_time hoặc last_change_time, cải thiện duplicate. File có nhiều file_id thì gom lại, phân version cho file

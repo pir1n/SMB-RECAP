@@ -42,7 +42,8 @@ def process_packets(packets):
         if cmd == "READ" and is_response is True:
             offset = pkt.get("smb2_offset")
             length = pkt.get("smb2_length")
-            
+            # if file_id == b'C\x00\x00\x00\x02\x00\x00\x00\xf5\x00\x00\x00\x02\x00\x00\x00':
+            #     print(f"READ command for target file: offset={offset}, length={length}")
             if offset is not None and length is not None:
                 file_obj.add_read(offset, length, last_write)
             continue

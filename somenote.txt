@@ -1,0 +1,8 @@
+Trong create request có một số field thú vị như là:
+
+AccessMask (field này quan trọng nhất vì nó chứa nhiều thông tin nhất về acction trên file)
+File Attribute
+Disposition
+Share Access 
+CreateOption
+ExtraInfo

@@ -6,6 +6,11 @@ Please make environment for python before running
 $ python -m venv .venv
 ```
 
+To run project:
+```python
+python -m smbmount parse-pcap .\data\pcaps\Sample2.pcapng .\outputs\metadatatree.json                                                                    
+```
+
 ```
 SMBmount
 ├── README.md

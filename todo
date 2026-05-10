@@ -11,3 +11,11 @@
 
 5. Tạo thêm test to to để xác định version chính xác hơn, khai thác vô GetInfo (query_info) để kiếm last_write_time hoặc last_change_time, cải thiện duplicate. File có nhiều file_id thì gom lại, phân version cho file
 
+6. Cần parse thêm các trường cần thiết cho SCF như là :
+desired_access
+create_disposition
+create_options
+file_info_class
+
+Viết vào get_smb2_payload()
+

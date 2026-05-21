@@ -104,6 +104,12 @@ def read_pcap_basic(input_pcap: str) -> List[Dict[str, Any]]:
             ))
             
             record.update(get_smb2_create_metadata(payload_layer)) # Get metadata from CREATE response and Close response
+            record.update(get_smb2_metadata_scf(
+                payload_layer,
+                raw_smb2=raw_bytes[magic:],
+                cmd=cmd,
+                is_response=is_response,
+            ))
             packets.append(record)
             smb2_counter += 1
 
@@ -175,7 +181,25 @@ def enrich_with_request_mapping(packets: List[Dict[str, Any]]) -> List[Dict[str,
 
             if not req:
                 continue
-                        
+            
+            scf_fields = [
+                "smb2_desired_access_raw",
+                "smb2_desired_access",
+                "smb2_create_disposition_raw",
+                "smb2_create_disposition",
+                "smb2_create_options_raw",
+                "smb2_create_options",
+                "smb2_info_type",
+                "smb2_file_info_class_raw",
+                "smb2_file_info_class",
+                "smb2_delete_pending",
+            ]
+
+            for field in scf_fields:
+                if req.get(field) is not None and pkt.get(field) is None:
+                    pkt[field] = req.get(field)
+            
+                          
             # copy thông tin quan trọng từ request
             if req.get("smb2_file_id") != None:
                 pkt["smb2_file_id"] = req.get("smb2_file_id")
@@ -311,7 +335,7 @@ def parse_pcap_to_json(input_pcap: str, output_json: str) -> None:
 
 #     write_json(result, output_json)
 
-# def parse_pcap_to_json(input_pcap: str, output_json: str) -> None:
+# def parse_pcap_to_json(input_pcap: str, output_json: str) -> None: # Only use this function for debugging and testing
 #     """
 #     Hàm chính cho CLI gọi.
 #     """

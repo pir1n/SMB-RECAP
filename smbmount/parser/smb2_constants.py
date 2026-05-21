@@ -29,12 +29,16 @@ SMB2_INFO_TYPE = {
 SMB2_FILE_INFO_CLASS = {
     1:  "FileDirectoryInformation",
     2:  "FileFullDirectoryInformation",
-    4:  "FileBasicInformation",        # ← có timestamps
+    3:  "FileBothDirectoryInformation",
+    4:  "FileBasicInformation",
     5:  "FileStandardInformation",
     6:  "FileInternalInformation",
     7:  "FileEaInformation",
     8:  "FileAccessInformation",
-    11: "FileRenameInformation",
+    9:  "FileNameInformation",
+    10: "FileRenameInformation",
+    11: "FileLinkInformation",
+    12: "FileNamesInformation",
     13: "FileDispositionInformation",
     14: "FilePositionInformation",
     16: "FileFullEaInformation",
@@ -43,10 +47,70 @@ SMB2_FILE_INFO_CLASS = {
     19: "FileAllInformation",
     20: "FileAllocationInformation",
     21: "FileEndOfFileInformation",
-    22: "FileLinkInformation",
-    34: "FileNetworkOpenInformation",  # ← có timestamps
+    22: "FileAlternateNameInformation",
+    34: "FileNetworkOpenInformation",
     35: "FileAttributeTagInformation",
+    37: "FileIdBothDirectoryInformation",
+    38: "FileIdFullDirectoryInformation",
+    48: "FileNormalizedNameInformation",
+    64: "FileDispositionInformationEx",
 }
 
-# Class nào chứa timestamps ở 32 byte đầu
 FILE_INFO_CLASSES_WITH_TIMESTAMPS = {4, 34}
+
+CREATE_DISPOSITION_MAP = {
+    0x00000000: "FILE_SUPERSEDE",
+    0x00000001: "FILE_OPEN",
+    0x00000002: "FILE_CREATE",
+    0x00000003: "FILE_OPEN_IF",
+    0x00000004: "FILE_OVERWRITE",
+    0x00000005: "FILE_OVERWRITE_IF",
+}
+
+CREATE_OPTIONS_FLAGS = {
+    0x00000001: "FILE_DIRECTORY_FILE",
+    0x00000002: "FILE_WRITE_THROUGH",
+    0x00000004: "FILE_SEQUENTIAL_ONLY",
+    0x00000008: "FILE_NO_INTERMEDIATE_BUFFERING",
+    0x00000010: "FILE_SYNCHRONOUS_IO_ALERT",
+    0x00000020: "FILE_SYNCHRONOUS_IO_NONALERT",
+    0x00000040: "FILE_NON_DIRECTORY_FILE",
+    0x00000080: "FILE_CREATE_TREE_CONNECTION",
+    0x00000100: "FILE_COMPLETE_IF_OPLOCKED",
+    0x00000200: "FILE_NO_EA_KNOWLEDGE",
+    0x00000400: "FILE_OPEN_REMOTE_INSTANCE",
+    0x00000800: "FILE_RANDOM_ACCESS",
+    0x00001000: "FILE_DELETE_ON_CLOSE",
+    0x00002000: "FILE_OPEN_BY_FILE_ID",
+    0x00004000: "FILE_OPEN_FOR_BACKUP_INTENT",
+    0x00008000: "FILE_NO_COMPRESSION",
+    0x00010000: "FILE_OPEN_REQUIRING_OPLOCK",
+    0x00020000: "FILE_DISALLOW_EXCLUSIVE",
+    0x00100000: "FILE_RESERVE_OPFILTER",
+    0x00200000: "FILE_OPEN_REPARSE_POINT",
+    0x00400000: "FILE_OPEN_NO_RECALL",
+    0x00800000: "FILE_OPEN_FOR_FREE_SPACE_QUERY",
+}
+
+DESIRED_ACCESS_FLAGS = {
+    0x00000001: "FILE_READ_DATA",
+    0x00000002: "FILE_WRITE_DATA",
+    0x00000004: "FILE_APPEND_DATA",
+    0x00000008: "FILE_READ_EA",
+    0x00000010: "FILE_WRITE_EA",
+    0x00000020: "FILE_EXECUTE",
+    0x00000040: "FILE_DELETE_CHILD",
+    0x00000080: "FILE_READ_ATTRIBUTES",
+    0x00000100: "FILE_WRITE_ATTRIBUTES",
+    0x00010000: "DELETE",
+    0x00020000: "READ_CONTROL",
+    0x00040000: "WRITE_DAC",
+    0x00080000: "WRITE_OWNER",
+    0x00100000: "SYNCHRONIZE",
+    0x01000000: "ACCESS_SYSTEM_SECURITY",
+    0x02000000: "MAXIMUM_ALLOWED",
+    0x10000000: "GENERIC_ALL",
+    0x20000000: "GENERIC_EXECUTE",
+    0x40000000: "GENERIC_WRITE",
+    0x80000000: "GENERIC_READ",
+}

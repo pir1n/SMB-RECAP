@@ -1,221 +1,41 @@
 from scapy.all import PcapReader, TCP, IP, IPv6
 import argparse
 import json
-from datetime import datetime, timezone
+
+from scapy.all import *
+from smbmount.parser.tcp_reassembler import reassemble_tcp_streams
 
 
-SMB2_SIGNATURE = b"\xfeSMB"
+# =======================
+# Utils
+# =======================
+
+def format_flags(flags):
+    if isinstance(flags, int):
+        return hex(flags)
+    return str(flags)
 
 
-COMMAND_MAP = {
-    0: "NEGOTIATE",
-    1: "SESSION_SETUP",
-    2: "LOGOFF",
-    3: "TREE_CONNECT",
-    4: "TREE_DISCONNECT",
-    5: "CREATE",
-    6: "CLOSE",
-    7: "FLUSH",
-    8: "READ",
-    9: "WRITE",
-    10: "LOCK",
-    11: "IOCTL",
-    12: "CANCEL",
-    13: "ECHO",
-    14: "QUERY_DIRECTORY",
-    15: "CHANGE_NOTIFY",
-    16: "QUERY_INFO",
-    17: "SET_INFO",
-    18: "OPLOCK_BREAK",
-}
-
-
-CREATE_DISPOSITION_MAP = {
-    0x00000000: "FILE_SUPERSEDE",
-    0x00000001: "FILE_OPEN",
-    0x00000002: "FILE_CREATE",
-    0x00000003: "FILE_OPEN_IF",
-    0x00000004: "FILE_OVERWRITE",
-    0x00000005: "FILE_OVERWRITE_IF",
-}
-
-
-CREATE_OPTIONS_FLAGS = {
-    0x00000001: "FILE_DIRECTORY_FILE",
-    0x00000002: "FILE_WRITE_THROUGH",
-    0x00000004: "FILE_SEQUENTIAL_ONLY",
-    0x00000008: "FILE_NO_INTERMEDIATE_BUFFERING",
-    0x00000010: "FILE_SYNCHRONOUS_IO_ALERT",
-    0x00000020: "FILE_SYNCHRONOUS_IO_NONALERT",
-    0x00000040: "FILE_NON_DIRECTORY_FILE",
-    0x00000080: "FILE_CREATE_TREE_CONNECTION",
-    0x00000100: "FILE_COMPLETE_IF_OPLOCKED",
-    0x00000200: "FILE_NO_EA_KNOWLEDGE",
-    0x00000400: "FILE_OPEN_REMOTE_INSTANCE",
-    0x00000800: "FILE_RANDOM_ACCESS",
-    0x00001000: "FILE_DELETE_ON_CLOSE",
-    0x00002000: "FILE_OPEN_BY_FILE_ID",
-    0x00004000: "FILE_OPEN_FOR_BACKUP_INTENT",
-    0x00008000: "FILE_NO_COMPRESSION",
-    0x00010000: "FILE_OPEN_REQUIRING_OPLOCK",
-    0x00020000: "FILE_DISALLOW_EXCLUSIVE",
-    0x00100000: "FILE_RESERVE_OPFILTER",
-    0x00200000: "FILE_OPEN_REPARSE_POINT",
-    0x00400000: "FILE_OPEN_NO_RECALL",
-    0x00800000: "FILE_OPEN_FOR_FREE_SPACE_QUERY",
-}
-
-
-DESIRED_ACCESS_FLAGS = {
-    0x00000001: "FILE_READ_DATA",
-    0x00000002: "FILE_WRITE_DATA",
-    0x00000004: "FILE_APPEND_DATA",
-    0x00000008: "FILE_READ_EA",
-    0x00000010: "FILE_WRITE_EA",
-    0x00000020: "FILE_EXECUTE",
-    0x00000040: "FILE_DELETE_CHILD",
-    0x00000080: "FILE_READ_ATTRIBUTES",
-    0x00000100: "FILE_WRITE_ATTRIBUTES",
-    0x00010000: "DELETE",
-    0x00020000: "READ_CONTROL",
-    0x00040000: "WRITE_DAC",
-    0x00080000: "WRITE_OWNER",
-    0x00100000: "SYNCHRONIZE",
-    0x01000000: "ACCESS_SYSTEM_SECURITY",
-    0x02000000: "MAXIMUM_ALLOWED",
-    0x10000000: "GENERIC_ALL",
-    0x20000000: "GENERIC_EXECUTE",
-    0x40000000: "GENERIC_WRITE",
-    0x80000000: "GENERIC_READ",
-}
-
-
-FILE_INFO_CLASS_MAP = {
-    4: "FileBasicInformation",
-    5: "FileStandardInformation",
-    9: "FileNameInformation",
-    13: "FileDispositionInformation",
-    18: "FileAllInformation",
-    20: "FileEndOfFileInformation",
-    34: "FileNetworkOpenInformation",
-    48: "FileNormalizedNameInformation",
-    64: "FileDispositionInformationEx",
-}
-
-
-def u16(data: bytes, off: int):
-    if off + 2 > len(data):
-        return None
-    return int.from_bytes(data[off:off + 2], "little")
-
-
-def u32(data: bytes, off: int):
-    if off + 4 > len(data):
-        return None
-    return int.from_bytes(data[off:off + 4], "little")
-
-
-def u64(data: bytes, off: int):
-    if off + 8 > len(data):
-        return None
-    return int.from_bytes(data[off:off + 8], "little")
-
-
-def hex_bytes(data: bytes):
-    return data.hex() if data is not None else None
-
-
-def flags_to_names(value, mapping):
-    if value is None:
-        return []
-    return [name for bit, name in mapping.items() if value & bit]
-
-
-def win_filetime_to_iso(value):
-    if not value:
-        return None
-
-    try:
-        unix_ts = (value - 116444736000000000) / 10_000_000
-        return datetime.fromtimestamp(unix_ts, tz=timezone.utc).isoformat()
-    except Exception:
-        return None
-
-
-def get_ip_info(pkt):
-    if IP in pkt:
-        return pkt[IP].src, pkt[IP].dst
-
-    if IPv6 in pkt:
-        return pkt[IPv6].src, pkt[IPv6].dst
-
-    return None, None
-
-
-def find_smb2_offsets(tcp_payload: bytes):
+def fileid_to_hex(fid_obj):
     """
-    Return offsets of SMB2 headers inside this TCP payload.
-
-    Handles:
-    - direct SMB2 payload
-    - NetBIOS Session Service prefix
-    - compound SMB2 via NextCommand
+    Convert SMB2_FILEID object -> Wireshark format
     """
-    offsets = []
-
-    first = tcp_payload.find(SMB2_SIGNATURE)
-    if first < 0:
-        return offsets
-
-    current = first
-
-    while current >= 0 and current + 64 <= len(tcp_payload):
-        if tcp_payload[current:current + 4] != SMB2_SIGNATURE:
-            break
-
-        offsets.append(current)
-
-        next_command = u32(tcp_payload, current + 20)
-
-        if not next_command:
-            break
-
-        current = current + next_command
-
-    return offsets
-
-
-def parse_smb2_header(data: bytes, base: int):
-    cmd = u16(data, base + 12)
-    flags = u32(data, base + 16)
-    next_command = u32(data, base + 20)
-
-    return {
-        "smb2_header_offset": base,
-        "smb2_protocol_id": data[base:base + 4].hex(),
-        "smb2_structure_size": u16(data, base + 4),
-        "smb2_credit_charge": u16(data, base + 6),
-        "smb2_channel_sequence_or_status": u32(data, base + 8),
-        "smb2_command": cmd,
-        "smb2_command_name": COMMAND_MAP.get(cmd, f"UNKNOWN_{cmd}"),
-        "smb2_credit_request_response": u16(data, base + 14),
-        "smb2_flags": flags,
-        "smb2_is_response": bool(flags & 0x00000001) if flags is not None else None,
-        "smb2_next_command": next_command,
-        "smb2_message_id": u64(data, base + 24),
-        "smb2_process_id": u32(data, base + 32),
-        "smb2_tree_id": u32(data, base + 36),
-        "smb2_session_id": u64(data, base + 40),
-        "smb2_signature": data[base + 48:base + 64].hex(),
-    }
-
-
-def decode_utf16le(raw: bytes):
-    if not raw:
-        return None
-
     try:
-        return raw.decode("utf-16le", errors="ignore").rstrip("\x00")
+        persistent = fid_obj.fields["Persistent"]
+        volatile = fid_obj.fields["Volatile"]
+
+        p_bytes = persistent.to_bytes(8, "little")
+        v_bytes = volatile.to_bytes(8, "little")
+
+        full = p_bytes + v_bytes
+
+        return (
+            full[0:4].hex() + "-" +
+            full[4:6].hex() + "-" +
+            full[6:8].hex() + "-" +
+            full[8:10].hex() + "-" +
+            full[10:16].hex()
+        )
     except Exception:
         return None
 
@@ -613,4 +433,24 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    pcap_file = "./data/pcaps/Sample2.pcapng"
+    # frame_number = 624
+
+    # data = extract_smb2_frame(pcap_file, frame_number)
+    # print(json.dumps(data, indent=2, default=str))
+    
+    capture_raw = rdpcap("../pcapFS_reproduce/pcapFS_reproduce/samples/smb2-peter.pcap")
+    tcp_responses, tcp_write_requests = reassemble_tcp_streams(capture_raw)
+
+    print(f"MID 54 in tcp_responses: {54 in tcp_responses}")
+    if 54 in tcp_responses:
+        hdr = tcp_responses[54]
+        from scapy.layers.smb2 import SMB2_Read_Response
+        if hdr.haslayer(SMB2_Read_Response):
+            data_len = hdr[SMB2_Read_Response].DataLen
+            blob = b""
+            for name, val in hdr[SMB2_Read_Response].Buffer:
+                if name == "Data":
+                    blob = val
+                    break
+            print(f"DataLen={data_len} actual={len(blob)} match={len(blob)==data_len}")

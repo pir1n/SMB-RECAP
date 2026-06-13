@@ -51,7 +51,13 @@ checklist_todo_by_chatgpt
 *.index
 debug*
 sample2.json
+sample3.json
+sample-peter.json
 smb_packet.py
+README-3.7.0-English.pdf
+test_versioning_only_smb_protocol.json
+Test.rf
+Test2.rtf
 debug.py
 testing
 debug.json

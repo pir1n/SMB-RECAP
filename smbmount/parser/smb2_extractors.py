@@ -25,6 +25,10 @@ from smbmount.parser.smb2_constants import (
     CREATE_DISPOSITION_MAP,
     CREATE_OPTIONS_FLAGS,
     DESIRED_ACCESS_FLAGS,
+    FILE_ATTRIBUTE_FLAGS,
+    SHARE_ACCESS_FLAGS,
+    FILE_DISPOSITION_EX_FLAGS,
+    QUERY_DIRECTORY_FLAGS,
 )
 
 def close_request_file_id(raw_smb2: bytes) -> Optional[bytes]:
@@ -410,6 +414,12 @@ def get_smb2_metadata_scf(
         "smb2_desired_access_raw": None,
         "smb2_desired_access": None,
 
+        "smb2_create_file_attributes_raw": None,
+        "smb2_create_file_attributes": None,
+
+        "smb2_share_access_raw": None,
+        "smb2_share_access": None,
+
         "smb2_create_disposition_raw": None,
         "smb2_create_disposition": None,
 
@@ -421,6 +431,12 @@ def get_smb2_metadata_scf(
         "smb2_file_info_class": None,
 
         "smb2_delete_pending": None,
+        "smb2_disposition_flags_raw": None,
+        "smb2_disposition_flags": None,
+
+        "smb2_query_directory_flags_raw": None,
+        "smb2_query_directory_flags": None,
+        "smb2_query_directory_pattern": None,
     }
 
     cmd_str = str(cmd) if cmd is not None else None
@@ -428,6 +444,8 @@ def get_smb2_metadata_scf(
     try:
         if smb2_layer is not None and isinstance(smb2_layer, SMB2_Create_Request):
             desired_access = safe_int(safe_get(smb2_layer, "DesiredAccess"))
+            file_attributes = safe_int(safe_get(smb2_layer, "FileAttributes"))
+            share_access = safe_int(safe_get(smb2_layer, "ShareAccess"))
             create_disposition = safe_int(safe_get(smb2_layer, "CreateDisposition"))
             create_options = safe_int(safe_get(smb2_layer, "CreateOptions"))
 
@@ -435,6 +453,18 @@ def get_smb2_metadata_scf(
             result["smb2_desired_access"] = flags_to_names(
                 desired_access,
                 DESIRED_ACCESS_FLAGS,
+            )
+
+            result["smb2_create_file_attributes_raw"] = file_attributes
+            result["smb2_create_file_attributes"] = flags_to_names(
+                file_attributes,
+                FILE_ATTRIBUTE_FLAGS,
+            )
+
+            result["smb2_share_access_raw"] = share_access
+            result["smb2_share_access"] = flags_to_names(
+                share_access,
+                SHARE_ACCESS_FLAGS,
             )
 
             result["smb2_create_disposition_raw"] = create_disposition
@@ -476,8 +506,20 @@ def get_smb2_metadata_scf(
             raw_buffer = safe_get(smb2_layer, "Buffer", [])
             for name, val in raw_buffer:
                 if name == "Data" and val:
-                    if file_class in (13, 64):
+                    # FileDispositionInformation: 1 byte DeletePending
+                    if file_class == 13:
                         result["smb2_delete_pending"] = bool(val[0])
+
+                    # FileDispositionInformationEx: 4 bytes flags
+                    elif file_class == 64 and len(val) >= 4:
+                        disposition_flags = struct.unpack("<I", val[:4])[0]
+                        result["smb2_disposition_flags_raw"] = disposition_flags
+                        result["smb2_disposition_flags"] = flags_to_names(
+                            disposition_flags,
+                            FILE_DISPOSITION_EX_FLAGS,
+                        )
+                        result["smb2_delete_pending"] = bool(disposition_flags & 0x00000001)
+
                     break
 
     except Exception:
@@ -492,6 +534,8 @@ def get_smb2_metadata_scf(
         # CREATE Request
         if cmd_str == "5" and is_response is False:
             desired_access = u32(raw_smb2, 64 + 24)
+            file_attributes = u32(raw_smb2, 64 + 28)
+            share_access = u32(raw_smb2, 64 + 32)
             create_disposition = u32(raw_smb2, 64 + 36)
             create_options = u32(raw_smb2, 64 + 40)
 
@@ -500,6 +544,20 @@ def get_smb2_metadata_scf(
                 result["smb2_desired_access"] = flags_to_names(
                     desired_access,
                     DESIRED_ACCESS_FLAGS,
+                )
+
+            if result["smb2_create_file_attributes_raw"] is None:
+                result["smb2_create_file_attributes_raw"] = file_attributes
+                result["smb2_create_file_attributes"] = flags_to_names(
+                    file_attributes,
+                    FILE_ATTRIBUTE_FLAGS,
+                )
+
+            if result["smb2_share_access_raw"] is None:
+                result["smb2_share_access_raw"] = share_access
+                result["smb2_share_access"] = flags_to_names(
+                    share_access,
+                    SHARE_ACCESS_FLAGS,
                 )
 
             if result["smb2_create_disposition_raw"] is None:
@@ -546,18 +604,42 @@ def get_smb2_metadata_scf(
 
             if buffer_offset is not None and buffer_length is not None:
                 buf = bytes_range(raw_smb2, buffer_offset, buffer_length)
-                if file_class in (13, 64) and buf:
+
+                if file_class == 13 and buf:
                     result["smb2_delete_pending"] = bool(buf[0])
+
+                elif file_class == 64 and buf and len(buf) >= 4:
+                    disposition_flags = struct.unpack("<I", buf[:4])[0]
+                    result["smb2_disposition_flags_raw"] = disposition_flags
+                    result["smb2_disposition_flags"] = flags_to_names(
+                        disposition_flags,
+                        FILE_DISPOSITION_EX_FLAGS,
+                    )
+                    result["smb2_delete_pending"] = bool(disposition_flags & 0x00000001)
 
         # QUERY_DIRECTORY Request
         elif cmd_str == "14" and is_response is False:
             file_class = u8(raw_smb2, 64 + 2)
+            query_flags = u8(raw_smb2, 64 + 3)
+            name_offset = u16(raw_smb2, 64 + 24)
+            name_length = u16(raw_smb2, 64 + 26)
 
             result["smb2_file_info_class_raw"] = file_class
             result["smb2_file_info_class"] = SMB2_FILE_INFO_CLASS.get(
                 file_class,
                 str(file_class) if file_class is not None else None,
             )
+
+            result["smb2_query_directory_flags_raw"] = query_flags
+            result["smb2_query_directory_flags"] = flags_to_names(
+                query_flags,
+                QUERY_DIRECTORY_FLAGS,
+            )
+
+            if name_offset is not None and name_length:
+                pattern_bytes = bytes_range(raw_smb2, name_offset, name_length)
+                if pattern_bytes:
+                    result["smb2_query_directory_pattern"] = decode_smb_filename(pattern_bytes)
 
     except Exception:
         pass

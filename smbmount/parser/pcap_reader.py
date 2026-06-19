@@ -255,14 +255,30 @@ def enrich_with_request_mapping(packets):
             scf_fields = [
                 "smb2_desired_access_raw",
                 "smb2_desired_access",
+
+                "smb2_create_file_attributes_raw",
+                "smb2_create_file_attributes",
+
+                "smb2_share_access_raw",
+                "smb2_share_access",
+
                 "smb2_create_disposition_raw",
                 "smb2_create_disposition",
+
                 "smb2_create_options_raw",
                 "smb2_create_options",
+
                 "smb2_info_type",
                 "smb2_file_info_class_raw",
                 "smb2_file_info_class",
+
                 "smb2_delete_pending",
+                "smb2_disposition_flags_raw",
+                "smb2_disposition_flags",
+
+                "smb2_query_directory_flags_raw",
+                "smb2_query_directory_flags",
+                "smb2_query_directory_pattern",
             ]
 
             for field in scf_fields:

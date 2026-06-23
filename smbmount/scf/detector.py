@@ -255,3 +255,160 @@ class SCFDetector:
                 return fid.hex() if isinstance(fid, bytes) else fid
 
         return None
+    
+    # Detect delete-on-close events
+    
+    def is_delete_on_close_create(self, pkt):
+        if pkt.get("smb2_command_name") != "CREATE":
+            return False
+
+        if pkt.get("smb2_is_response") is not False:
+            return False
+
+        desired = pkt.get("smb2_desired_access_raw") or 0
+        options = pkt.get("smb2_create_options_raw") or 0
+
+        try:
+            desired = int(desired)
+            options = int(options)
+        except Exception:
+            return False
+
+        DELETE_ACCESS = 0x00010000
+        FILE_DELETE_ON_CLOSE = 0x00001000
+
+        return (
+            (desired & DELETE_ACCESS) != 0
+            and (options & FILE_DELETE_ON_CLOSE) != 0
+        )
+
+    def classify_delete_target(self, pkt):
+        options = pkt.get("smb2_create_options_raw") or 0
+
+        try:
+            options = int(options)
+        except Exception:
+            return "unknown"
+
+        FILE_DIRECTORY_FILE = 0x00000001
+        FILE_NON_DIRECTORY_FILE = 0x00000040
+
+        if options & FILE_DIRECTORY_FILE:
+            return "directory"
+
+        if options & FILE_NON_DIRECTORY_FILE:
+            return "file"
+
+        return "unknown"
+    
+    
+    def detect_delete_on_close(self, packets, status_lookup):
+        events = []
+
+        # map FileId -> CREATE delete-on-close request
+        pending_delete_handles = {}
+
+        for pkt in sorted(
+            packets,
+            key=lambda p: (
+                float(p.get("timestamp") or 0),
+                p.get("frame_number") or 0,
+            )
+        ):
+            cmd = pkt.get("smb2_command_name")
+            is_response = pkt.get("smb2_is_response")
+
+            # 1. Bắt CREATE có FILE_DELETE_ON_CLOSE
+            if self.is_delete_on_close_create(pkt):
+                status = status_lookup.get(self._request_response_key(pkt))
+
+                # Nếu có response và response fail thì bỏ
+                if status is not None and not self._status_success(status):
+                    continue
+
+                # FileId có thể nằm trong mapped_file_id hoặc smb2_file_id tùy parser của bạn
+                fid = (
+                    pkt.get("smb2_file_id")
+                    or pkt.get("mapped_file_id")
+                )
+
+                # Nếu request chưa có FileId, vẫn lưu theo path; nhưng tốt nhất là enrich từ CREATE response
+                key = fid or (
+                    pkt.get("smb2_session_id"),
+                    pkt.get("smb2_tree_id"),
+                    pkt.get("smb2_filename"),
+                )
+
+                pending_delete_handles[key] = pkt
+                continue
+
+            # 2. Khi CLOSE cùng handle thì xác nhận deletion
+            if cmd == "CLOSE" and is_response is False:
+                fid = (
+                    pkt.get("smb2_file_id")
+                    or pkt.get("mapped_file_id")
+                )
+
+                key_candidates = [fid]
+
+                # fallback nếu không có fid
+                key_candidates.append((
+                    pkt.get("smb2_session_id"),
+                    pkt.get("smb2_tree_id"),
+                    pkt.get("mapped_filename") or pkt.get("smb2_filename"),
+                ))
+
+                create_pkt = None
+                matched_key = None
+
+                for key in key_candidates:
+                    if key in pending_delete_handles:
+                        create_pkt = pending_delete_handles[key]
+                        matched_key = key
+                        break
+
+                if not create_pkt:
+                    continue
+
+                close_status = status_lookup.get(self._request_response_key(pkt))
+
+                if close_status is not None and not self._status_success(close_status):
+                    continue
+
+                target_type = self.classify_delete_target(create_pkt)
+                path = create_pkt.get("smb2_filename") or create_pkt.get("mapped_filename")
+
+                events.append({
+                    "timestamp": self.safe_float(create_pkt.get("timestamp")),
+                    "src_ip": create_pkt.get("src_ip"),
+                    "dst_ip": create_pkt.get("dst_ip"),
+                    "src_port": create_pkt.get("src_port"),
+                    "dst_port": create_pkt.get("dst_port"),
+                    "session_id": create_pkt.get("smb2_session_id"),
+                    "tree_id": create_pkt.get("smb2_tree_id"),
+
+                    "rule_id": "delete_on_close",
+                    "action": f"deletion of {target_type} by delete-on-close",
+                    "description": "CREATE with FILE_DELETE_ON_CLOSE followed by CLOSE on the same handle",
+
+                    "path": path,
+                    "file_id": fid,
+                    "frames": [
+                        create_pkt.get("frame_number"),
+                        pkt.get("frame_number"),
+                    ],
+                    "commands": [
+                        "CREATE",
+                        "CLOSE",
+                    ],
+                    "success": True,
+                    "statuses": [
+                        status_lookup.get(self._request_response_key(create_pkt)),
+                        close_status,
+                    ],
+                })
+
+                if matched_key in pending_delete_handles:
+                    del pending_delete_handles[matched_key]
+
+        return events

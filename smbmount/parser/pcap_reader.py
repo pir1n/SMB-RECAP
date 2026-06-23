@@ -225,80 +225,239 @@ def read_pcap_basic(input_pcap: str) -> List[Dict[str, Any]]:
 
 
 def enrich_with_request_mapping(packets):
-    pending = {}  # (session_key, msg_id) → pkt
+    """
+    Mapping SMB2 request <-> response theo MessageId + flow.
+
+    Mục tiêu:
+    1. Copy các field quan trọng từ request sang response.
+    2. Với CREATE:
+       - Request có filename nhưng chưa có FileId.
+       - Response có FileId nhưng không có filename.
+       => Gắn ngược FileId từ CREATE response về CREATE request.
+    3. Lưu FileId -> filename để các packet sau như CLOSE / SET_INFO / READ / WRITE
+       có thể biết đang thao tác trên path nào.
+    """
+
+    pending = {}       # (client_flow_key, msg_id) -> request packet
+    file_context = {}  # (client_flow_key, session_id, tree_id, file_id_key) -> context
+
+    def flow_key(pkt):
+        """
+        Flow theo hướng packet hiện tại.
+        """
+        return (
+            pkt.get("src_ip"),
+            pkt.get("dst_ip"),
+            pkt.get("src_port"),
+            pkt.get("dst_port"),
+        )
+
+    def reverse_flow_key(pkt):
+        """
+        Flow đảo chiều, dùng để response tìm lại request.
+        """
+        return (
+            pkt.get("dst_ip"),
+            pkt.get("src_ip"),
+            pkt.get("dst_port"),
+            pkt.get("src_port"),
+        )
+
+    def client_flow_key(pkt):
+        """
+        Chuẩn hóa flow về hướng client -> server.
+        - Request: src là client, dst là server.
+        - Response: src là server, dst là client, nên phải đảo lại.
+        """
+        if pkt.get("smb2_is_response") is True:
+            return reverse_flow_key(pkt)
+
+        return flow_key(pkt)
+
+    def file_id_to_key(file_id):
+        """
+        Chuẩn hóa FileId để dùng làm dict key.
+        FileId trong parser có thể là bytes, bytearray, memoryview hoặc string.
+        """
+        if file_id is None:
+            return None
+
+        if isinstance(file_id, bytes):
+            return file_id.hex()
+
+        if isinstance(file_id, bytearray):
+            return bytes(file_id).hex()
+
+        if isinstance(file_id, memoryview):
+            return file_id.tobytes().hex()
+
+        return str(file_id)
+
+    def build_file_context_key(pkt, file_id, forced_client_flow=None):
+        fid_key = file_id_to_key(file_id)
+
+        if fid_key is None:
+            return None
+
+        return (
+            forced_client_flow or client_flow_key(pkt),
+            pkt.get("smb2_session_id"),
+            pkt.get("smb2_tree_id"),
+            fid_key,
+        )
+
+    def copy_field(src, dst, field):
+        if src.get(field) is not None and dst.get(field) is None:
+            dst[field] = src.get(field)
+
+    def attach_file_context(pkt):
+        """
+        Nếu packet có FileId, thử gắn filename đã biết từ CREATE trước đó.
+        Áp dụng cho CLOSE / SET_INFO / READ / WRITE / QUERY_INFO.
+        """
+        file_id = pkt.get("smb2_file_id") or pkt.get("mapped_file_id")
+        ctx_key = build_file_context_key(pkt, file_id)
+
+        if ctx_key is None:
+            return
+
+        ctx = file_context.get(ctx_key)
+
+        if not ctx:
+            return
+
+        if pkt.get("mapped_filename") is None and ctx.get("filename") is not None:
+            pkt["mapped_filename"] = ctx.get("filename")
+
+        # Giữ tương thích với code cũ đang đọc smb2_filename.
+        # Không overwrite nếu packet đã có smb2_filename thật.
+        if pkt.get("smb2_filename") is None and ctx.get("filename") is not None:
+            pkt["smb2_filename"] = ctx.get("filename")
+
+        if pkt.get("mapped_file_id") is None and ctx.get("file_id") is not None:
+            pkt["mapped_file_id"] = ctx.get("file_id")
+
+    scf_fields = [
+        "smb2_desired_access_raw",
+        "smb2_desired_access",
+
+        "smb2_create_file_attributes_raw",
+        "smb2_create_file_attributes",
+
+        "smb2_share_access_raw",
+        "smb2_share_access",
+
+        "smb2_create_disposition_raw",
+        "smb2_create_disposition",
+
+        "smb2_create_options_raw",
+        "smb2_create_options",
+
+        "smb2_info_type",
+        "smb2_file_info_class_raw",
+        "smb2_file_info_class",
+
+        "smb2_delete_pending",
+        "smb2_disposition_flags_raw",
+        "smb2_disposition_flags",
+
+        "smb2_query_directory_flags_raw",
+        "smb2_query_directory_flags",
+        "smb2_query_directory_pattern",
+    ]
+
+    request_to_response_fields = [
+        "smb2_file_id",
+        "mapped_file_id",
+
+        "smb2_offset",
+        "smb2_length",
+
+        "smb2_filename",
+        "mapped_filename",
+
+        "smb2_query_info_type",
+        "smb2_query_file_class",
+    ]
 
     for pkt in packets:
         msg_id = pkt.get("smb2_message_id")
         is_response = pkt.get("smb2_is_response")
-        
-        if not msg_id:
+
+        # Trước hết, nếu packet đã có FileId thì thử gắn filename từ context.
+        attach_file_context(pkt)
+
+        # Không dùng "if not msg_id" vì MessageId = 0 là hợp lệ.
+        if msg_id is None:
             continue
 
-        # Build session key từ packet
-        session_key = (
-            pkt.get("src_ip"), pkt.get("dst_ip"),
-            pkt.get("src_port"), pkt.get("dst_port")
-        )
-        # Response có src/dst ngược với request
-        reverse_key = (
-            pkt.get("dst_ip"), pkt.get("src_ip"),
-            pkt.get("dst_port"), pkt.get("src_port")
-        )
+        current_client_flow = client_flow_key(pkt)
 
-        if not is_response:
-            pending[(session_key, msg_id)] = pkt
-        else:
-            req = pending.get((reverse_key, msg_id))
+        # REQUEST
+        if is_response is False:
+            pending[(current_client_flow, msg_id)] = pkt
+
+            # Nếu request đã có FileId, ví dụ READ/WRITE/CLOSE/SET_INFO,
+            # thì thử enrich filename theo FileId.
+            attach_file_context(pkt)
+            continue
+
+        # RESPONSE
+        if is_response is True:
+            req = pending.get((current_client_flow, msg_id))
+
             if not req:
                 continue
-            
-            scf_fields = [
-                "smb2_desired_access_raw",
-                "smb2_desired_access",
 
-                "smb2_create_file_attributes_raw",
-                "smb2_create_file_attributes",
-
-                "smb2_share_access_raw",
-                "smb2_share_access",
-
-                "smb2_create_disposition_raw",
-                "smb2_create_disposition",
-
-                "smb2_create_options_raw",
-                "smb2_create_options",
-
-                "smb2_info_type",
-                "smb2_file_info_class_raw",
-                "smb2_file_info_class",
-
-                "smb2_delete_pending",
-                "smb2_disposition_flags_raw",
-                "smb2_disposition_flags",
-
-                "smb2_query_directory_flags_raw",
-                "smb2_query_directory_flags",
-                "smb2_query_directory_pattern",
-            ]
-
+            # 1. Copy SCF fields từ request sang response.
             for field in scf_fields:
-                if req.get(field) is not None and pkt.get(field) is None:
-                    pkt[field] = req.get(field)
-            
-                          
-            # copy thông tin quan trọng từ request
-            if req.get("smb2_file_id") is not None:
-                pkt["smb2_file_id"] = req.get("smb2_file_id")
-            if req.get("smb2_offset") is not None:
-                pkt["smb2_offset"] = req.get("smb2_offset")
-            if req.get("smb2_length") is not None:
-                pkt["smb2_length"] = req.get("smb2_length")
-            if req.get("smb2_filename") is not None:
-                pkt["smb2_filename"] = req.get("smb2_filename")
-            if req.get("smb2_query_info_type") is not None:
-                pkt["smb2_query_info_type"] = req["smb2_query_info_type"]
-            if req.get("smb2_query_file_class") is not None:
-                pkt["smb2_query_file_class"] = req["smb2_query_file_class"]
+                copy_field(req, pkt, field)
+
+            # 2. Copy các field request quan trọng sang response.
+            for field in request_to_response_fields:
+                copy_field(req, pkt, field)
+
+            # 3. Nếu request có filename, response nên có mapped_filename.
+            if req.get("smb2_filename") is not None and pkt.get("mapped_filename") is None:
+                pkt["mapped_filename"] = req.get("smb2_filename")
+
+            # 4. Nếu response là CREATE response và có FileId do server cấp,
+            #    gắn ngược FileId đó vào CREATE request.
+            if (
+                req.get("smb2_command_name") == "CREATE"
+                and pkt.get("smb2_command_name") == "CREATE"
+                and pkt.get("smb2_file_id") is not None
+            ):
+                create_file_id = pkt.get("smb2_file_id")
+
+                req["smb2_file_id"] = create_file_id
+                req["mapped_file_id"] = create_file_id
+
+                pkt["mapped_file_id"] = create_file_id
+
+                if req.get("smb2_filename") is not None:
+                    pkt["mapped_filename"] = req.get("smb2_filename")
+
+                # Lưu FileId -> filename để các request sau như CLOSE cùng FileId
+                # có thể map ngược ra path.
+                ctx_key = build_file_context_key(
+                    req,
+                    create_file_id,
+                    forced_client_flow=current_client_flow,
+                )
+
+                if ctx_key is not None:
+                    file_context[ctx_key] = {
+                        "filename": req.get("smb2_filename"),
+                        "file_id": create_file_id,
+                        "create_frame": req.get("frame_number"),
+                        "create_timestamp": req.get("timestamp"),
+                        "create_options_raw": req.get("smb2_create_options_raw"),
+                        "desired_access_raw": req.get("smb2_desired_access_raw"),
+                    }
+
+            # 5. Sau khi response được bổ sung FileId, thử attach context lại.
+            attach_file_context(pkt)
 
     return packets
 

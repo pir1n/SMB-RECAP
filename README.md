@@ -15,12 +15,12 @@ Use scf-dump to dump scf hash
 ```
 python -m smbmount scf-dump .\data\pcaps\test_versioning_modfied_on_file.pcapng .\outputs\scf_dump_2.json                                       
 ```
-Use scf to run with to and generate timeline command
+Use scf:
 ```
 python -m smbmount scf .\data\pcaps\testSCFsample.pcapng .\rules\scf_rules.json .\outputs\scf_timeline.json                                    
 ```
 
-
+```
 SMBmount
 ├── README.md
 ├── data

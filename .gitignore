@@ -46,7 +46,7 @@ dist/
 build/
 *.egg
 *.log
-.venv/
+
 checklist_todo_by_chatgpt
 *.index
 debug*
@@ -61,3 +61,4 @@ Test2.rtf
 debug.py
 testing
 debug.json
+digest_smbmount_pcapfs_reproduce_no_scf.txt

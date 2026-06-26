@@ -56,9 +56,10 @@ sample-peter.json
 smb_packet.py
 README-3.7.0-English.pdf
 test_versioning_only_smb_protocol.json
-Test.rf
+Test.rtf
 Test2.rtf
 debug.py
 testing
 debug.json
 digest_smbmount_pcapfs_reproduce_no_scf.txt
+digest*

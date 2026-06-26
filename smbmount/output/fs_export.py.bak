@@ -1,0 +1,75 @@
+# from collections import defaultdict 
+
+# def version_output_name(path, index, total_versions):
+#     if not path:
+#         path = "unknown"
+#     if total_versions <= 1:
+#         return path
+#     return f"{path}@{index}"
+
+from collections import defaultdict
+
+def export_files(file_table, tree):
+    # Group files theo path
+    path_groups = defaultdict(list)
+    for f in file_table.files.values():
+        path = f.path or "unknown"
+        path_groups[path].append(f)
+
+    files = []
+    
+    for path, file_objs in path_groups.items():
+        all_versions = []
+        
+        for f in file_objs:
+            deduped = f.versions.deduplicated_versions(file_id=f.file_id, path=f.path)
+            # Lấy metadata từ file object
+            meta = {
+                "created": f.metadata.created,
+                "modified": f.metadata.modified,
+                "accessed": f.metadata.accessed,
+                "size": f.metadata.size,
+            }
+            for v in deduped:
+                if v.last_op is None:
+                    continue
+                meta = v.snapshot_metadata or {
+                    "created": f.metadata.created,
+                    "modified": f.metadata.modified,
+                    "accessed": f.metadata.accessed,
+                    "size": f.metadata.size,
+                }
+                all_versions.append((v, f.file_id, meta))
+
+        # THÊM: Dedup lần 2 sau khi gộp tất cả FileObject cùng path
+        final_versions = []
+        for v, fid, meta in all_versions:
+            if final_versions and v.same_content_as(final_versions[-1][0]):
+                if v.modified is not None:
+                    final_versions[-1][2]["modified"] = v.modified
+                continue
+            final_versions.append((v, fid, meta))
+
+        # Format versions
+        versions = []
+        for i, (v, fid, meta) in enumerate(final_versions):
+            data = v.get_data()
+            versions.append({
+                "version": i,
+                "file_id": fid.hex() if isinstance(fid, bytes) else fid,
+                "op": v.last_op,
+                "metadata": meta,
+                # "chunks": v.chunks,
+                # "data": data.hex() if data else None,
+                "hash": v.get_hash(),
+            })
+
+        files.append({
+            "path": path,
+            "versions": versions,
+        })
+
+    return {
+        "files": files,
+        "tree": tree,
+    }

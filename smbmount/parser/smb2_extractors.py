@@ -103,6 +103,155 @@ def normalize_file_id(fid):
         return bytes(fid)
     except Exception:
         return fid
+
+def field_to_bytes(value):
+    if value is None:
+        return b""
+
+    if isinstance(value, bytes):
+        return value
+
+    if isinstance(value, bytearray):
+        return bytes(value)
+
+    if isinstance(value, memoryview):
+        return value.tobytes()
+
+    if isinstance(value, str):
+        try:
+            return bytes.fromhex(value)
+        except ValueError:
+            return value.encode(errors="ignore")
+
+    if isinstance(value, list):
+        chunks = []
+
+        for item in value:
+            if isinstance(item, tuple) and len(item) == 2:
+                _, item_value = item
+            else:
+                item_value = item
+
+            chunk = field_to_bytes(item_value)
+            if chunk:
+                chunks.append(chunk)
+
+        return b"".join(chunks)
+
+    try:
+        return bytes(value)
+    except Exception:
+        return b""
+
+
+def buffer_data_to_bytes(buffer):
+    """
+    Scapy SMB2 Buffer thường là list tuple:
+    [("Data", b"...")] hoặc [("Output", b"...")]
+    """
+    if not buffer:
+        return b""
+
+    if isinstance(buffer, (bytes, bytearray, memoryview, str)):
+        return field_to_bytes(buffer)
+
+    if isinstance(buffer, list):
+        for name, val in buffer:
+            if name in ("Data", "Output", "Buffer"):
+                return field_to_bytes(val)
+
+    return field_to_bytes(buffer)
+
+
+def decode_utf16le_name(raw):
+    if not raw:
+        return None
+
+    try:
+        return raw.decode("utf-16le", errors="ignore").rstrip("\x00")
+    except Exception:
+        return None
+
+
+def parse_file_rename_information(data):
+    """
+    FILE_RENAME_INFORMATION / FILE_RENAME_INFORMATION_EX.
+
+    Layout phổ biến:
+    0      ReplaceIfExists hoặc Flags
+    8      RootDirectory
+    16     FileNameLength
+    20     FileName UTF-16LE
+    """
+    if not data or len(data) < 20:
+        return None
+
+    name_len = u32(data, 16)
+    if not name_len:
+        return None
+
+    raw_name = bytes_range(data, 20, name_len)
+    return decode_utf16le_name(raw_name)
+
+
+def parse_file_disposition_information(data):
+    """
+    FileDispositionInformation: 1 byte DeletePending.
+    FileDispositionInformationEx: 4 bytes flags.
+    """
+    if not data:
+        return None, None, None
+
+    delete_pending = bool(data[0])
+    flags_raw = None
+    flags = None
+
+    if len(data) >= 4:
+        flags_raw = u32(data, 0)
+        if flags_raw:
+            flags = flags_to_names(flags_raw, FILE_DISPOSITION_EX_FLAGS)
+            delete_pending = bool(flags_raw & 0x00000001)
+
+    return delete_pending, flags_raw, flags
+
+
+def parse_file_size_information(data):
+    """
+    FileAllocationInformation / FileEndOfFileInformation:
+    8 bytes little-endian integer.
+    """
+    if not data or len(data) < 8:
+        return None
+
+    try:
+        return struct.unpack("<q", data[:8])[0]
+    except Exception:
+        return None
+
+
+def set_info_request_file_id(raw_smb2: bytes) -> Optional[bytes]:
+    """
+    SMB2 SET_INFO request:
+    Header 64 bytes.
+    Payload layout:
+      StructureSize: 2
+      InfoType: 1
+      FileInfoClass: 1
+      BufferLength: 4
+      BufferOffset: 2
+      Reserved: 2
+      AdditionalInformation: 4
+      FileId: 16
+
+    FileId offset = 64 + 16.
+    """
+    start = 64 + 16
+    end = start + 16
+
+    if raw_smb2 is None or len(raw_smb2) < end:
+        return None
+
+    return raw_smb2[start:end]
 # End of helper functions
 
 def get_basic_packet_info(packet: Any) -> Dict[str, Any]:
@@ -192,9 +341,21 @@ def get_smb2_payload(smb2_layer: Any, raw_smb2: Optional[bytes] = None,
         "smb2_offset": None,
         "smb2_length": None,
         "smb2_read_blob": None,
+
         "smb2_query_info_type": None,
         "smb2_query_file_class": None,
         "smb2_query_info_response_data": None,
+
+        "smb2_info_type": None,
+        "smb2_file_info_class_raw": None,
+        "smb2_file_info_class": None,
+
+        "smb2_set_info_data": None,
+        "smb2_rename_target": None,
+        "smb2_delete_pending": None,
+        "smb2_disposition_flags_raw": None,
+        "smb2_disposition_flags": None,
+        "smb2_truncate_size": None,
     }
 
     if smb2_layer is None:
@@ -261,20 +422,44 @@ def get_smb2_payload(smb2_layer: Any, raw_smb2: Optional[bytes] = None,
                     break
         
         elif isinstance(smb2_layer, SMB2_Set_Info_Request):
-            info_type   = safe_int(safe_get(smb2_layer, "InfoType"))
-            file_class  = safe_int(safe_get(smb2_layer, "FileInfoClass"))
-            # print(smb2_layer.fields)
+            fid = safe_get(smb2_layer, "FileId")
+            result["smb2_file_id"] = bytes(fid) if fid is not None else None
 
+            info_type = safe_int(safe_get(smb2_layer, "InfoType"))
+            file_class = safe_int(safe_get(smb2_layer, "FileInfoClass"))
+
+            result["smb2_info_type"] = info_type
+            result["smb2_file_info_class_raw"] = file_class
+            result["smb2_file_info_class"] = SMB2_FILE_INFO_CLASS.get(
+                file_class,
+                str(file_class) if file_class is not None else None,
+            )
+
+            data = buffer_data_to_bytes(safe_get(smb2_layer, "Buffer", []))
+            result["smb2_set_info_data"] = data
+
+            # Timestamp SET_INFO: FileBasicInformation, FileAllInformation, ...
             if info_type == 1 and file_class in FILE_INFO_CLASSES_WITH_TIMESTAMPS:
-                raw_buffer = safe_get(smb2_layer, "Buffer", [])
-                for name, val in raw_buffer:
-                    if name == "Data" and len(val) >= 32:
-                        result["smb2_create_time"]      = filetime_to_unix(struct.unpack("<Q", val[0:8])[0])
-                        result["smb2_last_access_time"] = filetime_to_unix(struct.unpack("<Q", val[8:16])[0])
-                        result["smb2_last_write_time"]  = filetime_to_unix(struct.unpack("<Q", val[16:24])[0])
-                        result["smb2_change_time"]      = filetime_to_unix(struct.unpack("<Q", val[24:32])[0])
-                        # print(f"Extracted timestamps from SET_INFO: create={result['smb2_create_time']}, last_access={result['smb2_last_access_time']}, last_write={result['smb2_last_write_time']}, change={result['smb2_change_time']}")
-                        break
+                if data and len(data) >= 32:
+                    result["smb2_create_time"] = filetime_to_unix(struct.unpack("<Q", data[0:8])[0])
+                    result["smb2_last_access_time"] = filetime_to_unix(struct.unpack("<Q", data[8:16])[0])
+                    result["smb2_last_write_time"] = filetime_to_unix(struct.unpack("<Q", data[16:24])[0])
+                    result["smb2_change_time"] = filetime_to_unix(struct.unpack("<Q", data[24:32])[0])
+
+            # Rename
+            if file_class in (10, 11):
+                result["smb2_rename_target"] = parse_file_rename_information(data)
+
+            # Delete / rmdir
+            elif file_class in (13, 64):
+                delete_pending, flags_raw, flags = parse_file_disposition_information(data)
+                result["smb2_delete_pending"] = delete_pending
+                result["smb2_disposition_flags_raw"] = flags_raw
+                result["smb2_disposition_flags"] = flags
+
+            # Truncate / allocation resize
+            elif file_class in (20, 21):
+                result["smb2_truncate_size"] = parse_file_size_information(data)
                 
         elif SMB2_Close_Request is not None and isinstance(smb2_layer, SMB2_Close_Request):
             fid = safe_get(smb2_layer, "FileId")
@@ -297,6 +482,14 @@ def get_smb2_payload(smb2_layer: Any, raw_smb2: Optional[bytes] = None,
     ):
         result["smb2_file_id"] = close_request_file_id(raw_smb2)
 
+    if (
+        result["smb2_file_id"] is None
+        and str(cmd) == "17"
+        and is_response is False
+        and raw_smb2 is not None
+    ):
+        result["smb2_file_id"] = set_info_request_file_id(raw_smb2)
+    
     if (
         result["smb2_filename"] is None
         and str(cmd) == "5"

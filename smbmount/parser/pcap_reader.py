@@ -1,3 +1,4 @@
+import cmd
 import json
 import struct
 from pathlib import Path
@@ -10,6 +11,7 @@ from smbmount.parser.utils import *
 from smbmount.parser.smb2_constants import *
 from smbmount.parser.smb2_extractors import *
 from smbmount.parser.tcp_reassembler import reassemble_tcp_streams
+from smbmount.output.snapshot_export import build_snapshot
 
 def _find_smb2_payload_layer(payload_pkt):
     payload_classes = [SMB2_Create_Request, SMB2_Create_Response,
@@ -370,14 +372,26 @@ def enrich_with_request_mapping(packets):
         "smb2_file_id",
         "mapped_file_id",
 
+        # READ/WRITE context
         "smb2_offset",
         "smb2_length",
+        "smb2_read_blob",
 
+        # path context
         "smb2_filename",
         "mapped_filename",
 
+        # QUERY_INFO context
         "smb2_query_info_type",
         "smb2_query_file_class",
+
+        # SET_INFO semantic context
+        "smb2_set_info_data",
+        "smb2_rename_target",
+        "smb2_delete_pending",
+        "smb2_disposition_flags_raw",
+        "smb2_disposition_flags",
+        "smb2_truncate_size",
     ]
 
     for pkt in packets:
@@ -455,6 +469,8 @@ def enrich_with_request_mapping(packets):
                         "create_options_raw": req.get("smb2_create_options_raw"),
                         "desired_access_raw": req.get("smb2_desired_access_raw"),
                     }
+                    
+                    attach_file_context(req)
 
             # 5. Sau khi response được bổ sung FileId, thử attach context lại.
             attach_file_context(pkt)
@@ -476,8 +492,8 @@ def enrich_with_file_metadata_mapping(packets: List[Dict[str, Any]]) -> List[Dic
     ]
 
     for pkt in packets:
-        file_id = pkt.get("smb2_file_id")
-        if not file_id:
+        file_id = pkt.get("smb2_file_id") or pkt.get("mapped_file_id")
+        if file_id is None:
             continue
 
         cmd = pkt.get("smb2_command_name")
@@ -493,7 +509,7 @@ def enrich_with_file_metadata_mapping(packets: List[Dict[str, Any]]) -> List[Dic
             continue
 
         # Chỉ enrich READ/WRITE từ CREATE metadata, không dùng CLOSE
-        if cmd in ("READ", "WRITE"):
+        if cmd in ("READ", "WRITE", "CLOSE", "SET_INFO", "QUERY_INFO"):
             metadata = create_metadata_by_file_id.get(file_id)
             if not metadata:
                 continue
@@ -549,19 +565,39 @@ def write_json(data: Any, output_path: str) -> None:
         json.dump(data, f, indent=2, ensure_ascii=False, default=default_serializer)
 
 
-def parse_pcap_to_json(input_pcap: str, output_json: str) -> None:
+def parse_pcap_to_json(
+    input_pcap: str,
+    output_json: str,
+    timestamp_mode: str = "hybrid",
+    snapshot_at: float = None,
+    snapshot_time_source: str = "network",
+    snapshot_include_deleted: bool = True,
+) -> None:
     packets = read_pcap_basic(input_pcap)
     packets = enrich_with_request_mapping(packets)
     packets = enrich_with_file_metadata_mapping(packets)
     packets = enrich_with_query_info_timestamps(packets)
 
-    file_table = process_packets(packets)
+    file_table = process_packets(
+        packets,
+        timestamp_mode=timestamp_mode,
+    )
 
     tree = build_tree(file_table)
 
     result = export_files(file_table, tree)
+    
+    if snapshot_at is not None:
+        result["snapshot"] = build_snapshot(
+            file_table,
+            snapshot_at=snapshot_at,
+            time_source=snapshot_time_source,
+            include_deleted=snapshot_include_deleted,
+        )
 
     write_json(result, output_json)
+    
+    return file_table, result
 
 # def parse_pcap_to_json(input_pcap: str, output_json: str) -> None:
 #     packets = read_pcap_basic(input_pcap)

@@ -5,16 +5,12 @@ from pathlib import Path
 from common import cmd_quote, ensure_dir, read_jsonl, windows_path
 
 
-def local_path(local_dir, op, prefix):
-    return str(Path(local_dir) / f"{prefix}_{op['op_id']:06d}.dat")
+def upload_local_path(local_dir, op=None):
+    return str(Path(local_dir) / "u")
 
 
-def local_path_for_id(local_dir, op_id, prefix):
-    return str(Path(local_dir) / f"{prefix}_{int(op_id):06d}.dat")
-
-
-def upload_local_path(local_dir, op):
-    return local_path(local_dir, op, "upload")
+def download_local_path(local_dir, op=None):
+    return str(Path(local_dir) / "d")
 
 
 def cmd_for_op(op, drive, local_dir):
@@ -33,7 +29,7 @@ def cmd_for_op(op, drive, local_dir):
     if event == "append_file":
         return f">> {cmd_quote(path)} echo {content}"
     if event == "download_file":
-        return f"copy /Y /B {cmd_quote(path)} {cmd_quote(local_path(local_dir, op, 'download'))} > nul"
+        return f"copy /Y /B {cmd_quote(path)} {cmd_quote(download_local_path(local_dir, op))} > nul"
     if event == "read_file":
         return f"more {cmd_quote(path)} > nul"
     if event == "overwrite_file":
@@ -73,6 +69,12 @@ def render(plan, out_file, drive, stop_on_error):
         f"set \"SCF_GT=%SCF_SCRIPT_DIR%..\\..\\ground_truth\\{run_id}.jsonl\"",
         "if not exist \"%SCF_SCRIPT_DIR%..\\..\\ground_truth\" mkdir \"%SCF_SCRIPT_DIR%..\\..\\ground_truth\"",
         "if not exist \"%SCF_LOCAL_DIR%\" mkdir \"%SCF_LOCAL_DIR%\"",
+        "del /f /q \"%SCF_LOCAL_DIR%\\upload_*.dat\" > nul 2> nul",
+        "del /f /q \"%SCF_LOCAL_DIR%\\download_*.dat\" > nul 2> nul",
+        "del /f /q \"%SCF_LOCAL_DIR%\\op_*.dat\" > nul 2> nul",
+        "del /f /q \"%SCF_LOCAL_DIR%\\out_*.dat\" > nul 2> nul",
+        "del /f /q \"%SCF_LOCAL_DIR%\\u\" > nul 2> nul",
+        "del /f /q \"%SCF_LOCAL_DIR%\\d\" > nul 2> nul",
         "if exist \"%SCF_GT%\" del \"%SCF_GT%\"",
         "",
     ]
@@ -80,7 +82,7 @@ def render(plan, out_file, drive, stop_on_error):
     for op in plan:
         if op["event"] == "upload_file":
             if op.get("local_source_op_id"):
-                source = local_path_for_id(local_dir, op["local_source_op_id"], "download")
+                source = download_local_path(local_dir, op)
                 target = upload_local_path(local_dir, op)
                 lines.extend([
                     f"copy /Y /B {cmd_quote(source)} {cmd_quote(target)} > nul",
@@ -89,7 +91,7 @@ def render(plan, out_file, drive, stop_on_error):
             else:
                 lines.extend([
                     f"set \"SCF_LOCAL_FILE={upload_local_path(local_dir, op)}\"",
-                    f"set \"SCF_LOCAL_SIZE={int(op.get('file_size') or 128)}\"",
+                    f"set \"SCF_LOCAL_SIZE={int(op.get('file_size') or 4)}\"",
                     "powershell -NoProfile -ExecutionPolicy Bypass -Command \"$p=$env:SCF_LOCAL_FILE; $n=[int]$env:SCF_LOCAL_SIZE; $d=Split-Path $p; New-Item -ItemType Directory -Path $d -Force | Out-Null; $b=New-Object byte[] $n; for($i=0; $i -lt $n; $i++){ $b[$i]=65+($i %% 26) }; [IO.File]::WriteAllBytes($p,$b)\"",
                     "",
                 ])

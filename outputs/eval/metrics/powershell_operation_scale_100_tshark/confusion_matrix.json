@@ -1,0 +1,36 @@
+{
+  "__extra__": {
+    "directory_listing": 111
+  },
+  "append_file": {
+    "append_file": 100
+  },
+  "create_directory": {
+    "create_directory": 503
+  },
+  "create_file": {
+    "create_file": 100
+  },
+  "delete_directory": {
+    "delete_directory": 100
+  },
+  "delete_file": {
+    "delete_file": 100
+  },
+  "directory_listing": {
+    "directory_listing": 100
+  },
+  "download_file": {
+    "download_file": 200
+  },
+  "read_file": {
+    "read_file": 100
+  },
+  "rename_file": {
+    "__missing__": 2,
+    "rename_file": 398
+  },
+  "upload_file": {
+    "upload_file": 900
+  }
+}

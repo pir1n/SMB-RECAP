@@ -1,0 +1,145 @@
+{
+  "inputs": {
+    "case_sensitive": false,
+    "ground_truth": [
+      "data\\eval\\generated\\ground_truth\\smbclient_operation_scale_100_tshark.jsonl"
+    ],
+    "time_after": 3.0,
+    "time_before": 1.0,
+    "timeline": [
+      "outputs\\eval\\timelines\\smbclient_operation_scale_100_tshark_timeline.json"
+    ]
+  },
+  "overall": {
+    "f1": 0.803242147922999,
+    "fn": 621,
+    "fp": 350,
+    "macro_f1": 0.37252831544106296,
+    "precision": 0.8499142367066895,
+    "recall": 0.7614291202458702,
+    "tp": 1982,
+    "weighted_f1": 0.7259564292698555
+  },
+  "per_class": {
+    "append_file": {
+      "f1": 0.0,
+      "fn": 100,
+      "fp": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 100,
+      "tp": 0
+    },
+    "create_directory": {
+      "f1": 1.0,
+      "fn": 0,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "support": 503,
+      "tp": 503
+    },
+    "create_file": {
+      "f1": 0.04580152671755725,
+      "fn": 97,
+      "fp": 28,
+      "precision": 0.0967741935483871,
+      "recall": 0.03,
+      "support": 100,
+      "tp": 3
+    },
+    "delete_directory": {
+      "f1": 1.0,
+      "fn": 0,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "support": 100,
+      "tp": 100
+    },
+    "delete_file": {
+      "f1": 0.0,
+      "fn": 100,
+      "fp": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 100,
+      "tp": 0
+    },
+    "directory_listing": {
+      "f1": 0.0,
+      "fn": 100,
+      "fp": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 100,
+      "tp": 0
+    },
+    "download_file": {
+      "f1": 0.0,
+      "fn": 200,
+      "fp": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 200,
+      "tp": 0
+    },
+    "overwrite_file": {
+      "f1": 0.0,
+      "fn": 0,
+      "fp": 3,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 0,
+      "tp": 0
+    },
+    "read_file": {
+      "f1": 0.5,
+      "fn": 0,
+      "fp": 200,
+      "precision": 0.3333333333333333,
+      "recall": 1.0,
+      "support": 100,
+      "tp": 100
+    },
+    "rename_file": {
+      "f1": 1.0,
+      "fn": 0,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "support": 400,
+      "tp": 400
+    },
+    "upload_file": {
+      "f1": 0.9245382585751979,
+      "fn": 24,
+      "fp": 119,
+      "precision": 0.8804020100502512,
+      "recall": 0.9733333333333334,
+      "support": 900,
+      "tp": 876
+    },
+    "write_file": {
+      "f1": 0.0,
+      "fn": 0,
+      "fp": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 0,
+      "tp": 0
+    }
+  },
+  "per_client": {
+    "smbclient": {
+      "f1": 0.803242147922999,
+      "fn": 621,
+      "fp": 350,
+      "macro_f1": 0.37252831544106296,
+      "precision": 0.8499142367066895,
+      "recall": 0.7614291202458702,
+      "tp": 1982,
+      "weighted_f1": 0.7259564292698555
+    }
+  }
+}

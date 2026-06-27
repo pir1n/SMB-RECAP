@@ -1,0 +1,145 @@
+{
+  "inputs": {
+    "case_sensitive": false,
+    "ground_truth": [
+      "data\\eval\\generated\\ground_truth\\powershell_operation_scale_100_tshark.jsonl"
+    ],
+    "time_after": 3.0,
+    "time_before": 1.0,
+    "timeline": [
+      "outputs\\eval\\timelines\\powershell_operation_scale_100_tshark_timeline.json"
+    ]
+  },
+  "overall": {
+    "f1": 0.9787394167450613,
+    "fn": 2,
+    "fp": 111,
+    "macro_f1": 0.8033817125880081,
+    "precision": 0.959070796460177,
+    "recall": 0.9992316557817903,
+    "tp": 2601,
+    "weighted_f1": 0.9859032560147374
+  },
+  "per_class": {
+    "append_file": {
+      "f1": 1.0,
+      "fn": 0,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "support": 100,
+      "tp": 100
+    },
+    "create_directory": {
+      "f1": 1.0,
+      "fn": 0,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "support": 503,
+      "tp": 503
+    },
+    "create_file": {
+      "f1": 1.0,
+      "fn": 0,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "support": 100,
+      "tp": 100
+    },
+    "delete_directory": {
+      "f1": 1.0,
+      "fn": 0,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "support": 100,
+      "tp": 100
+    },
+    "delete_file": {
+      "f1": 1.0,
+      "fn": 0,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "support": 100,
+      "tp": 100
+    },
+    "directory_listing": {
+      "f1": 0.6430868167202572,
+      "fn": 0,
+      "fp": 111,
+      "precision": 0.47393364928909953,
+      "recall": 1.0,
+      "support": 100,
+      "tp": 100
+    },
+    "download_file": {
+      "f1": 1.0,
+      "fn": 0,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "support": 200,
+      "tp": 200
+    },
+    "overwrite_file": {
+      "f1": 0.0,
+      "fn": 0,
+      "fp": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 0,
+      "tp": 0
+    },
+    "read_file": {
+      "f1": 1.0,
+      "fn": 0,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "support": 100,
+      "tp": 100
+    },
+    "rename_file": {
+      "f1": 0.9974937343358395,
+      "fn": 2,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 0.995,
+      "support": 400,
+      "tp": 398
+    },
+    "upload_file": {
+      "f1": 1.0,
+      "fn": 0,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "support": 900,
+      "tp": 900
+    },
+    "write_file": {
+      "f1": 0.0,
+      "fn": 0,
+      "fp": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 0,
+      "tp": 0
+    }
+  },
+  "per_client": {
+    "powershell": {
+      "f1": 0.9787394167450613,
+      "fn": 2,
+      "fp": 111,
+      "macro_f1": 0.8033817125880081,
+      "precision": 0.959070796460177,
+      "recall": 0.9992316557817903,
+      "tp": 2601,
+      "weighted_f1": 0.9859032560147374
+    }
+  }
+}

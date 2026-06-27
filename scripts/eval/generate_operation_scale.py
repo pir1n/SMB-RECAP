@@ -25,20 +25,22 @@ OPERATIONS = [
 ]
 
 CLIENTS = {"cmd", "powershell", "smbclient"}
-NONZERO_SIZES = [128, 4096, 65536, 1048576]
-
-
-def slug(value):
-    output = []
-    for ch in value.lower():
-        if ch.isalnum():
-            output.append(ch)
-        else:
-            output.append("_")
-    text = "".join(output).strip("_")
-    while "__" in text:
-        text = text.replace("__", "_")
-    return text
+SMALL_FILE_SIZE = 4
+OP_CODES = {
+    "Create Directory": "cd",
+    "Create File": "cf",
+    "Upload file": "up",
+    "Download file": "dl",
+    "View File": "vf",
+    "List Directory": "ld",
+    "Rename Directory": "rd",
+    "Move Directory": "md",
+    "rename File": "rf",
+    "Move file": "mf",
+    "Append to File": "ap",
+    "Remove Directory": "xd",
+    "Remove File": "xf",
+}
 
 
 def default_run_id(client, profile):
@@ -49,19 +51,31 @@ def default_run_id(client, profile):
 def file_size_for(run_id, op_id, operation):
     if operation not in {"Upload file", "Append to File"}:
         return 0
-    digest = hashlib.sha256(f"{run_id}:{op_id}:{operation}".encode("utf-8")).digest()
-    return NONZERO_SIZES[digest[0] % len(NONZERO_SIZES)]
+    return SMALL_FILE_SIZE
+
+
+def run_root(run_id):
+    digest = hashlib.sha1(run_id.encode("utf-8")).hexdigest()[:7]
+    return f"r{digest}"
+
+
+def op_component(operation, index):
+    return f"{OP_CODES[operation]}{index:06d}"
+
+
+def short_component(prefix, index):
+    return f"{prefix}{index:06d}"
 
 
 class OperationBuilder:
     def __init__(self, client, run_id):
         self.client = client
         self.run_id = run_id
-        self.root = run_id
+        self.root = run_root(run_id)
         self.setup_id = 900000000
         self.setup_keys = set()
 
-    def setup_op(self, event, path, *, target_path=None, variant="setup", file_size=128):
+    def setup_op(self, event, path, *, target_path=None, variant="setup", file_size=SMALL_FILE_SIZE):
         self.setup_id += 1
         content = content_for(self.run_id, self.setup_id, file_size)
         return {
@@ -118,7 +132,7 @@ class OperationBuilder:
         self.setup_keys.add(path)
         return [self.setup_op("create_directory", path)]
 
-    def ensure_file(self, path, file_size=128):
+    def ensure_file(self, path, file_size=SMALL_FILE_SIZE):
         if path in self.setup_keys:
             return []
         self.setup_keys.add(path)
@@ -131,7 +145,7 @@ class OperationBuilder:
         return setup, download_setup["op_id"]
 
     def build(self, op_id, operation, index):
-        prefix = posix_join(self.root, f"{slug(operation)}_{index:06d}")
+        prefix = posix_join(self.root, op_component(operation, index))
         setup = self.ensure_root()
 
         if operation == "Create Directory":
@@ -139,12 +153,12 @@ class OperationBuilder:
             return setup, self.measured_op(op_id, operation, "create_directory", path)
 
         if operation == "Create File":
-            path = f"{prefix}.dat"
+            path = prefix
             return setup, self.measured_op(op_id, operation, "create_file", path)
 
         if operation == "Upload file":
-            path = f"{prefix}.dat"
-            seed_path = f"{prefix}_server_seed.dat"
+            path = prefix
+            seed_path = posix_join(self.root, short_component("us", index))
             size = file_size_for(self.run_id, op_id, operation)
             staged_setup, local_source_op_id = self.stage_local_source_from_server(seed_path)
             setup += staged_setup
@@ -159,51 +173,51 @@ class OperationBuilder:
             )
 
         if operation == "Download file":
-            path = f"{prefix}.dat"
+            path = prefix
             setup += self.ensure_file(path)
             return setup, self.measured_op(op_id, operation, "download_file", path, variant="download")
 
         if operation == "View File":
-            path = f"{prefix}.dat"
+            path = prefix
             setup += self.ensure_file(path)
             return setup, self.measured_op(op_id, operation, "read_file", path, variant="view")
 
         if operation == "List Directory":
             path = prefix
             setup += self.ensure_directory(path)
-            setup += self.ensure_file(posix_join(path, "entry.txt"))
+            setup += self.ensure_file(posix_join(path, "e"))
             return setup, self.measured_op(op_id, operation, "directory_listing", path)
 
         if operation == "Rename Directory":
-            path = f"{prefix}_src"
-            target = f"{prefix}_renamed"
+            path = posix_join(self.root, short_component("rs", index))
+            target = posix_join(self.root, short_component("rt", index))
             setup += self.ensure_directory(path)
             return setup, self.measured_op(op_id, operation, "rename_file", path, target_path=target, variant="rename_directory")
 
         if operation == "Move Directory":
-            path = f"{prefix}_src"
-            target_parent = posix_join(self.root, "moved_directories")
-            target = posix_join(target_parent, f"{slug(operation)}_{index:06d}")
+            path = posix_join(self.root, short_component("ds", index))
+            target_parent = posix_join(self.root, "dmv")
+            target = posix_join(target_parent, short_component("dt", index))
             setup += self.ensure_directory(path)
             setup += self.ensure_directory(target_parent)
             return setup, self.measured_op(op_id, operation, "rename_file", path, target_path=target, variant="move")
 
         if operation == "rename File":
-            path = f"{prefix}_src.dat"
-            target = f"{prefix}_renamed.dat"
+            path = posix_join(self.root, short_component("fs", index))
+            target = posix_join(self.root, short_component("ft", index))
             setup += self.ensure_file(path)
             return setup, self.measured_op(op_id, operation, "rename_file", path, target_path=target, variant="rename_file")
 
         if operation == "Move file":
-            path = f"{prefix}_src.dat"
-            target_parent = posix_join(self.root, "moved_files")
-            target = posix_join(target_parent, f"{slug(operation)}_{index:06d}.dat")
+            path = posix_join(self.root, short_component("ms", index))
+            target_parent = posix_join(self.root, "fmv")
+            target = posix_join(target_parent, short_component("mt", index))
             setup += self.ensure_file(path)
             setup += self.ensure_directory(target_parent)
             return setup, self.measured_op(op_id, operation, "rename_file", path, target_path=target, variant="move")
 
         if operation == "Append to File":
-            path = f"{prefix}.dat"
+            path = prefix
             setup += self.ensure_file(path)
             size = file_size_for(self.run_id, op_id, operation)
             return setup, self.measured_op(op_id, operation, "append_file", path, variant="append", file_size=size)
@@ -214,7 +228,7 @@ class OperationBuilder:
             return setup, self.measured_op(op_id, operation, "delete_directory", path)
 
         if operation == "Remove File":
-            path = f"{prefix}.dat"
+            path = prefix
             setup += self.ensure_file(path)
             return setup, self.measured_op(op_id, operation, "delete_file", path)
 

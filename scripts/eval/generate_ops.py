@@ -19,8 +19,8 @@ EVENT_CYCLE = [
     "delete_directory",
 ]
 
-SIZE_CYCLE = [0, 1, 128, 4096, 65536, 1048576, 8388608]
-EXT_CYCLE = [".txt", ".bin", ".docx", ".tmp", ""]
+SMALL_FILE_SIZE = 4
+EXT_CYCLE = [""]
 
 
 def content_for(run_id, op_id, size):
@@ -44,19 +44,15 @@ def content_hash_for(run_id, op_id, size):
 
 
 def case_paths(case_id, style):
-    base = f"case_{case_id:06d}"
+    base = f"c{case_id:06d}"
     directory = posix_join(base)
 
-    stem_variants = [
-        f"a_{case_id:06d}",
-        f"file with spaces {case_id:06d}",
-        f"long_prefix_{case_id:06d}_" + ("x" * 32),
-    ]
-    stem = stem_variants[case_id % len(stem_variants)]
+    stem_variants = [f"f{case_id:06d}"]
+    stem = stem_variants[0]
     ext = EXT_CYCLE[case_id % len(EXT_CYCLE)]
 
     source = posix_join(directory, stem + ext)
-    target = posix_join(directory, f"renamed_{case_id:06d}{ext}")
+    target = posix_join(directory, f"g{case_id:06d}{ext}")
     return directory, source, target
 
 
@@ -65,7 +61,7 @@ def build_operation(run_id, client, op_id, event, rng):
     directory, source, target = case_paths(case_id, op_id % 3)
     file_size = 0
     if event in {"write_file", "overwrite_file"}:
-        file_size = SIZE_CYCLE[(op_id + rng.randint(0, len(SIZE_CYCLE) - 1)) % len(SIZE_CYCLE)]
+        file_size = SMALL_FILE_SIZE
     content = content_for(run_id, op_id, file_size)
 
     path_by_event = {

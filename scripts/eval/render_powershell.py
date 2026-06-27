@@ -5,16 +5,12 @@ from pathlib import Path
 from common import ensure_dir, ps_quote, read_jsonl, windows_path
 
 
-def local_path(local_dir, op, prefix):
-    return str(Path(local_dir) / f"{prefix}_{op['op_id']:06d}.dat")
+def upload_local_path(local_dir, op=None):
+    return str(Path(local_dir) / "u")
 
 
-def local_path_for_id(local_dir, op_id, prefix):
-    return str(Path(local_dir) / f"{prefix}_{int(op_id):06d}.dat")
-
-
-def upload_local_path(local_dir, op):
-    return local_path(local_dir, op, "upload")
+def download_local_path(local_dir, op=None):
+    return str(Path(local_dir) / "d")
 
 
 def ps_for_op(op, drive, local_dir):
@@ -33,7 +29,7 @@ def ps_for_op(op, drive, local_dir):
     if event == "append_file":
         return f"Add-Content -Path {ps_quote(path)} -Value {ps_quote(content)}"
     if event == "download_file":
-        return f"Copy-Item -Path {ps_quote(path)} -Destination {ps_quote(local_path(local_dir, op, 'download'))} -Force"
+        return f"Copy-Item -Path {ps_quote(path)} -Destination {ps_quote(download_local_path(local_dir, op))} -Force"
     if event == "read_file":
         return f"Get-Content -Path {ps_quote(path)} | Out-Null"
     if event == "overwrite_file":
@@ -62,6 +58,9 @@ def render(plan, out_file, drive, stop_on_error):
         f"$GroundTruthPath = Join-Path $PSScriptRoot '..\\..\\ground_truth\\{run_id}.jsonl'",
         "New-Item -ItemType Directory -Path (Split-Path $GroundTruthPath) -Force | Out-Null",
         "New-Item -ItemType Directory -Path $LocalDir -Force | Out-Null",
+        "foreach ($Pattern in @('upload_*.dat', 'download_*.dat', 'op_*.dat', 'out_*.dat', 'u', 'd')) {",
+        "    Remove-Item -Path (Join-Path $LocalDir $Pattern) -Force -ErrorAction SilentlyContinue",
+        "}",
         "Remove-Item -Path $GroundTruthPath -Force -ErrorAction SilentlyContinue",
         "",
         "function New-ScfLocalFile {",
@@ -116,12 +115,12 @@ def render(plan, out_file, drive, stop_on_error):
         if op["event"] == "upload_file":
             if op.get("local_source_op_id"):
                 lines.extend([
-                    f"Copy-Item -Path {ps_quote(local_path_for_id(local_dir, op['local_source_op_id'], 'download'))} -Destination {ps_quote(upload_local_path(local_dir, op))} -Force",
+                    f"Copy-Item -Path {ps_quote(download_local_path(local_dir, op))} -Destination {ps_quote(upload_local_path(local_dir, op))} -Force",
                     "",
                 ])
             else:
                 lines.extend([
-                    f"New-ScfLocalFile -Path {ps_quote(upload_local_path(local_dir, op))} -Size {int(op.get('file_size') or 128)}",
+                    f"New-ScfLocalFile -Path {ps_quote(upload_local_path(local_dir, op))} -Size {int(op.get('file_size') or 4)}",
                     "",
                 ])
 

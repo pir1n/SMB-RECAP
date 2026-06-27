@@ -22,10 +22,11 @@ def smbclient_command_for_op(op, local_dir):
         local_file = upload_local_path(local_dir, op)
         return f"put {smb_arg(local_file)} {smb_arg(path)}"
     if event == "download_file":
-        out_file = f"{local_dir}/out_{op['op_id']:06d}.dat"
+        out_file = download_local_path(local_dir, op)
         return f"get {smb_arg(path)} {smb_arg(out_file)}"
     if event == "read_file":
-        return f"more {smb_arg(path)}"
+        out_file = download_local_path(local_dir, op)
+        return f"get {smb_arg(path)} {smb_arg(out_file)}"
     if event == "rename_file":
         return f"rename {smb_arg(path)} {smb_arg(op['target_path'])}"
     if event == "directory_listing":
@@ -37,12 +38,17 @@ def smbclient_command_for_op(op, local_dir):
     raise ValueError(f"unsupported event: {event}")
 
 
-def upload_local_path(local_dir, op):
-    return f"{local_dir}/op_{op['op_id']:06d}.dat"
+def upload_local_path(local_dir, op=None):
+    return f"{local_dir}/u"
 
 
-def download_local_path(local_dir, op_id):
-    return f"{local_dir}/out_{int(op_id):06d}.dat"
+def download_local_path(local_dir, op=None):
+    return f"{local_dir}/d"
+
+
+def write_text_lf(path, text):
+    with open(path, "w", encoding="utf-8", newline="\n") as fh:
+        fh.write(text)
 
 
 def render(plan, out_script, out_commands, server, share, auth_file, local_dir, stop_on_error):
@@ -66,6 +72,7 @@ def render(plan, out_script, out_commands, server, share, auth_file, local_dir, 
         f"SERVICE={sh_quote(service)}",
         f"AUTH_FILE={sh_quote(auth_file)}",
         "mkdir -p \"$(dirname \"$GT_PATH\")\" \"$LOCAL_DIR\"",
+        "rm -f \"$LOCAL_DIR\"/upload_*.dat \"$LOCAL_DIR\"/download_*.dat \"$LOCAL_DIR\"/op_*.dat \"$LOCAL_DIR\"/out_*.dat \"$LOCAL_DIR\"/u \"$LOCAL_DIR\"/d",
         "rm -f \"$GT_PATH\"",
         "",
         "log_op() {",
@@ -94,30 +101,23 @@ def render(plan, out_script, out_commands, server, share, auth_file, local_dir, 
         "",
         "write_local_file() {",
         "  local op_id=\"$1\" size=\"$2\" seed=\"$3\"",
-        "  python3 - \"$LOCAL_DIR/op_${op_id}.dat\" \"$size\" \"$seed\" <<'PY'",
-        "import hashlib, sys",
+        "  python3 - \"$LOCAL_DIR/u\" \"$size\" \"$seed\" <<'PY'",
+        "import os, sys",
         "path, size_text, seed = sys.argv[1], sys.argv[2], sys.argv[3]",
         "size = int(size_text)",
-        "pattern = (hashlib.sha256(seed.encode('utf-8')).hexdigest() + '\\n').encode('utf-8')",
-        "remaining = size",
+        "if size <= 0:",
+        "    size = 4",
         "with open(path, 'wb') as fh:",
-        "    while remaining > 0:",
-        "        chunk = pattern[:min(len(pattern), remaining)]",
-        "        fh.write(chunk)",
-        "        remaining -= len(chunk)",
+        "    fh.write(os.urandom(size))",
         "PY",
         "}",
         "",
         "run_op() {",
         "  local op_id=\"$1\" event=\"$2\" path_value=\"$3\" target_path=\"$4\" variant=\"$5\" command_text=\"$6\" file_size=\"$7\" local_source_op_id=\"${8:-}\"",
-        "  local padded",
-        "  printf -v padded '%06d' \"$op_id\"",
         "  if [[ \"$event\" == \"upload_file\" && -n \"$local_source_op_id\" ]]; then",
-        "    local source_padded",
-        "    printf -v source_padded '%06d' \"$local_source_op_id\"",
-        "    cp -f \"$LOCAL_DIR/out_${source_padded}.dat\" \"$LOCAL_DIR/op_${padded}.dat\"",
+        "    cp -f \"$LOCAL_DIR/d\" \"$LOCAL_DIR/u\"",
         "  else",
-        "    case \"$event\" in create_file|upload_file|write_file|append_file|overwrite_file) write_local_file \"$padded\" \"$file_size\" \"$RUN_ID:$op_id:\" ;; esac",
+        "    case \"$event\" in create_file|upload_file|write_file|append_file|overwrite_file) write_local_file \"$op_id\" \"$file_size\" \"$RUN_ID:$op_id:\" ;; esac",
         "  fi",
         "  export SCF_RUN_ID=\"$RUN_ID\" SCF_CLIENT=\"$CLIENT\" SCF_OP_ID=\"$op_id\" SCF_EVENT=\"$event\" SCF_PATH=\"$path_value\" SCF_TARGET_PATH=\"$target_path\" SCF_VARIANT=\"$variant\" SCF_COMMAND=\"$command_text\"",
         "  export SCF_START=\"$(date -u +'%Y-%m-%dT%H:%M:%S.%6NZ')\"",
@@ -152,14 +152,14 @@ def render(plan, out_script, out_commands, server, share, auth_file, local_dir, 
         )
 
     ensure_dir(Path(out_script).parent)
-    Path(out_script).write_text("\n".join(shell_lines) + "\n", encoding="utf-8")
+    write_text_lf(out_script, "\n".join(shell_lines) + "\n")
     try:
         os.chmod(out_script, 0o755)
     except OSError:
         pass
 
     ensure_dir(Path(out_commands).parent)
-    Path(out_commands).write_text("\n".join(batch_lines) + "\n", encoding="utf-8")
+    write_text_lf(out_commands, "\n".join(batch_lines) + "\n")
 
 
 def main():

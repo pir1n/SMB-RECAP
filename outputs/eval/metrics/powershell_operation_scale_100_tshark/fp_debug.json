@@ -1,0 +1,5460 @@
+[
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        137,
+        139
+      ],
+      "path": "r3f89545\\ld000001",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782573542.6358745
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        },
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        462,
+        498,
+        481
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782573544.511287
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        831,
+        833
+      ],
+      "path": "r3f89545\\ld000002",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782573548.9493487
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        979,
+        1011
+      ],
+      "path": "r3f89545\\dmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782573550.5586586
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        },
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        1097,
+        1136,
+        1116
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782573551.895931
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        1473,
+        1475
+      ],
+      "path": "r3f89545\\ld000003",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782573557.5723765
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        1631,
+        1663
+      ],
+      "path": "r3f89545\\dmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782573559.321489
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        },
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        1753,
+        1791,
+        1772
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782573560.707971
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        2139,
+        2141
+      ],
+      "path": "r3f89545\\ld000004",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782573566.539467
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        2290,
+        2322
+      ],
+      "path": "r3f89545\\dmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782573568.2706933
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        },
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        2419,
+        2455,
+        2438
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782573569.6133192
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        2810,
+        2812
+      ],
+      "path": "r3f89545\\ld000005",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782573575.3526626
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        2966,
+        2997
+      ],
+      "path": "r3f89545\\dmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782573577.0537274
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        3114,
+        3141
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782573578.4320405
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000010",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        3488,
+        3492
+      ],
+      "path": "r3f89545\\ld000006",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782573584.2124877
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        3657,
+        3689
+      ],
+      "path": "r3f89545\\dmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782573586.010111
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        },
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        3791,
+        3831,
+        3809
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782573587.3208919
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        4340,
+        4344
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782573596.1730053
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000010",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        4885,
+        4891
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782573604.8789966
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        5431,
+        5435
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782573613.6953917
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        5977,
+        5981
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782573622.6679068
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        6522,
+        6526
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782573631.6295729
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        7081,
+        7085
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782573640.7268078
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000010",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        7629,
+        7635
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782573649.7372148
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        8188,
+        8192
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782573658.8035233
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        8752,
+        8756
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782573668.0868874
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        9312,
+        9316
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782573677.2622428
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        9868,
+        9872
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782573686.4342928
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000010",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        10436,
+        10442
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782573695.6298456
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        10999,
+        11003
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782573704.996809
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        11567,
+        11571
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782573714.3443599
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        12144,
+        12148
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782573724.0975714
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        12719,
+        12723
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782573733.7393548
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        13297,
+        13301
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782573743.5123076
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        13870,
+        13874
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782573753.300881
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000010",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        14450,
+        14456
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782573763.303977
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        15034,
+        15038
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782573773.1350355
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        15618,
+        15622
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782573782.9572976
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        16209,
+        16213
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782573792.943122
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        16798,
+        16802
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782573802.8901298
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        17387,
+        17391
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782573812.9020793
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        17983,
+        17987
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782573822.7816684
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        18583,
+        18587
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782573832.714484
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000010",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        19172,
+        19178
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782573842.651185
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000010",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        19768,
+        19774
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782573852.8274364
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        20373,
+        20377
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782573862.7357242
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        20974,
+        20978
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782573872.6833062
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        21577,
+        21581
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782573882.849383
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        22184,
+        22188
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782573892.9161944
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        22794,
+        22798
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782573903.0278907
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        23408,
+        23412
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782573913.6248116
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        24022,
+        24026
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782573923.713483
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        24632,
+        24636
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782573933.7914712
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        25252,
+        25256
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782573943.9571593
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        25870,
+        25874
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782573954.0781896
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        26489,
+        26493
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782573963.742545
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        27101,
+        27105
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782573973.2420692
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        27718,
+        27722
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782573982.815531
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000010",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        28337,
+        28343
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782573992.4413693
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        28963,
+        28967
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782574002.026547
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        29597,
+        29601
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782574011.630244
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        30233,
+        30237
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782574021.265817
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        30873,
+        30877
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782574031.041381
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        31506,
+        31510
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782574040.5981698
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        32148,
+        32152
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782574050.1835692
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000010",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        32791,
+        32797
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782574059.8683765
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        33442,
+        33446
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782574069.6860254
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        34094,
+        34098
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782574079.5125768
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        34739,
+        34743
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782574089.3344223
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        35390,
+        35394
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782574099.0351262
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        36041,
+        36045
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782574108.94714
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        36694,
+        36698
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782574118.7881293
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000010",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        37346,
+        37352
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782574128.3699427
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        38004,
+        38008
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782574138.267178
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        38665,
+        38669
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782574148.1689742
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        39335,
+        39339
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782574158.0162065
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        40004,
+        40008
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782574167.9209723
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        40676,
+        40680
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782574178.0079935
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        41351,
+        41355
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782574188.0800197
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        42026,
+        42030
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782574198.2337449
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        42701,
+        42705
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782574208.1704044
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        43376,
+        43380
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782574218.190911
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        44058,
+        44062
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782574228.3493323
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        44740,
+        44744
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782574238.2272892
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        45424,
+        45428
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782574248.5383854
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        46114,
+        46118
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782574258.6516342
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        46799,
+        46803
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782574269.3301597
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        47492,
+        47496
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782574279.7304108
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        48186,
+        48190
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782574289.9440775
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        48884,
+        48888
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782574300.3385513
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        49581,
+        49585
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782574310.4046957
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        50271,
+        50275
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782574320.6570334
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        50968,
+        50972
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782574330.7501059
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        51673,
+        51677
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782574341.1311083
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        52375,
+        52379
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782574351.58534
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        53081,
+        53085
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782574362.0363314
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        53790,
+        53794
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782574372.2539072
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        54498,
+        54502
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782574382.7873235
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        55201,
+        55205
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782574393.0645204
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        55908,
+        55912
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782574403.3663468
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        56624,
+        56628
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782574413.8424215
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        57338,
+        57342
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782574424.4519324
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        58061,
+        58065
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782574435.082196
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        58783,
+        58787
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782574445.730604
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        59506,
+        59510
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782574456.2902274
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        60228,
+        60232
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782574466.9350297
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        60953,
+        60957
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782574477.3757086
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        61680,
+        61684
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782574488.0344453
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        62409,
+        62413
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782574498.7420435
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        63139,
+        63143
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782574509.3584504
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        63878,
+        63882
+      ],
+      "path": "r3f89545\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_operation_scale_100_tshark",
+      "target_path": null,
+      "timestamp": 1782574520.2520182
+    }
+  }
+]

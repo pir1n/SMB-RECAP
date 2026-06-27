@@ -1,6 +1,6 @@
 import hashlib
 
-from smbmount.scf.normalize import normalize_packet
+from smbmount.scf.normalize import normalize_packet, packet_features
 
 
 def md5_text(text: str) -> str:
@@ -9,9 +9,18 @@ def md5_text(text: str) -> str:
 
 def fingerprint_packet(pkt):
     """
-    SCF của 1 SMB command.
+    Stable SCF hash của 1 SMB command.
     """
     return md5_text(normalize_packet(pkt))
+
+
+def signature_packet(pkt):
+    normalized = normalize_packet(pkt)
+    return {
+        "scf": md5_text(normalized),
+        "normalized": normalized,
+        "features": packet_features(pkt),
+    }
 
 
 def fingerprint_sequence(sequence):
@@ -28,3 +37,7 @@ def packet_fingerprints(sequence):
     Rule mới nên match list SCF từng packet.
     """
     return [fingerprint_packet(pkt) for pkt in sequence]
+
+
+def packet_signatures(sequence):
+    return [signature_packet(pkt) for pkt in sequence]

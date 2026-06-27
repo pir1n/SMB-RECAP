@@ -1,6 +1,8 @@
 import json
 from pathlib import Path
 
+from smbmount.scf.builtin_rules import BUILTIN_RULES
+
 
 def _normalize_rule(rule):
     """
@@ -24,7 +26,11 @@ def _normalize_rule(rule):
             "action": rule.get("action") or rule.get("id") or "unknown activity",
             "pattern": rule["pattern"],
             "require_success": bool(rule.get("require_success", False)),
+            "require_path": bool(rule.get("require_path", False)),
+            "same_file_id": rule.get("same_file_id"),
             "description": rule.get("description"),
+            "max_gap": int(rule.get("max_gap", 0) or 0),
+            "confidence": float(rule.get("confidence", 1.0) or 1.0),
         }
 
     # Legacy rule: {"hash": "...", "action": "..."}
@@ -34,7 +40,11 @@ def _normalize_rule(rule):
             "action": rule.get("action") or "unknown activity",
             "hash": rule["hash"],
             "require_success": bool(rule.get("require_success", False)),
+            "require_path": bool(rule.get("require_path", False)),
+            "same_file_id": rule.get("same_file_id"),
             "description": rule.get("description"),
+            "max_gap": 0,
+            "confidence": float(rule.get("confidence", 1.0) or 1.0),
         }
 
     raise ValueError(f"Invalid rule: {rule}")
@@ -95,12 +105,26 @@ def _load_tsv_rules(path: Path):
     return rules
 
 
-def load_rules(rule_file):
+def load_builtin_rules():
+    return [_normalize_rule(rule) for rule in BUILTIN_RULES]
+
+
+def load_rules(rule_file=None, include_builtin=False):
+    rules = []
+
+    if include_builtin or not rule_file:
+        rules.extend(load_builtin_rules())
+
+    if not rule_file:
+        return rules
+
     path = Path(rule_file)
 
     text = path.read_text(encoding="utf-8").lstrip()
 
     if path.suffix.lower() == ".json" or text.startswith("[") or text.startswith("{"):
-        return _load_json_rules(path)
+        rules.extend(_load_json_rules(path))
+        return rules
 
-    return _load_tsv_rules(path)
+    rules.extend(_load_tsv_rules(path))
+    return rules

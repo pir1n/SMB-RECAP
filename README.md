@@ -11,14 +11,28 @@ To run project:
 python -m smbmount parse-pcap .\data\pcaps\Sample2.pcapng .\outputs\metadatatree.json                                                                    
 ```
 
-Use scf-dump to dump scf hash
+Use scf-dump to dump SCF v2 hash, normalized string, and semantic features:
 ```
 python -m smbmount scf-dump .\data\pcaps\test_versioning_modfied_on_file.pcapng .\outputs\scf_dump_2.json                                       
 ```
-Use scf:
+Use SCF with built-in semantic rules:
+```
+python -m smbmount scf .\data\pcaps\testSCFsample.pcapng .\outputs\scf_timeline.json
+```
+
+Use SCF with a custom rule file:
 ```
 python -m smbmount scf .\data\pcaps\testSCFsample.pcapng .\rules\scf_rules.json .\outputs\scf_timeline.json                                    
 ```
+
+Use both built-in rules and a custom rule file:
+```
+python -m smbmount scf --with-builtin-rules .\data\pcaps\testSCFsample.pcapng .\rules\scf_rules.json .\outputs\scf_timeline.json
+```
+
+SCF v2 normalizes SMB commands into semantic features and excludes volatile values
+such as path, file id, offsets, lengths, and data bytes. Rule pattern entries may
+match raw SCF hashes, normalized strings, command names, or feature objects.
 
 ```
 SMBmount

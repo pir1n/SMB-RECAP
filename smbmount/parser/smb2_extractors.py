@@ -433,6 +433,7 @@ def get_smb2_metadata_scf(
         "smb2_delete_pending": None,
         "smb2_disposition_flags_raw": None,
         "smb2_disposition_flags": None,
+        "smb2_rename_target": None,
 
         "smb2_query_directory_flags_raw": None,
         "smb2_query_directory_flags": None,
@@ -519,6 +520,16 @@ def get_smb2_metadata_scf(
                             FILE_DISPOSITION_EX_FLAGS,
                         )
                         result["smb2_delete_pending"] = bool(disposition_flags & 0x00000001)
+
+                    elif file_class in (10, 65):
+                        name_offset = 20 if file_class == 10 else 24
+                        length_offset = 16 if file_class == 10 else 20
+                        if len(val) >= name_offset:
+                            name_length = u32(val, length_offset)
+                            if name_length:
+                                name_bytes = bytes_range(val, name_offset, name_length)
+                                if name_bytes:
+                                    result["smb2_rename_target"] = decode_smb_filename(name_bytes)
 
                     break
 
@@ -616,6 +627,16 @@ def get_smb2_metadata_scf(
                         FILE_DISPOSITION_EX_FLAGS,
                     )
                     result["smb2_delete_pending"] = bool(disposition_flags & 0x00000001)
+
+                elif file_class in (10, 65) and buf:
+                    name_offset = 20 if file_class == 10 else 24
+                    length_offset = 16 if file_class == 10 else 20
+                    if len(buf) >= name_offset:
+                        name_length = u32(buf, length_offset)
+                        if name_length:
+                            name_bytes = bytes_range(buf, name_offset, name_length)
+                            if name_bytes:
+                                result["smb2_rename_target"] = decode_smb_filename(name_bytes)
 
         # QUERY_DIRECTORY Request
         elif cmd_str == "14" and is_response is False:

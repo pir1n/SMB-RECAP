@@ -360,6 +360,7 @@ def enrich_with_request_mapping(packets):
         "smb2_delete_pending",
         "smb2_disposition_flags_raw",
         "smb2_disposition_flags",
+        "smb2_rename_target",
 
         "smb2_query_directory_flags_raw",
         "smb2_query_directory_flags",
@@ -432,6 +433,7 @@ def enrich_with_request_mapping(packets):
 
                 req["smb2_file_id"] = create_file_id
                 req["mapped_file_id"] = create_file_id
+                req["smb2_create_action"] = pkt.get("smb2_create_action")
 
                 pkt["mapped_file_id"] = create_file_id
 

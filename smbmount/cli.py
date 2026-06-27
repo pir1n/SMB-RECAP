@@ -13,7 +13,7 @@ from smbmount.scf.detector import SCFDetector
 from smbmount.scf.timeline import build_timeline
 from smbmount.scf.renderer import render
 from smbmount.scf.fingerprint import fingerprint_packet
-from smbmount.scf.normalize import normalize_packet
+from smbmount.scf.normalize import normalize_packet, packet_features
 
 
 from smbmount.parser.pcap_reader import write_json
@@ -45,11 +45,31 @@ def parse_pcap_cmd(input_pcap: str, output_json: str):
     
 @main.command("scf")
 @click.argument("input_pcap", type=click.Path(exists=True))
-@click.argument("rule_file", type=click.Path(exists=True))
-@click.argument("output_file", type=click.Path())
-def scf_cmd(input_pcap: str, rule_file: str, output_file: str):
+@click.argument("rule_or_output", type=click.Path(), required=True)
+@click.argument("output_file", type=click.Path(), required=False)
+@click.option(
+    "--with-builtin-rules",
+    is_flag=True,
+    help="Load built-in semantic SCF rules in addition to the supplied rule file.",
+)
+def scf_cmd(input_pcap: str, rule_or_output: str, output_file: str, with_builtin_rules: bool):
+    """
+    Detect SMB activities with SCF.
+
+    Forms:
+    python -m smbmount scf input.pcap rules.json output.json
+    python -m smbmount scf input.pcap output.json
+    """
 
     console.print(f"[bold cyan]Reading PCAP:[/bold cyan] {input_pcap}")
+
+    if output_file is None:
+        rule_file = None
+        output_file = rule_or_output
+        include_builtin = True
+    else:
+        rule_file = rule_or_output
+        include_builtin = with_builtin_rules
 
     #
     # parse
@@ -72,7 +92,7 @@ def scf_cmd(input_pcap: str, rule_file: str, output_file: str):
     #
     # rules
     #
-    rules = load_rules(rule_file)
+    rules = load_rules(rule_file, include_builtin=include_builtin)
 
     #
     # detect
@@ -132,7 +152,9 @@ def scf_dump_cmd(input_pcap: str, output_file: str):
             "message_id": pkt.get("smb2_message_id"),
             "command": pkt.get("smb2_command_name"),
             "path": pkt.get("smb2_filename"),
+            "target_path": pkt.get("smb2_rename_target"),
             "normalized": normalize_packet(pkt),
+            "features": packet_features(pkt),
             "scf": fingerprint_packet(pkt),
         })
 

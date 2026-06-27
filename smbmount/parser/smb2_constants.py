@@ -54,6 +54,7 @@ SMB2_FILE_INFO_CLASS = {
     38: "FileIdFullDirectoryInformation",
     48: "FileNormalizedNameInformation",
     64: "FileDispositionInformationEx",
+    65: "FileRenameInformationEx",
 }
 
 FILE_INFO_CLASSES_WITH_TIMESTAMPS = {4, 34}

@@ -1,0 +1,670 @@
+{
+  "application": "cmd",
+  "source": "cmd-rules_author.tsv semantic conversion + operation coverage",
+  "format": "smbmount-semantic-scf-v2",
+  "rules": [
+    {
+      "id": "cmd_mkdir_directory_created",
+      "action": "creation of directory",
+      "description": "CMD mkdir: CREATE directory whose response CreateAction is created.",
+      "pattern": [
+        {
+          "command": "CREATE",
+          "features": {
+            "target_type": "directory",
+            "create_result": "created"
+          }
+        }
+      ],
+      "require_success": true,
+      "confidence": 0.98,
+      "application": "cmd",
+      "source": "cmd-rules_author.tsv semantic conversion + operation coverage",
+      "command_family": "mkdir",
+      "operation_aliases": [
+        "Create Directory"
+      ]
+    },
+    {
+      "id": "cmd_echo_create_file_created",
+      "action": "creation of file",
+      "description": "CMD echo > create file: CREATE destination with echo-style access/options, then WRITE echo output.",
+      "pattern": [
+        {
+          "command": "CREATE",
+          "features": {
+            "target_type": "file",
+            "access_mask": "0x00120196",
+            "file_attributes": "0x00000080",
+            "share_access": "0x00000001",
+            "create_disposition": "0x00000005",
+            "create_options": "0x00000060"
+          },
+          "contains": {
+            "access_intents": [
+              "write"
+            ]
+          }
+        },
+        {
+          "command": "WRITE",
+          "features": {
+            "length_class": "nonzero"
+          }
+        }
+      ],
+      "require_success": true,
+      "confidence": 0.98,
+      "application": "cmd",
+      "source": "cmd-rules_author.tsv semantic conversion + operation coverage",
+      "command_family": "echo >",
+      "operation_aliases": [
+        "Create File"
+      ],
+      "max_gap": 8
+    },
+    {
+      "id": "cmd_echo_overwrite_file",
+      "action": "overwrite of file",
+      "description": "CMD echo > existing file: CREATE file whose response CreateAction is overwritten.",
+      "pattern": [
+        {
+          "command": "CREATE",
+          "features": {
+            "target_type": "file",
+            "create_result": "overwritten"
+          },
+          "contains": {
+            "access_intents": [
+              "write"
+            ]
+          }
+        }
+      ],
+      "require_success": true,
+      "confidence": 0.98,
+      "application": "cmd",
+      "source": "cmd-rules_author.tsv semantic conversion + operation coverage",
+      "command_family": "echo >",
+      "operation_aliases": [
+        "Overwrite File"
+      ]
+    },
+    {
+      "id": "cmd_upload_file_write",
+      "action": "upload file",
+      "description": "CMD copy local-to-server: CREATE destination using copy-style access/options, then WRITE payload.",
+      "pattern": [
+        {
+          "command": "CREATE",
+          "features": {
+            "target_type": "file",
+            "access_mask": "0x0017019f",
+            "file_attributes": "0x00000020",
+            "share_access": "0x00000000",
+            "create_disposition": "0x00000005",
+            "create_options": "0x00000044"
+          },
+          "any_features": {
+            "create_result": [
+              "created",
+              "overwritten"
+            ]
+          },
+          "contains": {
+            "access_intents": [
+              "read",
+              "write"
+            ]
+          }
+        },
+        {
+          "command": "WRITE",
+          "features": {
+            "length_class": "nonzero"
+          }
+        }
+      ],
+      "max_gap": 24,
+      "require_success": true,
+      "confidence": 0.92,
+      "application": "cmd",
+      "source": "cmd-rules_author.tsv semantic conversion + operation coverage",
+      "command_family": "copy to server",
+      "operation_aliases": [
+        "Upload file"
+      ]
+    },
+    {
+      "id": "cmd_echo_append_file",
+      "action": "append to file",
+      "description": "CMD echo >> append: open existing file for write followed by WRITE.",
+      "pattern": [
+        {
+          "command": "CREATE",
+          "features": {
+            "target_type": "file",
+            "create_result": "opened"
+          },
+          "contains": {
+            "access_intents": [
+              "write"
+            ]
+          }
+        },
+        {
+          "command": "WRITE",
+          "features": {
+            "length_class": "nonzero"
+          }
+        }
+      ],
+      "max_gap": 12,
+      "require_success": true,
+      "confidence": 0.95,
+      "application": "cmd",
+      "source": "cmd-rules_author.tsv semantic conversion + operation coverage",
+      "command_family": "echo >>",
+      "operation_aliases": [
+        "Append to File"
+      ]
+    },
+    {
+      "id": "cmd_more_read_file",
+      "action": "read of file",
+      "description": "CMD more read/view: CREATE source with more-style create_options 0x00020060, then READ.",
+      "pattern": [
+        {
+          "command": "CREATE",
+          "features": {
+            "target_type": "file",
+            "access_mask": "0x00120089",
+            "file_attributes": "0x00000080",
+            "share_access": "0x00000003",
+            "create_disposition": "0x00000001",
+            "create_options": "0x00020060"
+          },
+          "contains": {
+            "access_intents": [
+              "read"
+            ]
+          }
+        },
+        {
+          "command": "READ",
+          "features": {
+            "length_class": "nonzero"
+          }
+        }
+      ],
+      "max_gap": 16,
+      "require_success": true,
+      "confidence": 0.95,
+      "application": "cmd",
+      "source": "cmd-rules_author.tsv semantic conversion + operation coverage",
+      "command_family": "more",
+      "operation_aliases": [
+        "View File"
+      ]
+    },
+    {
+      "id": "cmd_copy_download_file",
+      "action": "download file",
+      "description": "CMD copy from server: CREATE source with copy-from-server create_options 0x00200044/share 0x5, then READ.",
+      "pattern": [
+        {
+          "command": "CREATE",
+          "features": {
+            "target_type": "file",
+            "access_mask": "0x00120089",
+            "file_attributes": "0x00000000",
+            "share_access": "0x00000005",
+            "create_disposition": "0x00000001",
+            "create_options": "0x00200044"
+          },
+          "contains": {
+            "access_intents": [
+              "read"
+            ]
+          }
+        },
+        {
+          "command": "READ",
+          "features": {
+            "length_class": "nonzero"
+          }
+        }
+      ],
+      "max_gap": 16,
+      "require_success": true,
+      "confidence": 0.93,
+      "application": "cmd",
+      "source": "cmd-rules_author.tsv semantic conversion + operation coverage",
+      "command_family": "copy from server",
+      "operation_aliases": [
+        "Download file"
+      ]
+    },
+    {
+      "id": "cmd_del_delete_on_close_file",
+      "action": "deletion of file",
+      "description": "CMD del variant: CREATE file with FILE_DELETE_ON_CLOSE.",
+      "pattern": [
+        {
+          "command": "CREATE",
+          "features": {
+            "target_type": "file",
+            "delete_on_close": true
+          },
+          "contains": {
+            "access_intents": [
+              "delete"
+            ]
+          }
+        }
+      ],
+      "require_success": true,
+      "confidence": 0.98,
+      "application": "cmd",
+      "source": "cmd-rules_author.tsv semantic conversion + operation coverage",
+      "command_family": "del",
+      "operation_aliases": [
+        "Remove File"
+      ]
+    },
+    {
+      "id": "cmd_del_set_info_file",
+      "action": "deletion of file",
+      "description": "CMD del variant: CREATE file with delete access followed by SET_INFO disposition.",
+      "pattern": [
+        {
+          "command": "CREATE",
+          "features": {
+            "target_type": "file",
+            "create_result": "opened"
+          },
+          "contains": {
+            "access_intents": [
+              "delete"
+            ]
+          }
+        },
+        {
+          "command": "SET_INFO",
+          "features": {
+            "file_info_class": "FileDispositionInformation",
+            "delete_pending": "1"
+          }
+        }
+      ],
+      "max_gap": 8,
+      "require_success": true,
+      "confidence": 0.98,
+      "application": "cmd",
+      "source": "cmd-rules_author.tsv semantic conversion + operation coverage",
+      "command_family": "del",
+      "operation_aliases": [
+        "Remove File"
+      ],
+      "same_file_id": false
+    },
+    {
+      "id": "cmd_del_set_info_file_ex",
+      "action": "deletion of file",
+      "description": "CMD del variant: CREATE file with delete access followed by SET_INFO disposition ex.",
+      "pattern": [
+        {
+          "command": "CREATE",
+          "features": {
+            "target_type": "file",
+            "create_result": "opened"
+          },
+          "contains": {
+            "access_intents": [
+              "delete"
+            ]
+          }
+        },
+        {
+          "command": "SET_INFO",
+          "features": {
+            "file_info_class": "FileDispositionInformationEx",
+            "delete_pending": "1"
+          }
+        }
+      ],
+      "max_gap": 8,
+      "require_success": true,
+      "confidence": 0.98,
+      "application": "cmd",
+      "source": "cmd-rules_author.tsv semantic conversion + operation coverage",
+      "command_family": "del",
+      "operation_aliases": [
+        "Remove File"
+      ],
+      "same_file_id": false
+    },
+    {
+      "id": "cmd_rmdir_set_info_directory",
+      "action": "deletion of directory",
+      "description": "CMD rmdir: open directory with delete access followed by SET_INFO disposition.",
+      "pattern": [
+        {
+          "command": "CREATE",
+          "features": {
+            "target_type": "directory",
+            "create_result": "opened"
+          },
+          "contains": {
+            "access_intents": [
+              "delete"
+            ]
+          }
+        },
+        {
+          "command": "SET_INFO",
+          "features": {
+            "file_info_class": "FileDispositionInformation",
+            "delete_pending": "1"
+          }
+        }
+      ],
+      "max_gap": 10,
+      "require_success": true,
+      "confidence": 0.98,
+      "application": "cmd",
+      "source": "cmd-rules_author.tsv semantic conversion + operation coverage",
+      "command_family": "rmdir",
+      "operation_aliases": [
+        "Remove Directory"
+      ],
+      "same_file_id": false
+    },
+    {
+      "id": "cmd_rmdir_set_info_directory_ex",
+      "action": "deletion of directory",
+      "description": "CMD rmdir: open directory with delete access followed by SET_INFO disposition ex.",
+      "pattern": [
+        {
+          "command": "CREATE",
+          "features": {
+            "target_type": "directory",
+            "create_result": "opened"
+          },
+          "contains": {
+            "access_intents": [
+              "delete"
+            ]
+          }
+        },
+        {
+          "command": "SET_INFO",
+          "features": {
+            "file_info_class": "FileDispositionInformationEx",
+            "delete_pending": "1"
+          }
+        }
+      ],
+      "max_gap": 10,
+      "require_success": true,
+      "confidence": 0.98,
+      "application": "cmd",
+      "source": "cmd-rules_author.tsv semantic conversion + operation coverage",
+      "command_family": "rmdir",
+      "operation_aliases": [
+        "Remove Directory"
+      ],
+      "same_file_id": false
+    },
+    {
+      "id": "cmd_rename_or_move_file_basic",
+      "action": "rename or move of file",
+      "description": "cmd rename/move file: open file handle then SET_INFO FileRenameInformation with target present.",
+      "pattern": [
+        {
+          "command": "CREATE",
+          "features": {
+            "create_result": "opened"
+          },
+          "any_features": {
+            "target_type": [
+              "file",
+              "unknown"
+            ]
+          },
+          "contains": {
+            "access_intents": [
+              "delete"
+            ]
+          }
+        },
+        {
+          "command": "SET_INFO",
+          "features": {
+            "file_info_class": "FileRenameInformation",
+            "rename_target_present": true
+          }
+        }
+      ],
+      "max_gap": 16,
+      "require_success": true,
+      "confidence": 0.96,
+      "application": "cmd",
+      "source": "cmd-rules_author.tsv semantic conversion + operation coverage",
+      "command_family": "ren/rename/move",
+      "operation_aliases": [
+        "Rename File",
+        "Move file",
+        "rename File",
+        "Move file"
+      ],
+      "same_file_id": false
+    },
+    {
+      "id": "cmd_rename_or_move_file_ex",
+      "action": "rename or move of file",
+      "description": "cmd rename/move file: open file handle then SET_INFO FileRenameInformationEx with target present.",
+      "pattern": [
+        {
+          "command": "CREATE",
+          "features": {
+            "create_result": "opened"
+          },
+          "any_features": {
+            "target_type": [
+              "file",
+              "unknown"
+            ]
+          },
+          "contains": {
+            "access_intents": [
+              "delete"
+            ]
+          }
+        },
+        {
+          "command": "SET_INFO",
+          "features": {
+            "file_info_class": "FileRenameInformationEx",
+            "rename_target_present": true
+          }
+        }
+      ],
+      "max_gap": 16,
+      "require_success": true,
+      "confidence": 0.96,
+      "application": "cmd",
+      "source": "cmd-rules_author.tsv semantic conversion + operation coverage",
+      "command_family": "ren/rename/move",
+      "operation_aliases": [
+        "Rename File",
+        "Move file",
+        "rename File",
+        "Move file"
+      ],
+      "same_file_id": false
+    },
+    {
+      "id": "cmd_rename_or_move_directory_basic",
+      "action": "rename or move of directory",
+      "description": "cmd rename/move directory: open directory handle then SET_INFO FileRenameInformation with target present.",
+      "pattern": [
+        {
+          "command": "CREATE",
+          "features": {
+            "create_result": "opened"
+          },
+          "any_features": {
+            "target_type": [
+              "directory",
+              "unknown"
+            ]
+          },
+          "contains": {
+            "access_intents": [
+              "delete"
+            ]
+          }
+        },
+        {
+          "command": "SET_INFO",
+          "features": {
+            "file_info_class": "FileRenameInformation",
+            "rename_target_present": true
+          }
+        }
+      ],
+      "max_gap": 16,
+      "require_success": true,
+      "confidence": 0.96,
+      "application": "cmd",
+      "source": "cmd-rules_author.tsv semantic conversion + operation coverage",
+      "command_family": "ren/rename/move",
+      "operation_aliases": [
+        "Rename Directory",
+        "Move Directory"
+      ],
+      "same_file_id": false
+    },
+    {
+      "id": "cmd_rename_or_move_directory_ex",
+      "action": "rename or move of directory",
+      "description": "cmd rename/move directory: open directory handle then SET_INFO FileRenameInformationEx with target present.",
+      "pattern": [
+        {
+          "command": "CREATE",
+          "features": {
+            "create_result": "opened"
+          },
+          "any_features": {
+            "target_type": [
+              "directory",
+              "unknown"
+            ]
+          },
+          "contains": {
+            "access_intents": [
+              "delete"
+            ]
+          }
+        },
+        {
+          "command": "SET_INFO",
+          "features": {
+            "file_info_class": "FileRenameInformationEx",
+            "rename_target_present": true
+          }
+        }
+      ],
+      "max_gap": 16,
+      "require_success": true,
+      "confidence": 0.96,
+      "application": "cmd",
+      "source": "cmd-rules_author.tsv semantic conversion + operation coverage",
+      "command_family": "ren/rename/move",
+      "operation_aliases": [
+        "Rename Directory",
+        "Move Directory"
+      ],
+      "same_file_id": false
+    },
+    {
+      "id": "cmd_dir_directory_listing",
+      "action": "directory listing",
+      "description": "CMD dir: open directory then query directory entries.",
+      "pattern": [
+        {
+          "command": "CREATE",
+          "features": {
+            "target_type": "directory",
+            "create_result": "opened"
+          },
+          "contains": {
+            "access_intents": [
+              "read"
+            ]
+          }
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "features": {
+            "pattern_class": "wildcard",
+            "file_info_class": "FileIdBothDirectoryInformation"
+          }
+        }
+      ],
+      "max_gap": 12,
+      "require_success": true,
+      "confidence": 0.94,
+      "application": "cmd",
+      "source": "cmd-rules_author.tsv semantic conversion + operation coverage",
+      "command_family": "dir",
+      "operation_aliases": [
+        "List Directory"
+      ],
+      "same_file_id": false
+    },
+    {
+      "id": "cmd_dir_root_listing",
+      "action": "directory listing",
+      "description": "CMD dir root/share listing: metadata open followed by QUERY_DIRECTORY.",
+      "pattern": [
+        {
+          "command": "CREATE",
+          "contains": {
+            "access_intents": [
+              "metadata",
+              "read"
+            ]
+          },
+          "features": {
+            "target_type": "directory",
+            "create_result": "opened"
+          }
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "features": {
+            "pattern_class": "wildcard",
+            "file_info_class": "FileIdBothDirectoryInformation"
+          }
+        }
+      ],
+      "max_gap": 12,
+      "require_success": true,
+      "confidence": 0.86,
+      "application": "cmd",
+      "source": "cmd-rules_author.tsv semantic conversion + operation coverage",
+      "command_family": "dir",
+      "operation_aliases": [
+        "List Directory"
+      ],
+      "same_file_id": false
+    }
+  ],
+  "removed_broad_rules": [
+    "cmd_rename_file",
+    "cmd_rename_file_ex"
+  ],
+  "operation_event_note": "Author-semantics workload: upload/download are transfer operations. CMD and PowerShell transfer rules use copy-style SMB CREATE access/options, not file-size buckets; read/view rules use more/Get-Content-style CREATE options."
+}

@@ -46,7 +46,6 @@ dist/
 build/
 *.egg
 *.log
-.venv/
 checklist_todo_by_chatgpt
 *.index
 debug*

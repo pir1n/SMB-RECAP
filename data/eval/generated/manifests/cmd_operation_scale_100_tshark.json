@@ -1,0 +1,32 @@
+{
+  "actual_ground_truth": "data/eval/generated/ground_truth/cmd_operation_scale_100_tshark.jsonl",
+  "client": "cmd",
+  "count_per_operation": 100,
+  "expected_ground_truth": "data/eval/generated/ground_truth_expected/cmd_operation_scale_100_tshark.expected.jsonl",
+  "ground_truth_operation_count": 2603,
+  "measured_operation_count": 1300,
+  "operation_count": 2603,
+  "operations": [
+    "Create Directory",
+    "Create File",
+    "Upload file",
+    "Download file",
+    "View File",
+    "List Directory",
+    "Rename Directory",
+    "Move Directory",
+    "rename File",
+    "Move file",
+    "Append to File",
+    "Remove Directory",
+    "Remove File"
+  ],
+  "pcap": "data/eval/pcaps/cmd_operation_scale_100_tshark.pcapng",
+  "plan": "data/eval/generated/plans/cmd_operation_scale_100_tshark.jsonl",
+  "plan_operation_count": 2603,
+  "profile": "operation_scale",
+  "rendered_workloads": [
+    "data/eval/generated/workloads/cmd/cmd_operation_scale_100_tshark.cmd"
+  ],
+  "run_id": "cmd_operation_scale_100_tshark"
+}

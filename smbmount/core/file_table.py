@@ -56,13 +56,50 @@ class FileObject:
             file_id=self.file_id,
         )
     
-    def add_read(self, offset, length, data=None, timestamp=None, pkt=None):
-        self.versions.add_read(
+    def add_read(
+        self,
+        offset,
+        length,
+        data=None,
+        timestamp=None,
+        pkt=None,
+        expected_size=None,
+        allow_after_prior_content=False,
+    ):
+        data_len = None
+        data_md5 = None
+
+        if data is not None:
+            try:
+                import hashlib
+
+                if isinstance(data, bytes):
+                    raw = data
+                elif isinstance(data, bytearray):
+                    raw = bytes(data)
+                elif isinstance(data, memoryview):
+                    raw = data.tobytes()
+                elif isinstance(data, str):
+                    try:
+                        raw = bytes.fromhex(data)
+                    except ValueError:
+                        raw = data.encode(errors="ignore")
+                else:
+                    raw = bytes(data)
+
+                data_len = len(raw)
+                data_md5 = hashlib.md5(raw).hexdigest()
+            except Exception:
+                pass
+
+        observed = self.versions.add_read(
             offset,
             length,
             data=data,
             timestamp=timestamp,
             file_id=self.file_id,
+            expected_size=expected_size,
+            allow_after_prior_content=allow_after_prior_content,
         )
 
         self.add_event(
@@ -72,8 +109,15 @@ class FileObject:
             evidence={
                 "offset": offset,
                 "length": length,
+                "data_len": data_len,
+                "data_md5": data_md5,
+                "observed": observed,
+                "expected_size": expected_size,
+                "allow_after_prior_content": allow_after_prior_content,
             },
         )
+
+        return observed
     
     def add_write(self, offset, length, data=None, timestamp=None, pkt=None):
         self.semantic_write(
@@ -247,10 +291,75 @@ class FileTable:
             self.files[key] = FileObject(file_id)
 
         return self.files[key]
+    
+    def version_time_key(self, version):
+        """
+        Chọn thứ tự thời gian cho content version.
+
+        Ưu tiên network_timestamp trong snapshot_metadata vì:
+        - hybrid/fs timestamp có thể trùng nhau giữa nhiều operation gần nhau.
+        - scale benchmark cần phân biệt append/overwrite/truncate sát nhau.
+        """
+        if version is None:
+            return float("-inf")
+
+        meta = getattr(version, "snapshot_metadata", None) or {}
+
+        candidates = [
+            meta.get("network_timestamp"),
+            meta.get("modified"),
+            meta.get("changed"),
+            getattr(version, "modified", None),
+        ]
+
+        for value in candidates:
+            if value is None:
+                continue
+
+            try:
+                return float(value)
+            except Exception:
+                continue
+
+        return float("-inf")
+
+    def latest_content_for_path(self, path: str, exclude=None):
+        """
+        Lấy content version mới nhất theo path.
+
+        Không được chọn theo thứ tự dict object, vì SMB có thể dùng nhiều handle/FileId
+        cho cùng một file. Phải chọn version có timestamp mới nhất.
+        """
+        best_version = None
+        best_key = (float("-inf"), -1)
+
+        for obj in self.files.values():
+            if obj is exclude or obj.path != path:
+                continue
+
+            candidate = obj.versions.latest_content_version()
+
+            if candidate is None:
+                continue
+
+            key = (
+                self.version_time_key(candidate),
+                int(getattr(candidate, "version_id", -1) or -1),
+            )
+
+            if key > best_key:
+                best_key = key
+                best_version = candidate
+
+        return best_version
 
     def bind_path(self, file_obj: FileObject, path: str, timestamp=None):
         if not path:
             return
+
+        file_obj.versions.set_base_version(
+            self.latest_content_for_path(path, exclude=file_obj)
+        )
 
         # Xóa mọi path cũ đang trỏ tới cùng object,
         # vì path_index chỉ nên biểu diễn current path.
@@ -301,3 +410,109 @@ class FileTable:
         if isinstance(file_id, memoryview):
             return file_id.tobytes().hex()
         return str(file_id)
+
+    def objects_for_path(self, path: str):
+        if not path:
+            return []
+
+        return [
+            obj
+            for obj in self.files.values()
+            if obj.path == path
+        ]
+
+
+    def best_content_object_for_path(self, path: str, exclude=None):
+        """
+        Chọn object đại diện cho file content tại path cũ.
+
+        Ưu tiên object có content version mới nhất, không chỉ object có nhiều version nhất.
+        """
+        best_obj = None
+        best_key = (0, float("-inf"), -1)
+
+        for obj in self.objects_for_path(path):
+            if obj is exclude:
+                continue
+
+            versions = getattr(obj.versions, "versions", []) or []
+
+            content_versions = [
+                v for v in versions
+                if getattr(v, "last_op", None) in ("write", "truncate", "read")
+            ]
+
+            if not content_versions:
+                continue
+
+            latest = max(
+                content_versions,
+                key=lambda v: (
+                    self.version_time_key(v),
+                    int(getattr(v, "version_id", -1) or -1),
+                ),
+            )
+
+            key = (
+                len(content_versions),
+                self.version_time_key(latest),
+                int(getattr(latest, "version_id", -1) or -1),
+            )
+
+            if key > best_key:
+                best_key = key
+                best_obj = obj
+
+        if best_obj is not None:
+            return best_obj
+
+        return self.path_index.get(path)
+
+
+    def rename_path(self, handle_obj, old_path: str, new_path: str, pkt=None, timestamp=None):
+        """
+        Apply rename ở mức path, không chỉ ở handle hiện tại.
+
+        Lý do:
+        SMB rename có thể dùng handle khác với handle đã WRITE.
+        Nếu chỉ rename handle hiện tại thì content versions vẫn nằm ở old_path.
+        """
+        if not old_path or not new_path:
+            return handle_obj
+
+        # Object có content thật ở old_path.
+        target_obj = self.best_content_object_for_path(
+            old_path,
+            exclude=None,
+        )
+
+        if target_obj is None:
+            target_obj = handle_obj
+
+        # Gắn rename event vào object có content.
+        target_obj.add_event(
+            "rename",
+            pkt,
+            old_path=old_path,
+            new_path=new_path,
+            evidence={
+                "file_info_class": (pkt or {}).get("smb2_file_info_class"),
+            },
+        )
+
+        # Tất cả object đang ở old_path phải chuyển sang new_path
+        # để export không còn tạo file report.txt riêng.
+        for obj in self.objects_for_path(old_path):
+            obj.set_path(new_path, timestamp=timestamp)
+
+        # Handle rename hiện tại cũng chuyển sang new_path để events được group chung.
+        if handle_obj is not None:
+            handle_obj.set_path(new_path, timestamp=timestamp)
+
+        # Update path_index.
+        if old_path in self.path_index:
+            del self.path_index[old_path]
+
+        self.path_index[new_path] = target_obj
+
+        return target_obj

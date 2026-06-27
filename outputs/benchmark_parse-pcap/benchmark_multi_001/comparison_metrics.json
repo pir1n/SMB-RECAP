@@ -1,0 +1,271 @@
+{
+  "scenario_dir": "bench_multi_version_001",
+  "ours": {
+    "version_tp": 9,
+    "version_fp": 0,
+    "version_fn": 0,
+    "version_precision": 1.0,
+    "version_recall": 1.0,
+    "version_f1": 1.0,
+    "content_hash_accuracy": 1.0,
+    "size_accuracy": 1.0,
+    "version_count_error": 0,
+    "missing_versions": [],
+    "extra_versions": [],
+    "wrong_hash": [],
+    "strict_path_content": {
+      "tp": 9,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "missing": [],
+      "extra": []
+    },
+    "content_only": {
+      "tp": 9,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "missing": [],
+      "extra": []
+    },
+    "mutation_content": {
+      "tp": 9,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "missing": [],
+      "extra": []
+    },
+    "observed_content": {
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "missing": [],
+      "extra": []
+    },
+    "index_version_tp": 9,
+    "index_version_fp": 0,
+    "index_version_fn": 0,
+    "index_content_hash_accuracy": 1.0,
+    "index_size_accuracy": 1.0,
+    "index_missing_versions": [],
+    "index_extra_versions": [],
+    "index_wrong_hash": []
+  },
+  "pcapfs": {
+    "version_tp": 4,
+    "version_fp": 4,
+    "version_fn": 5,
+    "version_precision": 0.5,
+    "version_recall": 0.4444444444444444,
+    "version_f1": 0.47058823529411764,
+    "content_hash_accuracy": 0.4444444444444444,
+    "size_accuracy": 0.4444444444444444,
+    "version_count_error": -1,
+    "missing_versions": [
+      {
+        "path": "bench_multi_version_001\\bin\\large.bin",
+        "md5": "2f303f70ae2a9312336615fd61868549",
+        "size": 1500000
+      },
+      {
+        "path": "bench_multi_version_001\\docs\\notes.txt",
+        "md5": "781e5e245d69b566979b86e28d23f2c7",
+        "size": 10
+      },
+      {
+        "path": "bench_multi_version_001\\docs\\report_final.txt",
+        "md5": "75bafddaa9e8e5c67e20b0f3f91512c1",
+        "size": 11
+      },
+      {
+        "path": "bench_multi_version_001\\docs\\report_final.txt",
+        "md5": "852e77b490fb4e8653fbc11f4c6f89c2",
+        "size": 11
+      },
+      {
+        "path": "bench_multi_version_001\\docs\\report_final.txt",
+        "md5": "9f9f90dbe3e5ee1218c86b8839db1995",
+        "size": 6
+      }
+    ],
+    "extra_versions": [
+      {
+        "path": "bench_multi_version_001\\bin\\large.bin",
+        "md5": "2a198110996c4149a216639e1d5fb1d1",
+        "size": 262144
+      },
+      {
+        "path": "bench_multi_version_001\\docs\\report.txt",
+        "md5": "75bafddaa9e8e5c67e20b0f3f91512c1",
+        "size": 11
+      },
+      {
+        "path": "bench_multi_version_001\\docs\\report.txt",
+        "md5": "852e77b490fb4e8653fbc11f4c6f89c2",
+        "size": 11
+      },
+      {
+        "path": "bench_multi_version_001\\docs\\report.txt",
+        "md5": "9f9f90dbe3e5ee1218c86b8839db1995",
+        "size": 6
+      }
+    ],
+    "wrong_hash": [],
+    "strict_path_content": {
+      "tp": 4,
+      "fp": 4,
+      "fn": 5,
+      "precision": 0.5,
+      "recall": 0.4444444444444444,
+      "f1": 0.47058823529411764,
+      "missing": [
+        {
+          "path": "bench_multi_version_001\\bin\\large.bin",
+          "md5": "2f303f70ae2a9312336615fd61868549",
+          "size": 1500000
+        },
+        {
+          "path": "bench_multi_version_001\\docs\\notes.txt",
+          "md5": "781e5e245d69b566979b86e28d23f2c7",
+          "size": 10
+        },
+        {
+          "path": "bench_multi_version_001\\docs\\report_final.txt",
+          "md5": "75bafddaa9e8e5c67e20b0f3f91512c1",
+          "size": 11
+        },
+        {
+          "path": "bench_multi_version_001\\docs\\report_final.txt",
+          "md5": "852e77b490fb4e8653fbc11f4c6f89c2",
+          "size": 11
+        },
+        {
+          "path": "bench_multi_version_001\\docs\\report_final.txt",
+          "md5": "9f9f90dbe3e5ee1218c86b8839db1995",
+          "size": 6
+        }
+      ],
+      "extra": [
+        {
+          "path": "bench_multi_version_001\\bin\\large.bin",
+          "md5": "2a198110996c4149a216639e1d5fb1d1",
+          "size": 262144
+        },
+        {
+          "path": "bench_multi_version_001\\docs\\report.txt",
+          "md5": "75bafddaa9e8e5c67e20b0f3f91512c1",
+          "size": 11
+        },
+        {
+          "path": "bench_multi_version_001\\docs\\report.txt",
+          "md5": "852e77b490fb4e8653fbc11f4c6f89c2",
+          "size": 11
+        },
+        {
+          "path": "bench_multi_version_001\\docs\\report.txt",
+          "md5": "9f9f90dbe3e5ee1218c86b8839db1995",
+          "size": 6
+        }
+      ]
+    },
+    "content_only": {
+      "tp": 7,
+      "fp": 1,
+      "fn": 2,
+      "precision": 0.875,
+      "recall": 0.7777777777777778,
+      "f1": 0.823529411764706,
+      "missing": [
+        {
+          "md5": "2f303f70ae2a9312336615fd61868549",
+          "size": 1500000
+        },
+        {
+          "md5": "781e5e245d69b566979b86e28d23f2c7",
+          "size": 10
+        }
+      ],
+      "extra": [
+        {
+          "md5": "2a198110996c4149a216639e1d5fb1d1",
+          "size": 262144
+        }
+      ]
+    },
+    "mutation_content": {
+      "applicable": false,
+      "note": "pcapFS does not expose semantic operation labels, so mutation_content is not applicable."
+    },
+    "observed_content": {
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "missing": [],
+      "extra": []
+    },
+    "index_version_tp": 5,
+    "index_version_fp": 3,
+    "index_version_fn": 4,
+    "index_content_hash_accuracy": 0.8,
+    "index_size_accuracy": 0.8,
+    "index_missing_versions": [
+      {
+        "path": "bench_multi_version_001\\docs\\notes.txt",
+        "version": 1
+      },
+      {
+        "path": "bench_multi_version_001\\docs\\report_final.txt",
+        "version": 0
+      },
+      {
+        "path": "bench_multi_version_001\\docs\\report_final.txt",
+        "version": 1
+      },
+      {
+        "path": "bench_multi_version_001\\docs\\report_final.txt",
+        "version": 2
+      }
+    ],
+    "index_extra_versions": [
+      {
+        "path": "bench_multi_version_001\\docs\\report.txt",
+        "version": 0
+      },
+      {
+        "path": "bench_multi_version_001\\docs\\report.txt",
+        "version": 1
+      },
+      {
+        "path": "bench_multi_version_001\\docs\\report.txt",
+        "version": 2
+      }
+    ],
+    "index_wrong_hash": [
+      {
+        "path": "bench_multi_version_001\\bin\\large.bin",
+        "version": 1,
+        "expected_md5": "2f303f70ae2a9312336615fd61868549",
+        "predicted_md5": "2a198110996c4149a216639e1d5fb1d1"
+      }
+    ]
+  },
+  "delta": {
+    "strict_path_version_f1": 0.5294117647058824,
+    "content_only_f1": 0.17647058823529405,
+    "mutation_content_f1": "not_applicable_for_pcapfs"
+  }
+}

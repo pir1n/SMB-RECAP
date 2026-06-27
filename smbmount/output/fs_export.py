@@ -49,10 +49,11 @@ def infer_object_type(path, is_dir=False):
 def dedupe_path_history(history):
     """
     Làm sạch path_history:
-    - Convert timestamp EDecimal -> float
-    - Bỏ record lỗi/rỗng
+    - Convert timestamp về scalar
+    - Bỏ record rỗng
     - Sort theo timestamp
-    - Chỉ giữ khi path thay đổi, tránh lặp hàng chục dòng cùng path
+    - Bỏ duplicate liên tiếp
+    - Nếu path bị flip do handle phụ/context_seen, nén lại để giữ luồng đổi tên chính.
     """
     cleaned = []
 
@@ -74,19 +75,49 @@ def dedupe_path_history(history):
         x.get("path") or "",
     ))
 
-    result = []
+    # Bỏ trùng liên tiếp
+    compact = []
     last_path = None
 
     for item in cleaned:
         path = item.get("path")
-
         if path == last_path:
             continue
 
-        result.append(item)
+        compact.append(item)
         last_path = path
 
-    return result
+    if len(compact) <= 2:
+        return compact
+
+    # Nén oscillation kiểu:
+    # old -> new -> old -> new
+    result = []
+
+    for item in compact:
+        path = item["path"]
+
+        # Nếu path này đã xuất hiện trước đó, giữ occurrence mới nhất
+        # bằng cách xóa occurrence cũ. Điều này giúp loại các flip do handle phụ.
+        result = [x for x in result if x["path"] != path]
+        result.append(item)
+
+    result.sort(key=lambda x: (
+        sortable_timestamp(x.get("timestamp")),
+        x.get("path") or "",
+    ))
+
+    # Bỏ trùng liên tiếp lần cuối
+    final = []
+    last_path = None
+
+    for item in result:
+        if item["path"] == last_path:
+            continue
+        final.append(item)
+        last_path = item["path"]
+
+    return final
 
 def build_semantic_summary(events, versions):
     semantic_ops = []
@@ -108,6 +139,26 @@ def build_semantic_summary(events, versions):
         "version_count": len(versions),
         "has_content": len(versions) > 0,
     }
+
+def version_export_time(version, metadata):
+    metadata = metadata or {}
+
+    return (
+        metadata.get("network_timestamp")
+        or getattr(version, "modified", None)
+        or metadata.get("modified")
+        or metadata.get("changed")
+    )
+
+
+def version_export_sort_key(item):
+    version, fid, metadata = item
+
+    return (
+        sortable_timestamp(version_export_time(version, metadata)),
+        file_id_to_str(fid) or "",
+        int(getattr(version, "version_id", 0) or 0),
+    )
 
 def file_id_to_str(fid):
     if fid is None:
@@ -144,6 +195,40 @@ def choose_representative(file_objs):
 
     return file_objs[-1]
 
+def path_history_from_events(path_history, events, final_path):
+    """
+    Ưu tiên rename event để tạo path history semantic.
+    Nếu có rename old_path -> new_path thì history nên là:
+      old_path -> new_path
+    """
+    rename_events = [
+        e for e in events
+        if e.get("op") == "rename" and e.get("old_path") and e.get("new_path")
+    ]
+
+    if not rename_events:
+        return dedupe_path_history(path_history)
+
+    rename_events.sort(key=lambda e: (
+        sortable_timestamp(e.get("timestamp")),
+        sortable_timestamp(e.get("frame_number")),
+    ))
+
+    result = []
+
+    first = rename_events[0]
+    result.append({
+        "timestamp": normalize_scalar(first.get("timestamp")),
+        "path": first.get("old_path"),
+    })
+
+    for e in rename_events:
+        result.append({
+            "timestamp": normalize_scalar(e.get("timestamp")),
+            "path": e.get("new_path"),
+        })
+
+    return dedupe_path_history(result)
 
 def export_files(file_table, tree):
     path_groups = defaultdict(list)
@@ -189,6 +274,7 @@ def export_files(file_table, tree):
 
                 all_versions.append((v, f.file_id, meta))
 
+        all_versions.sort(key=version_export_sort_key)
         # Dedup lần 2 sau khi gộp nhiều FileObject cùng path.
         final_versions = []
 
@@ -235,7 +321,11 @@ def export_files(file_table, tree):
             "delete_time": representative.delete_time,
 
             "semantic_summary": build_semantic_summary(event_dicts, versions),
-            "path_history": dedupe_path_history(all_path_history),
+            "path_history": path_history_from_events(
+                all_path_history,
+                event_dicts,
+                path,
+            ),
             "events": event_dicts,
 
             "versions": versions,
@@ -245,3 +335,4 @@ def export_files(file_table, tree):
         "files": files,
         "tree": tree,
     }
+

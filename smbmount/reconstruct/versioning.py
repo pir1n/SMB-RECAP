@@ -183,13 +183,56 @@ class VersionManager:
     def __init__(self):
         self.versions = []
         self.current = None
+        self.base_version = None
+
+    def set_base_version(self, version):
+        if self.current is None and not self.versions and version is not None:
+            self.base_version = version
+
+    def latest_content_version(self):
+        """
+        Content base cho reconstruction.
+
+        - write/truncate: mutation state.
+        - read: observed baseline/snapshot đã được phân loại là đáng tin.
+        """
+        if (
+            self.current is not None
+            and self.current.last_op in ("write", "truncate", "read")
+        ):
+            return self.current
+
+        for version in reversed(self.versions):
+            if version.last_op in ("write", "truncate", "read"):
+                return version
+
+        return self.base_version
+
+    def latest_mutation_version(self):
+        if (
+            self.current is not None
+            and self.current.last_op in ("write", "truncate")
+        ):
+            return self.current
+
+        for version in reversed(self.versions):
+            if version.last_op in ("write", "truncate"):
+                return version
+
+        if (
+            self.base_version is not None
+            and self.base_version.last_op in ("write", "truncate")
+        ):
+            return self.base_version
+
+        return None
         
     def start_new_version(self, timestamp=None, inherit=True, inherit_chunks=True, file_id=None):
         version_id = len(self.versions) + 1
 
         previous = None
         if inherit:
-            previous = self.current or (self.versions[-1] if self.versions else None)
+            previous = self.latest_content_version()
 
         v = FileVersion(
             version_id,
@@ -205,11 +248,16 @@ class VersionManager:
         return v
 
     def current_size(self):
-        if self.current is not None:
+        if self.current is not None and self.current.last_op is not None:
             return self.current.size
 
         if self.versions:
-            return self.versions[-1].size
+            for version in reversed(self.versions):
+                if version.last_op is not None:
+                    return version.size
+
+        if self.base_version is not None:
+            return self.base_version.size
 
         return 0
     
@@ -225,27 +273,29 @@ class VersionManager:
         self.current = None
 
     def update_metadata(self, timestamp=None, file_id=None):
+        """
+        Metadata-only SMB operations như QUERY_INFO không được tạo content version mới.
+        Chúng chỉ cập nhật timestamp cho version hiện tại nếu version đó đã có nội dung.
+        """
         if timestamp is None:
             return
 
         if self.current is None:
-            self.start_new_version(
-                timestamp,
-                inherit=bool(self.versions),
-                file_id=file_id,
-            )
             return
 
-        if self.current.modified is not None and self.current.modified != timestamp:
-            self.commit(self.current.modified)
-            self.start_new_version(
-                timestamp,
-                inherit=True,
-                file_id=file_id,
-            )
-            return
+        if self.current.last_op in ("write", "truncate", "observed_read"):
+            self.current.modified = timestamp
 
-        self.current.modified = timestamp
+            if self.current.modified is not None and self.current.modified != timestamp:
+                self.commit(self.current.modified)
+                self.start_new_version(
+                    timestamp,
+                    inherit=True,
+                    file_id=file_id,
+                )
+                return
+
+            self.current.modified = timestamp
     
     def add_chunk(self, offset, length, timestamp=None, data=None, op=None, file_id=None):
         if self.current is None:
@@ -264,35 +314,95 @@ class VersionManager:
             data=data,
             op=op,
         )
-        
-    def add_read(self, offset, length, data=None, timestamp=None, file_id=None):
-        if self.current is None:
-            self.start_new_version(
-                timestamp,
-                inherit=bool(self.versions),
-                file_id=file_id,
-            )
+    
+    def add_read(
+        self,
+        offset,
+        length,
+        data=None,
+        timestamp=None,
+        file_id=None,
+        expected_size=None,
+        allow_after_prior_content=False,
+    ):
+        """
+        Materialize READ thành version chỉ khi READ đủ tin cậy.
 
-        elif self.current.last_op == "write":
-            # READ sau WRITE không làm thay đổi server state,
-            # nhưng ta tách version để phân biệt evidence read/write.
-            # inherit=True để không mất dữ liệu vừa write.
-            self.commit(self.current.modified)
-            self.start_new_version(
-                timestamp,
-                inherit=True,
-                file_id=file_id,
-            )
+        Rule:
+        1. Phải có data.
+        2. Phải đọc từ offset 0.
+        3. Nếu chưa có content version trước đó:
+        -> cho phép tạo baseline read version.
+        4. Nếu đã có content trước đó:
+        -> chỉ cho phép nếu caller xác nhận có external-change hint.
+        5. Nếu biết expected_size thì data phải bao phủ expected_size.
+        """
+        if offset is None or length is None or data is None:
+            return False
 
-        elif timestamp is not None and self.current.modified is None:
-            self.current.modified = timestamp
+        offset = int(offset)
 
-        self.current.add_chunk(
-            offset,
-            length,
-            data=data,
+        if isinstance(data, bytes):
+            raw = data
+        elif isinstance(data, bytearray):
+            raw = bytes(data)
+        elif isinstance(data, memoryview):
+            raw = data.tobytes()
+        elif isinstance(data, str):
+            try:
+                raw = bytes.fromhex(data)
+            except ValueError:
+                raw = data.encode(errors="ignore")
+        else:
+            raw = bytes(data)
+
+        if not raw:
+            return False
+
+        actual_length = len(raw)
+
+        # Không materialize partial/non-zero-offset read.
+        if offset != 0:
+            return False
+
+        latest = self.latest_content_version()
+        has_prior_content = latest is not None and latest.last_op is not None
+
+        # Nếu đã có version content rồi, READ sau đó thường chỉ là verify/cache.
+        # Chỉ chấp nhận nếu content.py phát hiện external-change hint.
+        if has_prior_content and not allow_after_prior_content:
+            return False
+
+        if expected_size is None or int(expected_size or 0) <= 0:
+            expected_size = actual_length
+
+        expected_size = int(expected_size)
+
+        # Nếu READ không đủ bao phủ size kỳ vọng thì không tạo version.
+        if actual_length < expected_size:
+            return False
+
+        observed = FileVersion(
+            len(self.versions) + 1,
+            None,
+            inherit_chunks=False,
+            file_id=file_id,
+        )
+        observed.modified = timestamp
+        observed.add_chunk(
+            0,
+            expected_size,
+            data=raw[:expected_size],
             op="read",
         )
+
+        if latest is not None and observed.same_content_as(latest):
+            return False
+
+        self.versions.append(observed)
+        self.current = observed
+
+        return True
 
     def add_write(self, offset, length, data=None, timestamp=None, file_id=None):
         if offset is None or length is None:
@@ -308,15 +418,36 @@ class VersionManager:
                 file_id=file_id,
             )
 
-        elif self.current.last_op == "read":
-            # WRITE sau READ nghĩa là bắt đầu một state mới của file.
-            # Phải inherit=True để giữ nội dung cũ rồi apply phần write mới.
-            self.commit(self.current.modified)
+        elif self.current.last_op is None and self.latest_mutation_version() is not self.current:
+            self.current = None
             self.start_new_version(
                 timestamp,
                 inherit=True,
                 file_id=file_id,
             )
+
+        # elif self.current.last_op == "observed_read":
+        #     self.commit(self.current.modified)
+        #     self.start_new_version(
+        #         timestamp,
+        #         inherit=True,
+        #         file_id=file_id,
+        #     )
+        
+        elif self.current.last_op == "truncate":
+            current_size = int(self.current.size or 0)
+
+            # Nếu truncate xong WRITE từ offset 0 và ghi đủ size mới,
+            # thì không export truncate riêng. Version hiện tại chuyển thành write.
+            if offset == 0 and length >= current_size:
+                pass
+            else:
+                self.commit(self.current.modified)
+                self.start_new_version(
+                    timestamp,
+                    inherit=True,
+                    file_id=file_id,
+                )
 
         elif self.current.last_op == "write":
             expected_offset = self.current.size
@@ -357,7 +488,15 @@ class VersionManager:
                 file_id=file_id,
             )
 
-        elif self.current.last_op in ("read", "write"):
+        elif self.current.last_op is None and self.latest_mutation_version() is not self.current:
+            self.current = None
+            self.start_new_version(
+                timestamp,
+                inherit=True,
+                file_id=file_id,
+            )
+
+        elif self.current.last_op in ("write", "read"):
             # Truncate là operation thay đổi state file.
             # Tạo version mới nhưng inherit content cũ rồi cắt.
             self.commit(self.current.modified)
@@ -370,26 +509,6 @@ class VersionManager:
         self.current.truncate(new_size)
         self.current.modified = timestamp
     
-    # def deduplicated_versions(self, file_id=None, path=None):
-    #     deduped = []
-    #     for version in self.versions:
-    #         # print(f"[DEDUP LOOP] v{version.version_id} op={version.last_op} hash={version.get_hash()}")
-    #         if deduped:
-    #             prev = deduped[-1]
-    #             # print(f"  comparing with deduped[-1] v{deduped[-1].version_id} op={deduped[-1].last_op}")
-    #             # print(f"[COMPARE] v{prev.version_id}({prev.last_op}) hash={prev.get_hash()} data={prev.get_data()}")
-    #             # print(f"[COMPARE] v{version.version_id}({version.last_op}) hash={version.get_hash()} data={version.get_data()}")
-    #         # print(version)
-    #         if deduped and version.same_content_as(deduped[-1]):
-    #             if version.modified is not None:
-    #                 deduped[-1].modified = version.modified
-    #             continue
-    #         deduped.append(version)
-
-    #     for index, version in enumerate(deduped):
-    #         version.version_id = index
-
-    #     return deduped
     
     def deduplicated_versions(self, file_id=None, path=None):
         deduped = []

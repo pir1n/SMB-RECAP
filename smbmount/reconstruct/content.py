@@ -36,6 +36,52 @@ def fs_timestamp(pkt):
         or pkt.get("timestamp")
     )
 
+def float_or_none(value):
+    if value is None:
+        return None
+    try:
+        return float(value)
+    except Exception:
+        return None
+
+
+def fs_change_time_from_pkt(pkt):
+    return (
+        float_or_none(pkt.get("smb2_last_write_time"))
+        or float_or_none(pkt.get("smb2_change_time"))
+    )
+
+
+def version_fs_time(version):
+    meta = version.snapshot_metadata or {}
+
+    return (
+        float_or_none(meta.get("modified"))
+        or float_or_none(meta.get("changed"))
+        or float_or_none(version.modified)
+    )
+
+
+def read_has_external_change_hint(file_obj, pkt):
+    """
+    READ sau khi đã có content chỉ materialize nếu có dấu hiệu file
+    đã bị thay đổi ngoài mutation chain hiện tại.
+
+    Không dùng network timestamp ở đây, vì READ sau WRITE luôn có network time lớn hơn.
+    Chỉ dùng FS last_write/change time.
+    """
+    latest = file_obj.versions.latest_content_version()
+
+    if latest is None:
+        return True
+
+    read_fs = fs_change_time_from_pkt(pkt)
+    latest_fs = version_fs_time(latest)
+
+    if read_fs is None or latest_fs is None:
+        return False
+
+    return read_fs > latest_fs + 1e-6
 
 def is_directory_create(pkt):
     create_options = safe_int(pkt.get("smb2_create_options_raw"))
@@ -78,7 +124,11 @@ def process_packets(packets, timestamp_mode="hybrid"):
                 pkt=event_pkt,
             )
 
-        if path:
+        if path and not (
+            cmd == "SET_INFO"
+            and is_response is True
+            and pkt.get("smb2_rename_target")
+        ):
             table.bind_path(
                 file_obj,
                 path,
@@ -92,7 +142,11 @@ def process_packets(packets, timestamp_mode="hybrid"):
         # - mở version session
         # - phát hiện mkdir nếu có directory create
         if cmd == "CREATE":
-            if path:
+            if path and not (
+                cmd == "SET_INFO"
+                and is_response is True
+                and pkt.get("smb2_rename_target")
+            ):
                 table.bind_path(
                     file_obj,
                     path,
@@ -144,19 +198,44 @@ def process_packets(packets, timestamp_mode="hybrid"):
             data = pkt.get("smb2_read_blob")
 
             if offset is not None and length is not None:
-                file_obj.add_read(
+                actual_length = length
+
+                if data is not None:
+                    try:
+                        actual_length = len(data)
+                    except Exception:
+                        actual_length = length
+
+                latest = file_obj.versions.latest_content_version()
+
+                expected_size = None
+
+                if latest is not None and int(latest.size or 0) > 0:
+                    expected_size = int(latest.size or 0)
+                elif int(file_obj.metadata.size or 0) > 0:
+                    expected_size = int(file_obj.metadata.size or 0)
+                elif int(offset or 0) == 0 and int(actual_length or 0) > 0:
+                    # Capture bắt đầu giữa chừng, chưa có prior content.
+                    # Dùng READ đầu tiên như observed baseline.
+                    expected_size = int(actual_length)
+
+                allow_after_prior_content = read_has_external_change_hint(file_obj, pkt)
+
+                observed = file_obj.add_read(
                     offset,
-                    length,
+                    actual_length,
                     data=data,
                     timestamp=version_time,
                     pkt=event_pkt,
+                    expected_size=expected_size,
+                    allow_after_prior_content=allow_after_prior_content,
                 )
 
-                if file_obj.versions.current:
+                if observed and file_obj.versions.current:
                     file_obj.versions.current.snapshot_metadata = ts.snapshot_metadata(
                         file_obj,
                         pkt,
-                        size=file_obj.metadata.size,
+                        size=file_obj.versions.current.size,
                     )
 
             continue
@@ -208,12 +287,14 @@ def process_packets(packets, timestamp_mode="hybrid"):
                 or file_info_class in ("FileRenameInformation", "FileRenameInformationEx")
             ):
                 new_path = pkt.get("smb2_rename_target")
+                old_path = file_obj.path
 
-                if new_path:
-                    file_obj.rename(new_path, event_pkt)
-                    table.bind_path(
-                        file_obj,
-                        new_path,
+                if new_path and old_path:
+                    file_obj = table.rename_path(
+                        handle_obj=file_obj,
+                        old_path=old_path,
+                        new_path=new_path,
+                        pkt=event_pkt,
                         timestamp=event_time,
                     )
 
@@ -223,7 +304,7 @@ def process_packets(packets, timestamp_mode="hybrid"):
                 or file_info_class in ("FileDispositionInformation", "FileDispositionInformationEx")
             ):
                 if pkt.get("smb2_delete_pending") is True:
-                    file_obj.truncate(new_size, pkt=event_pkt)
+                    file_obj.mark_delete(event_pkt)
 
             # Truncate / allocation resize
             elif (
@@ -234,7 +315,13 @@ def process_packets(packets, timestamp_mode="hybrid"):
 
                 if new_size is not None:
                     file_obj.truncate(new_size, pkt=event_pkt)
-
+                    
+                    if file_obj.versions.current:
+                        file_obj.versions.current.snapshot_metadata = ts.snapshot_metadata(
+                            file_obj,
+                            pkt,
+                            size=new_size,
+                        )
             else:
                 file_obj.update_version_metadata(version_time)
                 file_obj.mark_metadata_update(event_pkt)

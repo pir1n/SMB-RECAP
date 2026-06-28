@@ -52,7 +52,26 @@ def parse_pcap_cmd(input_pcap: str, output_json: str):
     is_flag=True,
     help="Load built-in semantic SCF rules in addition to the supplied rule file.",
 )
-def scf_cmd(input_pcap: str, rule_or_output: str, output_file: str, with_builtin_rules: bool):
+@click.option(
+    "--print-table/--no-print-table",
+    default=False,
+    show_default=True,
+    help="Print the Rich activity table. Disable for faster large timeline generation.",
+)
+@click.option(
+    "--progress/--no-progress",
+    default=True,
+    show_default=True,
+    help="Print SCF detection progress every 10 percent.",
+)
+def scf_cmd(
+    input_pcap: str,
+    rule_or_output: str,
+    output_file: str,
+    with_builtin_rules: bool,
+    print_table: bool,
+    progress: bool,
+):
     """
     Detect SMB activities with SCF.
 
@@ -99,7 +118,13 @@ def scf_cmd(input_pcap: str, rule_or_output: str, output_file: str, with_builtin
     #
     detector = SCFDetector(rules)
 
-    events = detector.detect(packets)
+    def print_progress(percent):
+        console.print(f"[cyan]SCF progress:[/cyan] {percent}%")
+
+    events = detector.detect(
+        packets,
+        progress_callback=print_progress if progress else None,
+    )
 
     #
     # timeline
@@ -109,7 +134,8 @@ def scf_cmd(input_pcap: str, rule_or_output: str, output_file: str, with_builtin
     #
     # render
     #
-    render(timeline)
+    if print_table:
+        render(timeline)
 
     #
     # export json

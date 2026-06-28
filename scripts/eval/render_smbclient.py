@@ -51,7 +51,7 @@ def write_text_lf(path, text):
         fh.write(text)
 
 
-def render(plan, out_script, out_commands, server, share, auth_file, local_dir, stop_on_error):
+def render(plan, out_script, out_commands, server, share, auth_file, local_dir, stop_on_error, progress_every=1):
     run_id = plan[0]["run_id"] if plan else "smbclient_run"
     service = f"//{server}/{share}"
 
@@ -67,6 +67,9 @@ def render(plan, out_script, out_commands, server, share, auth_file, local_dir, 
         "SCRIPT_DIR=\"$(CDPATH= cd -- \"$(dirname -- \"$0\")\" && pwd)\"",
         f"RUN_ID={sh_quote(run_id)}",
         "CLIENT=smbclient",
+        f"TOTAL_OPS={len(plan)}",
+        "OP_INDEX=0",
+        f"PROGRESS_EVERY={max(1, int(progress_every))}",
         "GT_PATH=\"$SCRIPT_DIR/../../ground_truth/${RUN_ID}.jsonl\"",
         f"LOCAL_DIR={sh_quote(local_dir)}",
         f"SERVICE={sh_quote(service)}",
@@ -114,6 +117,10 @@ def render(plan, out_script, out_commands, server, share, auth_file, local_dir, 
         "",
         "run_op() {",
         "  local op_id=\"$1\" event=\"$2\" path_value=\"$3\" target_path=\"$4\" variant=\"$5\" command_text=\"$6\" file_size=\"$7\" local_source_op_id=\"${8:-}\"",
+        "  OP_INDEX=$((OP_INDEX + 1))",
+        "  if [[ \"$PROGRESS_EVERY\" -le 1 || \"$OP_INDEX\" -eq \"$TOTAL_OPS\" || $((OP_INDEX % PROGRESS_EVERY)) -eq 0 ]]; then",
+        "    printf '[%s/%s] op_id=%s event=%s path=%s\\n' \"$OP_INDEX\" \"$TOTAL_OPS\" \"$op_id\" \"$event\" \"$path_value\"",
+        "  fi",
         "  if [[ \"$event\" == \"upload_file\" && -n \"$local_source_op_id\" ]]; then",
         "    cp -f \"$LOCAL_DIR/d\" \"$LOCAL_DIR/u\"",
         "  else",
@@ -171,6 +178,7 @@ def main():
     parser.add_argument("--auth-file", default="")
     parser.add_argument("--local-dir", default="/tmp/smbmount_scf_eval")
     parser.add_argument("--continue-on-error", action="store_true")
+    parser.add_argument("--progress-every", type=int, default=1, help="Print progress every N operations. Default prints every operation.")
     args = parser.parse_args()
 
     plan = read_jsonl(args.plan_jsonl)
@@ -185,6 +193,7 @@ def main():
         auth_file=args.auth_file,
         local_dir=args.local_dir,
         stop_on_error=not args.continue_on_error,
+        progress_every=max(1, args.progress_every),
     )
     print(out_dir / f"{run_id}.sh")
     print(out_dir / f"{run_id}.smbclient")

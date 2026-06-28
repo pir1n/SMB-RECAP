@@ -13,11 +13,14 @@ class SCFDetector:
     def __init__(self, rules):
         self.rules = rules
 
-    def detect(self, packets):
+    def detect(self, packets, progress_callback=None):
         events = []
 
         status_lookup = self._build_response_status_lookup(packets)
         groups = self._group_requests(packets)
+        total_positions = sum(len(requests) for requests in groups.values())
+        processed_positions = 0
+        next_progress = 10
 
         # Prefer longer rules first so short rules do not consume a longer match.
         sorted_rules = sorted(
@@ -25,6 +28,9 @@ class SCFDetector:
             key=lambda r: len(r.get("pattern", [])),
             reverse=True,
         )
+
+        if progress_callback and total_positions == 0:
+            progress_callback(100)
 
         for group_key, requests in groups.items():
             requests = sorted(
@@ -86,6 +92,13 @@ class SCFDetector:
 
                     # The longest rule at this position is enough.
                     break
+
+                processed_positions += 1
+                if progress_callback and total_positions:
+                    percent = int((processed_positions * 100) / total_positions)
+                    while percent >= next_progress and next_progress <= 100:
+                        progress_callback(next_progress)
+                        next_progress += 10
 
         return self._post_process_events(events)
 

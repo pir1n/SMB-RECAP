@@ -54,8 +54,8 @@
     },
     {
       "id": "smbclient_put_overwrite",
-      "action": "overwrite of file",
-      "description": "smbclient put existing file: CREATE file for write whose response says overwritten.",
+      "action": "append to file",
+      "description": "smbclient put existing file: CREATE file for write whose response says overwritten. In the current smbclient workload this represents append/update.",
       "pattern": [
         {
           "command": "CREATE",
@@ -76,24 +76,19 @@
       "source": "smbclient semantic SCF v2 rules + operation coverage",
       "command_family": "put upload",
       "operation_aliases": [
-        "Overwrite File"
+        "Append to File"
       ]
     },
     {
-      "id": "smbclient_upload_file_write",
-      "action": "upload file",
-      "description": "smbclient put/upload: CREATE destination then WRITE file data larger than tiny create-file payloads.",
+      "id": "smbclient_put_append_overwrite",
+      "action": "append to file",
+      "description": "smbclient append/update workload: put to an existing remote file, represented as overwritten CREATE followed by WRITE.",
       "pattern": [
         {
           "command": "CREATE",
           "features": {
-            "target_type": "file"
-          },
-          "any_features": {
-            "create_result": [
-              "created",
-              "overwritten"
-            ]
+            "target_type": "file",
+            "create_result": "overwritten"
           },
           "contains": {
             "access_intents": [
@@ -110,23 +105,24 @@
       ],
       "max_gap": 24,
       "require_success": true,
-      "confidence": 0.92,
+      "confidence": 0.93,
       "application": "smbclient",
       "source": "smbclient semantic SCF v2 rules + operation coverage",
-      "command_family": "put/upload",
+      "command_family": "put append",
       "operation_aliases": [
-        "Upload file"
+        "Append to File"
       ]
     },
     {
-      "id": "smbclient_put_write",
-      "action": "append to file",
-      "description": "smbclient append workload approximation: put to an existing remote file, represented as WRITE on an opened/overwritten file.",
+      "id": "smbclient_upload_file_write",
+      "action": "upload file",
+      "description": "smbclient put/upload: CREATE a new destination then WRITE file data.",
       "pattern": [
         {
           "command": "CREATE",
           "features": {
-            "target_type": "file"
+            "target_type": "file",
+            "create_result": "created"
           },
           "contains": {
             "access_intents": [
@@ -142,53 +138,19 @@
         }
       ],
       "require_success": true,
-      "confidence": 0.9,
+      "confidence": 0.92,
       "application": "smbclient",
       "source": "smbclient semantic SCF v2 rules + operation coverage",
-      "command_family": "put upload",
-      "max_gap": 20,
+      "command_family": "put/upload",
+      "max_gap": 24,
       "operation_aliases": [
-        "Append to File"
-      ]
-    },
-    {
-      "id": "smbclient_more_read",
-      "action": "read of file",
-      "description": "smbclient more view/read: open existing SMB file for read followed by a small/medium READ.",
-      "pattern": [
-        {
-          "command": "CREATE",
-          "features": {
-            "target_type": "file",
-            "create_result": "opened"
-          },
-          "contains": {
-            "access_intents": [
-              "read"
-            ]
-          }
-        },
-        {
-          "command": "READ",
-          "features": {
-            "length_class": "nonzero"
-          }
-        }
-      ],
-      "require_success": true,
-      "confidence": 0.94,
-      "application": "smbclient",
-      "source": "smbclient semantic SCF v2 rules + operation coverage",
-      "command_family": "more",
-      "max_gap": 20,
-      "operation_aliases": [
-        "View File"
+        "Upload file"
       ]
     },
     {
       "id": "smbclient_get_download",
       "action": "download file",
-      "description": "smbclient get/download: open existing SMB file for read followed by a large READ.",
+      "description": "smbclient get/download: open existing SMB file for read followed by READ.",
       "pattern": [
         {
           "command": "CREATE",
@@ -220,6 +182,40 @@
       ]
     },
     {
+      "id": "smbclient_more_read",
+      "action": "read of file",
+      "description": "smbclient view/read fallback: open existing SMB file for read followed by READ.",
+      "pattern": [
+        {
+          "command": "CREATE",
+          "features": {
+            "target_type": "file",
+            "create_result": "opened"
+          },
+          "contains": {
+            "access_intents": [
+              "read"
+            ]
+          }
+        },
+        {
+          "command": "READ",
+          "features": {
+            "length_class": "nonzero"
+          }
+        }
+      ],
+      "require_success": true,
+      "confidence": 0.9,
+      "application": "smbclient",
+      "source": "smbclient semantic SCF v2 rules + operation coverage",
+      "command_family": "more",
+      "max_gap": 20,
+      "operation_aliases": [
+        "View File"
+      ]
+    },
+    {
       "id": "smbclient_del_delete_on_close",
       "action": "deletion of file",
       "description": "smbclient del variant: CREATE file with delete-on-close.",
@@ -227,8 +223,13 @@
         {
           "command": "CREATE",
           "features": {
-            "target_type": "file",
             "delete_on_close": true
+          },
+          "any_features": {
+            "target_type": [
+              "file",
+              "unknown"
+            ]
           },
           "contains": {
             "access_intents": [
@@ -253,8 +254,11 @@
       "pattern": [
         {
           "command": "CREATE",
-          "features": {
-            "target_type": "file"
+          "any_features": {
+            "target_type": [
+              "file",
+              "unknown"
+            ]
           },
           "contains": {
             "access_intents": [
@@ -508,8 +512,13 @@
         {
           "command": "QUERY_DIRECTORY",
           "features": {
-            "pattern_class": "wildcard",
             "file_info_class": "FileIdBothDirectoryInformation"
+          },
+          "any_features": {
+            "pattern_class": [
+              "wildcard",
+              "literal"
+            ]
           }
         }
       ],
@@ -545,8 +554,13 @@
         {
           "command": "QUERY_DIRECTORY",
           "features": {
-            "pattern_class": "wildcard",
             "file_info_class": "FileIdBothDirectoryInformation"
+          },
+          "any_features": {
+            "pattern_class": [
+              "wildcard",
+              "literal"
+            ]
           }
         }
       ],

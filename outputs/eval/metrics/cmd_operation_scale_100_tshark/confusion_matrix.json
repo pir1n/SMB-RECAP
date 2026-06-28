@@ -6,8 +6,7 @@
     "create_directory": 503
   },
   "create_file": {
-    "create_file": 3,
-    "upload_file": 97
+    "create_file": 100
   },
   "delete_directory": {
     "delete_directory": 100
@@ -16,19 +15,19 @@
     "delete_file": 100
   },
   "directory_listing": {
-    "__missing__": 100
+    "directory_listing": 100
   },
   "download_file": {
     "download_file": 200
   },
   "read_file": {
-    "download_file": 100
+    "read_file": 100
   },
   "rename_file": {
     "rename_file": 400
   },
   "upload_file": {
-    "create_file": 28,
-    "upload_file": 872
+    "__missing__": 1,
+    "upload_file": 899
   }
 }

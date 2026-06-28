@@ -2,11 +2,11 @@ actual\predicted,__missing__,append_file,create_directory,create_file,delete_dir
 __missing__,0,0,0,0,0,0,0,0,0,0,0
 append_file,0,100,0,0,0,0,0,0,0,0,0
 create_directory,0,0,503,0,0,0,0,0,0,0,0
-create_file,0,0,0,3,0,0,0,0,0,0,97
+create_file,0,0,0,100,0,0,0,0,0,0,0
 delete_directory,0,0,0,0,100,0,0,0,0,0,0
 delete_file,0,0,0,0,0,100,0,0,0,0,0
-directory_listing,100,0,0,0,0,0,0,0,0,0,0
+directory_listing,0,0,0,0,0,0,100,0,0,0,0
 download_file,0,0,0,0,0,0,0,200,0,0,0
-read_file,0,0,0,0,0,0,0,100,0,0,0
+read_file,0,0,0,0,0,0,0,0,100,0,0
 rename_file,0,0,0,0,0,0,0,0,0,400,0
-upload_file,0,0,0,28,0,0,0,0,0,0,872
+upload_file,1,0,0,0,0,0,0,0,0,0,899

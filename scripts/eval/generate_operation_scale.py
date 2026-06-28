@@ -255,15 +255,25 @@ def generate(client, run_id, count_per_operation):
 
 def render_workload(client, plan_path, out_dir, args):
     if client == "cmd":
-        from render_cmd import render
+        from render_cmd import fast_sidecar_path, render
 
         from common import read_jsonl
 
         plan = read_jsonl(plan_path)
         run_id = plan[0]["run_id"] if plan else Path(plan_path).stem
         out_file = Path(out_dir) / "workloads" / "cmd" / f"{run_id}.cmd"
-        render(plan, out_file, args.drive, stop_on_error=not args.continue_on_error)
-        return [out_file]
+        render(
+            plan,
+            out_file,
+            args.drive,
+            stop_on_error=not args.continue_on_error,
+            fast_mode=args.fast_workload,
+            progress_every=args.progress_every,
+        )
+        rendered = [out_file]
+        if args.fast_workload:
+            rendered.append(fast_sidecar_path(out_file))
+        return rendered
 
     if client == "powershell":
         from render_powershell import render
@@ -273,7 +283,14 @@ def render_workload(client, plan_path, out_dir, args):
         plan = read_jsonl(plan_path)
         run_id = plan[0]["run_id"] if plan else Path(plan_path).stem
         out_file = Path(out_dir) / "workloads" / "powershell" / f"{run_id}.ps1"
-        render(plan, out_file, args.drive, stop_on_error=not args.continue_on_error)
+        render(
+            plan,
+            out_file,
+            args.drive,
+            stop_on_error=not args.continue_on_error,
+            fast_mode=args.fast_workload,
+            progress_every=args.progress_every,
+        )
         return [out_file]
 
     if client == "smbclient":
@@ -295,6 +312,7 @@ def render_workload(client, plan_path, out_dir, args):
             auth_file=args.auth_file,
             local_dir=args.local_dir,
             stop_on_error=not args.continue_on_error,
+            progress_every=args.progress_every,
         )
         return [script_path, commands_path]
 
@@ -317,6 +335,8 @@ def main():
     parser.add_argument("--auth-file", default="", help="smbclient auth file path.")
     parser.add_argument("--local-dir", default="/tmp/smbmount_scf_eval", help="Local data dir for smbclient render.")
     parser.add_argument("--continue-on-error", action="store_true")
+    parser.add_argument("--fast-workload", action="store_true", help="Render a faster workload runner for cmd/powershell. Default preserves the old runner.")
+    parser.add_argument("--progress-every", type=int, default=1, help="Print progress every N operations in rendered workloads.")
     args = parser.parse_args()
 
     if args.count_per_operation is None:
@@ -325,6 +345,10 @@ def main():
 
     if args.count_per_operation <= 0:
         raise SystemExit("--count-per-operation must be positive")
+    if args.progress_every <= 0:
+        raise SystemExit("--progress-every must be positive")
+    if args.fast_workload and args.client == "smbclient":
+        raise SystemExit("--fast-workload is only supported for cmd and powershell")
 
     run_id = args.run_id or default_run_id(args.client, args.profile)
     out_dir = Path(args.out_dir)
@@ -358,6 +382,8 @@ def main():
             "ground_truth_operation_count": len(expected_rows),
             "operation_count": len(expected_rows),
             "plan_operation_count": len(plan_rows),
+            "fast_workload": bool(args.fast_workload),
+            "progress_every": args.progress_every,
             "operations": OPERATIONS,
             "plan": str(plan_path.as_posix()),
             "expected_ground_truth": str(expected_path.as_posix()),

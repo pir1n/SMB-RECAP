@@ -47,13 +47,21 @@ def ps_for_op(op, drive, local_dir):
     raise ValueError(f"unsupported event: {event}")
 
 
-def render(plan, out_file, drive, stop_on_error):
+def should_show_progress(index, total, progress_every):
+    if progress_every <= 1:
+        return True
+    return index == total or index % progress_every == 0
+
+
+def render(plan, out_file, drive, stop_on_error, fast_mode=False, progress_every=1):
     run_id = plan[0]["run_id"] if plan else "powershell_run"
     local_dir = str(Path(out_file).parent / "local" / run_id)
     lines = [
         "$ErrorActionPreference = 'Stop'",
         f"$RunId = {ps_quote(run_id)}",
         "$Client = 'powershell'",
+        f"$TotalOps = {len(plan)}",
+        "$OpIndex = 0",
         f"$LocalDir = {ps_quote(local_dir)}",
         f"$GroundTruthPath = Join-Path $PSScriptRoot '..\\..\\ground_truth\\{run_id}.jsonl'",
         "New-Item -ItemType Directory -Path (Split-Path $GroundTruthPath) -Force | Out-Null",
@@ -62,6 +70,13 @@ def render(plan, out_file, drive, stop_on_error):
         "    Remove-Item -Path (Join-Path $LocalDir $Pattern) -Force -ErrorAction SilentlyContinue",
         "}",
         "Remove-Item -Path $GroundTruthPath -Force -ErrorAction SilentlyContinue",
+    ]
+    if fast_mode:
+        lines.extend([
+            "$Utf8NoBom = New-Object System.Text.UTF8Encoding($false)",
+            "$GroundTruthWriter = New-Object System.IO.StreamWriter($GroundTruthPath, $false, $Utf8NoBom)",
+        ])
+    lines.extend([
         "",
         "function New-ScfLocalFile {",
         "    param([string]$Path, [int]$Size)",
@@ -71,6 +86,16 @@ def render(plan, out_file, drive, stop_on_error):
         "    [IO.File]::WriteAllBytes($Path, $bytes)",
         "}",
         "",
+    ])
+    if fast_mode:
+        lines.extend([
+            "function Write-ScfRecord {",
+            "    param($Record)",
+            "    $GroundTruthWriter.WriteLine(($Record | ConvertTo-Json -Compress))",
+            "}",
+            "",
+        ])
+    lines.extend([
         "function Invoke-ScfOp {",
         "    param(",
         "        [int]$OpId,",
@@ -105,36 +130,67 @@ def render(plan, out_file, drive, stop_on_error):
         "        operation_variant = $Variant",
         "        error = $errorText",
         "    }",
-        "    $record | ConvertTo-Json -Compress | Add-Content -Encoding UTF8 -Path $GroundTruthPath",
-    ]
+    ])
+    if fast_mode:
+        lines.append("    Write-ScfRecord $record")
+    else:
+        lines.append("    $record | ConvertTo-Json -Compress | Add-Content -Encoding UTF8 -Path $GroundTruthPath")
     if stop_on_error:
         lines.append("    if ($exitCode -ne 0) { throw \"SCF operation $OpId failed: $errorText\" }")
     lines.extend(["}", ""])
+    if fast_mode:
+        lines.append("try {")
 
-    for op in plan:
+    prefix = "    " if fast_mode else ""
+    for index, op in enumerate(plan, start=1):
         if op["event"] == "upload_file":
             if op.get("local_source_op_id"):
                 lines.extend([
-                    f"Copy-Item -Path {ps_quote(download_local_path(local_dir, op))} -Destination {ps_quote(upload_local_path(local_dir, op))} -Force",
+                    f"{prefix}Copy-Item -Path {ps_quote(download_local_path(local_dir, op))} -Destination {ps_quote(upload_local_path(local_dir, op))} -Force",
                     "",
                 ])
             else:
                 lines.extend([
-                    f"New-ScfLocalFile -Path {ps_quote(upload_local_path(local_dir, op))} -Size {int(op.get('file_size') or 4)}",
+                    f"{prefix}New-ScfLocalFile -Path {ps_quote(upload_local_path(local_dir, op))} -Size {int(op.get('file_size') or 4)}",
                     "",
                 ])
 
         command = ps_for_op(op, drive, local_dir)
+        progress = None
+        if should_show_progress(index, len(plan), progress_every):
+            progress = (
+                f"{prefix}Write-Host (\"[{{0}}/{{1}}] op_id={op['op_id']} "
+                f"event={op['event']} path={op['path']}\" -f $OpIndex, $TotalOps)"
+            )
         if op.get("log_ground_truth") is False:
             lines.extend([
-                f"# setup op_id={op['op_id']} event={op['event']}",
-                command,
+                f"{prefix}# setup op_id={op['op_id']} event={op['event']}",
+                f"{prefix}$OpIndex += 1",
+            ])
+            if progress:
+                lines.append(progress)
+            lines.extend([
+                f"{prefix}{command}",
                 "",
             ])
             continue
         lines.extend([
-            f"Invoke-ScfOp -OpId {op['op_id']} -Event {ps_quote(op['event'])} -PathValue {ps_quote(op['path'])} -TargetPath {ps_quote(op.get('target_path'))} -Variant {ps_quote(op.get('operation_variant') or '')} -CommandText {ps_quote(command)} -Body {{",
-            f"    {command}",
+            f"{prefix}$OpIndex += 1",
+        ])
+        if progress:
+            lines.append(progress)
+        lines.extend([
+            f"{prefix}Invoke-ScfOp -OpId {op['op_id']} -Event {ps_quote(op['event'])} -PathValue {ps_quote(op['path'])} -TargetPath {ps_quote(op.get('target_path'))} -Variant {ps_quote(op.get('operation_variant') or '')} -CommandText {ps_quote(command)} -Body {{",
+            f"{prefix}    {command}",
+            f"{prefix}}}",
+            "",
+        ])
+
+    if fast_mode:
+        lines.extend([
+            "} finally {",
+            "    $GroundTruthWriter.Flush()",
+            "    $GroundTruthWriter.Dispose()",
             "}",
             "",
         ])
@@ -149,12 +205,21 @@ def main():
     parser.add_argument("--out-dir", default="data/eval/generated/workloads/powershell")
     parser.add_argument("--drive", default="Z")
     parser.add_argument("--continue-on-error", action="store_true")
+    parser.add_argument("--fast-workload", action="store_true", help="Use an open StreamWriter for faster JSONL logging.")
+    parser.add_argument("--progress-every", type=int, default=1, help="Print progress every N operations. Default prints every operation.")
     args = parser.parse_args()
 
     plan = read_jsonl(args.plan_jsonl)
     run_id = plan[0]["run_id"] if plan else Path(args.plan_jsonl).stem
     out_file = Path(args.out_dir) / f"{run_id}.ps1"
-    render(plan, out_file, args.drive, stop_on_error=not args.continue_on_error)
+    render(
+        plan,
+        out_file,
+        args.drive,
+        stop_on_error=not args.continue_on_error,
+        fast_mode=args.fast_workload,
+        progress_every=max(1, args.progress_every),
+    )
     print(out_file)
 
 

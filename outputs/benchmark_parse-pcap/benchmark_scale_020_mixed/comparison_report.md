@@ -4,49 +4,49 @@
 
 | Metric | Value |
 |---|---:|
-| `version_tp` | 47 |
-| `version_fp` | 4 |
-| `version_fn` | 4 |
-| `version_precision` | 0.9216 |
-| `version_recall` | 0.9216 |
-| `version_f1` | 0.9216 |
-| `content_hash_accuracy` | 0.9216 |
-| `size_accuracy` | 0.9216 |
+| `version_tp` | 51 |
+| `version_fp` | 0 |
+| `version_fn` | 0 |
+| `version_precision` | 1.0000 |
+| `version_recall` | 1.0000 |
+| `version_f1` | 1.0000 |
+| `content_hash_accuracy` | 1.0000 |
+| `size_accuracy` | 1.0000 |
 | `version_count_error` | 0 |
-| `index_content_hash_accuracy` | 0.9216 |
+| `index_content_hash_accuracy` | 1.0000 |
 
 ### Strict path content score `(path, md5, size)`
 
 | Metric | Value |
 |---|---:|
-| `tp` | 47 |
-| `fp` | 4 |
-| `fn` | 4 |
-| `precision` | 0.9216 |
-| `recall` | 0.9216 |
-| `f1` | 0.9216 |
+| `tp` | 51 |
+| `fp` | 0 |
+| `fn` | 0 |
+| `precision` | 1.0000 |
+| `recall` | 1.0000 |
+| `f1` | 1.0000 |
 
 ### Content-only score `(md5, size)`
 
 | Metric | Value |
 |---|---:|
-| `tp` | 47 |
-| `fp` | 4 |
-| `fn` | 4 |
-| `precision` | 0.9216 |
-| `recall` | 0.9216 |
-| `f1` | 0.9216 |
+| `tp` | 51 |
+| `fp` | 0 |
+| `fn` | 0 |
+| `precision` | 1.0000 |
+| `recall` | 1.0000 |
+| `f1` | 1.0000 |
 
 ### Mutation content score
 
 | Metric | Value |
 |---|---:|
-| `tp` | 47 |
-| `fp` | 4 |
-| `fn` | 4 |
-| `precision` | 0.9216 |
-| `recall` | 0.9216 |
-| `f1` | 0.9216 |
+| `tp` | 51 |
+| `fp` | 0 |
+| `fn` | 0 |
+| `precision` | 1.0000 |
+| `recall` | 1.0000 |
+| `f1` | 1.0000 |
 
 ### Observed/read baseline score
 
@@ -58,14 +58,14 @@ Not applicable: This scenario has no observed/read baseline versions.
 | Metric | Value |
 |---|---:|
 | `version_tp` | 43 |
-| `version_fp` | 10 |
+| `version_fp` | 9 |
 | `version_fn` | 8 |
-| `version_precision` | 0.8113 |
+| `version_precision` | 0.8269 |
 | `version_recall` | 0.8431 |
-| `version_f1` | 0.8269 |
+| `version_f1` | 0.8350 |
 | `content_hash_accuracy` | 0.8431 |
 | `size_accuracy` | 0.8431 |
-| `version_count_error` | 2 |
+| `version_count_error` | 1 |
 | `index_content_hash_accuracy` | 0.9318 |
 
 ### Strict path content score `(path, md5, size)`
@@ -73,22 +73,22 @@ Not applicable: This scenario has no observed/read baseline versions.
 | Metric | Value |
 |---|---:|
 | `tp` | 43 |
-| `fp` | 10 |
+| `fp` | 9 |
 | `fn` | 8 |
-| `precision` | 0.8113 |
+| `precision` | 0.8269 |
 | `recall` | 0.8431 |
-| `f1` | 0.8269 |
+| `f1` | 0.8350 |
 
 ### Content-only score `(md5, size)`
 
 | Metric | Value |
 |---|---:|
 | `tp` | 46 |
-| `fp` | 7 |
+| `fp` | 6 |
 | `fn` | 5 |
-| `precision` | 0.8679 |
+| `precision` | 0.8846 |
 | `recall` | 0.9020 |
-| `f1` | 0.8846 |
+| `f1` | 0.8932 |
 
 ### Mutation content score
 
@@ -112,82 +112,15 @@ Not applicable: This scenario has no observed/read baseline versions.
 
 ### smbmount missing versions
 
-[
-  {
-    "path": "bench_scale_020_mixed\\dir_00\\sub_00\\file_0000_final.bin",
-    "md5": "a75d36bcd001cd89cb1112100b59e909",
-    "size": 524800
-  },
-  {
-    "path": "bench_scale_020_mixed\\dir_00\\sub_00\\file_0000_final.bin",
-    "md5": "b8a5679bfbe76b5248cb3ed963575280",
-    "size": 262400
-  },
-  {
-    "path": "bench_scale_020_mixed\\dir_00\\sub_01\\file_0010.bin",
-    "md5": "efd3396f7555e9adcd5ac399b4bc34b0",
-    "size": 1929
-  },
-  {
-    "path": "bench_scale_020_mixed\\dir_05\\sub_00\\file_0005.bin",
-    "md5": "ca480ef6a53b954685269128fee5539f",
-    "size": 986
-  }
-]
+[]
 
 ### smbmount extra versions
 
-[
-  {
-    "path": "bench_scale_020_mixed\\dir_00\\sub_00\\file_0000_final.bin",
-    "md5": "20327d618caea19d688fa1cb5c03aedc",
-    "size": 262400
-  },
-  {
-    "path": "bench_scale_020_mixed\\dir_00\\sub_00\\file_0000_final.bin",
-    "md5": "3d65c13f4923feaf08251c61a312bca7",
-    "size": 524288
-  },
-  {
-    "path": "bench_scale_020_mixed\\dir_00\\sub_01\\file_0010.bin",
-    "md5": "185c616342e8ea13283de74f7d9f469b",
-    "size": 1929
-  },
-  {
-    "path": "bench_scale_020_mixed\\dir_05\\sub_00\\file_0005.bin",
-    "md5": "a9ffbcfd1b1c4cc828b3784e1c8da747",
-    "size": 986
-  }
-]
+[]
 
 ### smbmount index wrong hash versions
 
-[
-  {
-    "path": "bench_scale_020_mixed\\dir_00\\sub_00\\file_0000_final.bin",
-    "version": 3,
-    "expected_md5": "b8a5679bfbe76b5248cb3ed963575280",
-    "predicted_md5": "20327d618caea19d688fa1cb5c03aedc"
-  },
-  {
-    "path": "bench_scale_020_mixed\\dir_05\\sub_00\\file_0005.bin",
-    "version": 2,
-    "expected_md5": "ca480ef6a53b954685269128fee5539f",
-    "predicted_md5": "a9ffbcfd1b1c4cc828b3784e1c8da747"
-  },
-  {
-    "path": "bench_scale_020_mixed\\dir_00\\sub_00\\file_0000_final.bin",
-    "version": 2,
-    "expected_md5": "a75d36bcd001cd89cb1112100b59e909",
-    "predicted_md5": "3d65c13f4923feaf08251c61a312bca7"
-  },
-  {
-    "path": "bench_scale_020_mixed\\dir_00\\sub_01\\file_0010.bin",
-    "version": 2,
-    "expected_md5": "efd3396f7555e9adcd5ac399b4bc34b0",
-    "predicted_md5": "185c616342e8ea13283de74f7d9f469b"
-  }
-]
+[]
 
 ### pcapFS missing versions
 
@@ -281,11 +214,6 @@ Not applicable: This scenario has no observed/read baseline versions.
     "path": "bench_scale_020_mixed\\dir_07\\sub_00\\file_0007.bin",
     "md5": "58f77b9650fbb340a2a207213255a368",
     "size": 2986
-  },
-  {
-    "path": "udp\\0-9393_udp0",
-    "md5": "6923a51dca7582d20f3925a2b45357f1",
-    "size": 201
   }
 ]
 
@@ -293,16 +221,16 @@ Not applicable: This scenario has no observed/read baseline versions.
 
 [
   {
-    "path": "bench_scale_020_mixed\\dir_07\\sub_00\\file_0007_final.bin",
-    "version": 0,
-    "expected_md5": "20073d4d8f386479d8b32ec556eb2bd8",
-    "predicted_md5": "58f77b9650fbb340a2a207213255a368"
-  },
-  {
     "path": "bench_scale_020_mixed\\dir_04\\sub_01\\file_0014_final.bin",
     "version": 0,
     "expected_md5": "2ac3373311d5463cb40df8967a70fd5e",
     "predicted_md5": "05aa50d77a6700e069a6ba63dcb1c6b4"
+  },
+  {
+    "path": "bench_scale_020_mixed\\dir_07\\sub_00\\file_0007_final.bin",
+    "version": 0,
+    "expected_md5": "20073d4d8f386479d8b32ec556eb2bd8",
+    "predicted_md5": "58f77b9650fbb340a2a207213255a368"
   },
   {
     "path": "bench_scale_020_mixed\\dir_00\\sub_00\\file_0000_final.bin",

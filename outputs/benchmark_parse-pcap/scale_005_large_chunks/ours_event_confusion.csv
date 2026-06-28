@@ -1,0 +1,17 @@
+expected,predicted,count
+append,context_seen,5
+append,metadata_update,5
+delete,missing,1
+mkdir,context_seen,19
+none,append,35
+none,delete,5
+none,metadata_update,23
+none,mkdir,16
+none,overwrite,4
+none,read,40
+none,rename,1
+none,truncate,1
+overwrite,metadata_update,2
+rename,context_seen,1
+rmdir,mkdir,3
+truncate,metadata_update,1

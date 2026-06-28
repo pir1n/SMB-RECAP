@@ -450,6 +450,7 @@
         {
           "version": 0,
           "op": "write",
+          "version_kind": "mutation",
           "md5": "7ba28798b485035f812c6197dfdf0fce",
           "size": 524288,
           "metadata": {
@@ -466,6 +467,7 @@
         {
           "version": 1,
           "op": "write",
+          "version_kind": "mutation",
           "md5": "1db2a6d1a594672b46a6a6db99e5ccde",
           "size": 524800,
           "metadata": {
@@ -482,14 +484,15 @@
         {
           "version": 2,
           "op": "write",
-          "md5": "3d65c13f4923feaf08251c61a312bca7",
-          "size": 524288,
+          "version_kind": "mutation",
+          "md5": "a75d36bcd001cd89cb1112100b59e909",
+          "size": 524800,
           "metadata": {
             "created": 1782528164.189108,
             "modified": 1782528164.4861088,
             "accessed": 1782528164.4861088,
             "changed": 1782528164.4861088,
-            "size": 524288,
+            "size": 524800,
             "timestamp_mode": "network",
             "version_timestamp_source": "network",
             "network_timestamp": 1782528164.465695
@@ -498,13 +501,18 @@
         {
           "version": 3,
           "op": "truncate",
-          "md5": "20327d618caea19d688fa1cb5c03aedc",
+          "version_kind": "mutation",
+          "md5": "b8a5679bfbe76b5248cb3ed963575280",
           "size": 262400,
           "metadata": {
             "created": 1782528164.189108,
-            "modified": 1782528164.5485764,
-            "accessed": 1782528164.5485764,
-            "size": 262400
+            "modified": 1782528164.4861088,
+            "accessed": 1782528164.4861088,
+            "changed": 1782528164.4861088,
+            "size": 262400,
+            "timestamp_mode": "network",
+            "version_timestamp_source": "network",
+            "network_timestamp": 1782528164.4676
           }
         }
       ],
@@ -812,6 +820,7 @@
         {
           "version": 0,
           "op": "write",
+          "version_kind": "mutation",
           "md5": "a505885e56e61106abbe5b208c29226a",
           "size": 2786,
           "metadata": {
@@ -828,6 +837,7 @@
         {
           "version": 1,
           "op": "write",
+          "version_kind": "mutation",
           "md5": "41e47c5b088420f7584e3024a3717e84",
           "size": 3134,
           "metadata": {
@@ -926,6 +936,7 @@
         {
           "version": 0,
           "op": "write",
+          "version_kind": "mutation",
           "md5": "96842dae38c3298f4cda206ea64ab13f",
           "size": 4046,
           "metadata": {
@@ -942,6 +953,7 @@
         {
           "version": 1,
           "op": "write",
+          "version_kind": "mutation",
           "md5": "c6a029a8adaaba4454fbf2cb1cd9665a",
           "size": 4551,
           "metadata": {
@@ -1040,6 +1052,7 @@
         {
           "version": 0,
           "op": "write",
+          "version_kind": "mutation",
           "md5": "06ff686dec4d6ee70f30232dbaf9d2a7",
           "size": 2440,
           "metadata": {
@@ -1056,6 +1069,7 @@
         {
           "version": 1,
           "op": "write",
+          "version_kind": "mutation",
           "md5": "1362db8e6feec9a7ff30bbd2e8a9ceaf",
           "size": 2745,
           "metadata": {
@@ -1072,6 +1086,7 @@
         {
           "version": 2,
           "op": "write",
+          "version_kind": "mutation",
           "md5": "01f5d0c0db6bafbf7f5e0a7efbdba0fb",
           "size": 2745,
           "metadata": {
@@ -1197,6 +1212,7 @@
         {
           "version": 0,
           "op": "write",
+          "version_kind": "mutation",
           "md5": "d39e3ff3ce06c5b70305ebdb266e7788",
           "size": 3163,
           "metadata": {
@@ -1213,6 +1229,7 @@
         {
           "version": 1,
           "op": "write",
+          "version_kind": "mutation",
           "md5": "ea8696849b8f5742e7ed78dc1c81ab4b",
           "size": 3558,
           "metadata": {
@@ -1311,6 +1328,7 @@
         {
           "version": 0,
           "op": "write",
+          "version_kind": "mutation",
           "md5": "c4d2ec0b475a38f890e769fe4b14ca0d",
           "size": 1754,
           "metadata": {
@@ -1327,6 +1345,7 @@
         {
           "version": 1,
           "op": "write",
+          "version_kind": "mutation",
           "md5": "c93a9ae7b6392dda12b08b60242e93fe",
           "size": 1973,
           "metadata": {
@@ -1343,13 +1362,18 @@
         {
           "version": 2,
           "op": "truncate",
-          "md5": "a9ffbcfd1b1c4cc828b3784e1c8da747",
+          "version_kind": "mutation",
+          "md5": "ca480ef6a53b954685269128fee5539f",
           "size": 986,
           "metadata": {
             "created": 1782528166.0485344,
-            "modified": 1782528166.174408,
-            "accessed": 1782528166.2673492,
-            "size": 986
+            "modified": 1782528166.1737804,
+            "accessed": 1782528166.1737804,
+            "changed": 1782528166.1737804,
+            "size": 986,
+            "timestamp_mode": "network",
+            "version_timestamp_source": "network",
+            "network_timestamp": 1782528166.174985
           }
         }
       ],
@@ -1464,6 +1488,7 @@
         {
           "version": 0,
           "op": "write",
+          "version_kind": "mutation",
           "md5": "204ebe012e6bf1b604258faf1c6568e7",
           "size": 2594,
           "metadata": {
@@ -1480,6 +1505,7 @@
         {
           "version": 1,
           "op": "write",
+          "version_kind": "mutation",
           "md5": "6de96d6103575db2f6478d3d5b3ba915",
           "size": 2918,
           "metadata": {
@@ -1496,6 +1522,7 @@
         {
           "version": 2,
           "op": "write",
+          "version_kind": "mutation",
           "md5": "dfd6b846b0f0ebb23118da1ccf69301a",
           "size": 2918,
           "metadata": {
@@ -1621,6 +1648,7 @@
         {
           "version": 0,
           "op": "write",
+          "version_kind": "mutation",
           "md5": "20073d4d8f386479d8b32ec556eb2bd8",
           "size": 2655,
           "metadata": {
@@ -1637,6 +1665,7 @@
         {
           "version": 1,
           "op": "write",
+          "version_kind": "mutation",
           "md5": "58f77b9650fbb340a2a207213255a368",
           "size": 2986,
           "metadata": {
@@ -1766,6 +1795,7 @@
         {
           "version": 0,
           "op": "write",
+          "version_kind": "mutation",
           "md5": "85ce5c43b38dab8b6d2e3f1b34e8b543",
           "size": 3253,
           "metadata": {
@@ -1782,6 +1812,7 @@
         {
           "version": 1,
           "op": "write",
+          "version_kind": "mutation",
           "md5": "8db1887a5b163a2c75c344b3cfa192f5",
           "size": 3659,
           "metadata": {
@@ -1880,6 +1911,7 @@
         {
           "version": 0,
           "op": "write",
+          "version_kind": "mutation",
           "md5": "b796cb09fc666f55c97494190d234fd3",
           "size": 934,
           "metadata": {
@@ -1896,6 +1928,7 @@
         {
           "version": 1,
           "op": "write",
+          "version_kind": "mutation",
           "md5": "a238a9f0f959ce65cb60b24bf666926c",
           "size": 1050,
           "metadata": {
@@ -1912,6 +1945,7 @@
         {
           "version": 2,
           "op": "write",
+          "version_kind": "mutation",
           "md5": "f277a430b2cd15ae840fbca1ee3ecc5b",
           "size": 1050,
           "metadata": {
@@ -2037,6 +2071,7 @@
         {
           "version": 0,
           "op": "write",
+          "version_kind": "mutation",
           "md5": "011527abc0b222583495a31dc21a00e6",
           "size": 3431,
           "metadata": {
@@ -2053,6 +2088,7 @@
         {
           "version": 1,
           "op": "write",
+          "version_kind": "mutation",
           "md5": "e02b7bc648647ce246658553d54327fb",
           "size": 3859,
           "metadata": {
@@ -2069,13 +2105,18 @@
         {
           "version": 2,
           "op": "truncate",
-          "md5": "185c616342e8ea13283de74f7d9f469b",
+          "version_kind": "mutation",
+          "md5": "efd3396f7555e9adcd5ac399b4bc34b0",
           "size": 1929,
           "metadata": {
             "created": 1782528167.767355,
-            "modified": 1782528167.8749485,
-            "accessed": 1782528167.9549084,
-            "size": 1929
+            "modified": 1782528167.876894,
+            "accessed": 1782528167.876894,
+            "changed": 1782528167.876894,
+            "size": 1929,
+            "timestamp_mode": "network",
+            "version_timestamp_source": "network",
+            "network_timestamp": 1782528167.875067
           }
         }
       ],
@@ -2190,6 +2231,7 @@
         {
           "version": 0,
           "op": "write",
+          "version_kind": "mutation",
           "md5": "69414c9d4b4d3045d9657a0c2f86c042",
           "size": 3632,
           "metadata": {
@@ -2206,6 +2248,7 @@
         {
           "version": 1,
           "op": "write",
+          "version_kind": "mutation",
           "md5": "82fc8edee016bd016d893f60b5a9c5d9",
           "size": 4086,
           "metadata": {
@@ -2313,6 +2356,7 @@
         {
           "version": 0,
           "op": "write",
+          "version_kind": "mutation",
           "md5": "293a46cbaf358256e05e339c328bf360",
           "size": 1619,
           "metadata": {
@@ -2329,6 +2373,7 @@
         {
           "version": 1,
           "op": "write",
+          "version_kind": "mutation",
           "md5": "e61d84d632fe37790a343b8dbe9eb410",
           "size": 1821,
           "metadata": {
@@ -2345,6 +2390,7 @@
         {
           "version": 2,
           "op": "write",
+          "version_kind": "mutation",
           "md5": "4690749e548cc3220b03bd0d3e6b5ab3",
           "size": 1821,
           "metadata": {
@@ -2470,6 +2516,7 @@
         {
           "version": 0,
           "op": "write",
+          "version_kind": "mutation",
           "md5": "897be0cd29e471b38536ad2a8b82dd51",
           "size": 1827,
           "metadata": {
@@ -2486,6 +2533,7 @@
         {
           "version": 1,
           "op": "write",
+          "version_kind": "mutation",
           "md5": "0a124f393f35504076c0474532840840",
           "size": 2055,
           "metadata": {
@@ -2584,6 +2632,7 @@
         {
           "version": 0,
           "op": "write",
+          "version_kind": "mutation",
           "md5": "2ac3373311d5463cb40df8967a70fd5e",
           "size": 2856,
           "metadata": {
@@ -2600,6 +2649,7 @@
         {
           "version": 1,
           "op": "write",
+          "version_kind": "mutation",
           "md5": "05aa50d77a6700e069a6ba63dcb1c6b4",
           "size": 3213,
           "metadata": {
@@ -2729,6 +2779,7 @@
         {
           "version": 0,
           "op": "write",
+          "version_kind": "mutation",
           "md5": "c9c4ba295d3fb39f1a8800cd3e1b7994",
           "size": 3490,
           "metadata": {
@@ -2745,6 +2796,7 @@
         {
           "version": 1,
           "op": "write",
+          "version_kind": "mutation",
           "md5": "51132bf6ce435b4bd9f7a88a62355028",
           "size": 3926,
           "metadata": {
@@ -2761,6 +2813,7 @@
         {
           "version": 2,
           "op": "write",
+          "version_kind": "mutation",
           "md5": "2524fe2873684ab7f38636b5878468e0",
           "size": 3926,
           "metadata": {
@@ -2777,13 +2830,18 @@
         {
           "version": 3,
           "op": "truncate",
+          "version_kind": "mutation",
           "md5": "fe5d6b8814e82a9f38c0e270220bdc9b",
           "size": 1963,
           "metadata": {
             "created": 1782528169.4393444,
-            "modified": 1782528169.7203064,
-            "accessed": 1782528169.7203064,
-            "size": 1963
+            "modified": 1782528169.6580677,
+            "accessed": 1782528169.6580677,
+            "changed": 1782528169.6580677,
+            "size": 1963,
+            "timestamp_mode": "network",
+            "version_timestamp_source": "network",
+            "network_timestamp": 1782528169.638778
           }
         }
       ],
@@ -2925,6 +2983,7 @@
         {
           "version": 0,
           "op": "write",
+          "version_kind": "mutation",
           "md5": "5ef7d6baf3acdf0e175b3aa343b8e8f0",
           "size": 1729,
           "metadata": {
@@ -2941,6 +3000,7 @@
         {
           "version": 1,
           "op": "write",
+          "version_kind": "mutation",
           "md5": "f01e04b5957beacbcfb0f693ce3076a8",
           "size": 1945,
           "metadata": {
@@ -3039,6 +3099,7 @@
         {
           "version": 0,
           "op": "write",
+          "version_kind": "mutation",
           "md5": "de4f3857cd55cd5004c896e412e72b2a",
           "size": 4031,
           "metadata": {
@@ -3055,6 +3116,7 @@
         {
           "version": 1,
           "op": "write",
+          "version_kind": "mutation",
           "md5": "b2235d912767714ad0b893f710722187",
           "size": 4534,
           "metadata": {
@@ -3153,6 +3215,7 @@
         {
           "version": 0,
           "op": "write",
+          "version_kind": "mutation",
           "md5": "797734b2f263e12deaabb7ea77749d93",
           "size": 1516,
           "metadata": {
@@ -3169,6 +3232,7 @@
         {
           "version": 1,
           "op": "write",
+          "version_kind": "mutation",
           "md5": "0bbfd5d03686fa2858ca25d98b113b67",
           "size": 1705,
           "metadata": {
@@ -3185,6 +3249,7 @@
         {
           "version": 2,
           "op": "write",
+          "version_kind": "mutation",
           "md5": "abbcf894fb46be8afaf71ed05e4eb1c1",
           "size": 1705,
           "metadata": {
@@ -3310,6 +3375,7 @@
         {
           "version": 0,
           "op": "write",
+          "version_kind": "mutation",
           "md5": "720b3decfa444a2e407235377a2fad05",
           "size": 1859,
           "metadata": {
@@ -3326,6 +3392,7 @@
         {
           "version": 1,
           "op": "write",
+          "version_kind": "mutation",
           "md5": "15bdd59fcac6b5aa9bc4513df1a7fba2",
           "size": 2091,
           "metadata": {

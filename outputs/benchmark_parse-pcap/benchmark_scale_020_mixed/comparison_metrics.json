@@ -1,207 +1,47 @@
 {
   "scenario_dir": "bench_scale_020_mixed",
   "ours": {
-    "version_tp": 47,
-    "version_fp": 4,
-    "version_fn": 4,
-    "version_precision": 0.9215686274509803,
-    "version_recall": 0.9215686274509803,
-    "version_f1": 0.9215686274509803,
-    "content_hash_accuracy": 0.9215686274509803,
-    "size_accuracy": 0.9215686274509803,
+    "version_tp": 51,
+    "version_fp": 0,
+    "version_fn": 0,
+    "version_precision": 1.0,
+    "version_recall": 1.0,
+    "version_f1": 1.0,
+    "content_hash_accuracy": 1.0,
+    "size_accuracy": 1.0,
     "version_count_error": 0,
-    "missing_versions": [
-      {
-        "path": "bench_scale_020_mixed\\dir_00\\sub_00\\file_0000_final.bin",
-        "md5": "a75d36bcd001cd89cb1112100b59e909",
-        "size": 524800
-      },
-      {
-        "path": "bench_scale_020_mixed\\dir_00\\sub_00\\file_0000_final.bin",
-        "md5": "b8a5679bfbe76b5248cb3ed963575280",
-        "size": 262400
-      },
-      {
-        "path": "bench_scale_020_mixed\\dir_00\\sub_01\\file_0010.bin",
-        "md5": "efd3396f7555e9adcd5ac399b4bc34b0",
-        "size": 1929
-      },
-      {
-        "path": "bench_scale_020_mixed\\dir_05\\sub_00\\file_0005.bin",
-        "md5": "ca480ef6a53b954685269128fee5539f",
-        "size": 986
-      }
-    ],
-    "extra_versions": [
-      {
-        "path": "bench_scale_020_mixed\\dir_00\\sub_00\\file_0000_final.bin",
-        "md5": "20327d618caea19d688fa1cb5c03aedc",
-        "size": 262400
-      },
-      {
-        "path": "bench_scale_020_mixed\\dir_00\\sub_00\\file_0000_final.bin",
-        "md5": "3d65c13f4923feaf08251c61a312bca7",
-        "size": 524288
-      },
-      {
-        "path": "bench_scale_020_mixed\\dir_00\\sub_01\\file_0010.bin",
-        "md5": "185c616342e8ea13283de74f7d9f469b",
-        "size": 1929
-      },
-      {
-        "path": "bench_scale_020_mixed\\dir_05\\sub_00\\file_0005.bin",
-        "md5": "a9ffbcfd1b1c4cc828b3784e1c8da747",
-        "size": 986
-      }
-    ],
+    "missing_versions": [],
+    "extra_versions": [],
     "wrong_hash": [],
     "strict_path_content": {
-      "tp": 47,
-      "fp": 4,
-      "fn": 4,
-      "precision": 0.9215686274509803,
-      "recall": 0.9215686274509803,
-      "f1": 0.9215686274509803,
-      "missing": [
-        {
-          "path": "bench_scale_020_mixed\\dir_00\\sub_00\\file_0000_final.bin",
-          "md5": "a75d36bcd001cd89cb1112100b59e909",
-          "size": 524800
-        },
-        {
-          "path": "bench_scale_020_mixed\\dir_00\\sub_00\\file_0000_final.bin",
-          "md5": "b8a5679bfbe76b5248cb3ed963575280",
-          "size": 262400
-        },
-        {
-          "path": "bench_scale_020_mixed\\dir_00\\sub_01\\file_0010.bin",
-          "md5": "efd3396f7555e9adcd5ac399b4bc34b0",
-          "size": 1929
-        },
-        {
-          "path": "bench_scale_020_mixed\\dir_05\\sub_00\\file_0005.bin",
-          "md5": "ca480ef6a53b954685269128fee5539f",
-          "size": 986
-        }
-      ],
-      "extra": [
-        {
-          "path": "bench_scale_020_mixed\\dir_00\\sub_00\\file_0000_final.bin",
-          "md5": "20327d618caea19d688fa1cb5c03aedc",
-          "size": 262400
-        },
-        {
-          "path": "bench_scale_020_mixed\\dir_00\\sub_00\\file_0000_final.bin",
-          "md5": "3d65c13f4923feaf08251c61a312bca7",
-          "size": 524288
-        },
-        {
-          "path": "bench_scale_020_mixed\\dir_00\\sub_01\\file_0010.bin",
-          "md5": "185c616342e8ea13283de74f7d9f469b",
-          "size": 1929
-        },
-        {
-          "path": "bench_scale_020_mixed\\dir_05\\sub_00\\file_0005.bin",
-          "md5": "a9ffbcfd1b1c4cc828b3784e1c8da747",
-          "size": 986
-        }
-      ]
+      "tp": 51,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "missing": [],
+      "extra": []
     },
     "content_only": {
-      "tp": 47,
-      "fp": 4,
-      "fn": 4,
-      "precision": 0.9215686274509803,
-      "recall": 0.9215686274509803,
-      "f1": 0.9215686274509803,
-      "missing": [
-        {
-          "md5": "a75d36bcd001cd89cb1112100b59e909",
-          "size": 524800
-        },
-        {
-          "md5": "b8a5679bfbe76b5248cb3ed963575280",
-          "size": 262400
-        },
-        {
-          "md5": "ca480ef6a53b954685269128fee5539f",
-          "size": 986
-        },
-        {
-          "md5": "efd3396f7555e9adcd5ac399b4bc34b0",
-          "size": 1929
-        }
-      ],
-      "extra": [
-        {
-          "md5": "185c616342e8ea13283de74f7d9f469b",
-          "size": 1929
-        },
-        {
-          "md5": "20327d618caea19d688fa1cb5c03aedc",
-          "size": 262400
-        },
-        {
-          "md5": "3d65c13f4923feaf08251c61a312bca7",
-          "size": 524288
-        },
-        {
-          "md5": "a9ffbcfd1b1c4cc828b3784e1c8da747",
-          "size": 986
-        }
-      ]
+      "tp": 51,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "missing": [],
+      "extra": []
     },
     "mutation_content": {
-      "tp": 47,
-      "fp": 4,
-      "fn": 4,
-      "precision": 0.9215686274509803,
-      "recall": 0.9215686274509803,
-      "f1": 0.9215686274509803,
-      "missing": [
-        {
-          "path": "bench_scale_020_mixed\\dir_00\\sub_00\\file_0000_final.bin",
-          "md5": "a75d36bcd001cd89cb1112100b59e909",
-          "size": 524800
-        },
-        {
-          "path": "bench_scale_020_mixed\\dir_00\\sub_00\\file_0000_final.bin",
-          "md5": "b8a5679bfbe76b5248cb3ed963575280",
-          "size": 262400
-        },
-        {
-          "path": "bench_scale_020_mixed\\dir_00\\sub_01\\file_0010.bin",
-          "md5": "efd3396f7555e9adcd5ac399b4bc34b0",
-          "size": 1929
-        },
-        {
-          "path": "bench_scale_020_mixed\\dir_05\\sub_00\\file_0005.bin",
-          "md5": "ca480ef6a53b954685269128fee5539f",
-          "size": 986
-        }
-      ],
-      "extra": [
-        {
-          "path": "bench_scale_020_mixed\\dir_00\\sub_00\\file_0000_final.bin",
-          "md5": "20327d618caea19d688fa1cb5c03aedc",
-          "size": 262400
-        },
-        {
-          "path": "bench_scale_020_mixed\\dir_00\\sub_00\\file_0000_final.bin",
-          "md5": "3d65c13f4923feaf08251c61a312bca7",
-          "size": 524288
-        },
-        {
-          "path": "bench_scale_020_mixed\\dir_00\\sub_01\\file_0010.bin",
-          "md5": "185c616342e8ea13283de74f7d9f469b",
-          "size": 1929
-        },
-        {
-          "path": "bench_scale_020_mixed\\dir_05\\sub_00\\file_0005.bin",
-          "md5": "a9ffbcfd1b1c4cc828b3784e1c8da747",
-          "size": 986
-        }
-      ]
+      "tp": 51,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "missing": [],
+      "extra": []
     },
     "observed_content": {
       "applicable": false,
@@ -210,47 +50,22 @@
     "index_version_tp": 51,
     "index_version_fp": 0,
     "index_version_fn": 0,
-    "index_content_hash_accuracy": 0.9215686274509803,
-    "index_size_accuracy": 0.9803921568627451,
+    "index_content_hash_accuracy": 1.0,
+    "index_size_accuracy": 1.0,
     "index_missing_versions": [],
     "index_extra_versions": [],
-    "index_wrong_hash": [
-      {
-        "path": "bench_scale_020_mixed\\dir_00\\sub_00\\file_0000_final.bin",
-        "version": 3,
-        "expected_md5": "b8a5679bfbe76b5248cb3ed963575280",
-        "predicted_md5": "20327d618caea19d688fa1cb5c03aedc"
-      },
-      {
-        "path": "bench_scale_020_mixed\\dir_05\\sub_00\\file_0005.bin",
-        "version": 2,
-        "expected_md5": "ca480ef6a53b954685269128fee5539f",
-        "predicted_md5": "a9ffbcfd1b1c4cc828b3784e1c8da747"
-      },
-      {
-        "path": "bench_scale_020_mixed\\dir_00\\sub_00\\file_0000_final.bin",
-        "version": 2,
-        "expected_md5": "a75d36bcd001cd89cb1112100b59e909",
-        "predicted_md5": "3d65c13f4923feaf08251c61a312bca7"
-      },
-      {
-        "path": "bench_scale_020_mixed\\dir_00\\sub_01\\file_0010.bin",
-        "version": 2,
-        "expected_md5": "efd3396f7555e9adcd5ac399b4bc34b0",
-        "predicted_md5": "185c616342e8ea13283de74f7d9f469b"
-      }
-    ]
+    "index_wrong_hash": []
   },
   "pcapfs": {
     "version_tp": 43,
-    "version_fp": 10,
+    "version_fp": 9,
     "version_fn": 8,
-    "version_precision": 0.8113207547169812,
+    "version_precision": 0.8269230769230769,
     "version_recall": 0.8431372549019608,
-    "version_f1": 0.826923076923077,
+    "version_f1": 0.8349514563106797,
     "content_hash_accuracy": 0.8431372549019608,
     "size_accuracy": 0.8431372549019608,
-    "version_count_error": 2,
+    "version_count_error": 1,
     "missing_versions": [
       {
         "path": "bench_scale_020_mixed\\dir_00\\sub_00\\file_0000_final.bin",
@@ -338,21 +153,16 @@
         "path": "bench_scale_020_mixed\\dir_07\\sub_00\\file_0007.bin",
         "md5": "58f77b9650fbb340a2a207213255a368",
         "size": 2986
-      },
-      {
-        "path": "udp\\0-9393_udp0",
-        "md5": "6923a51dca7582d20f3925a2b45357f1",
-        "size": 201
       }
     ],
     "wrong_hash": [],
     "strict_path_content": {
       "tp": 43,
-      "fp": 10,
+      "fp": 9,
       "fn": 8,
-      "precision": 0.8113207547169812,
+      "precision": 0.8269230769230769,
       "recall": 0.8431372549019608,
-      "f1": 0.826923076923077,
+      "f1": 0.8349514563106797,
       "missing": [
         {
           "path": "bench_scale_020_mixed\\dir_00\\sub_00\\file_0000_final.bin",
@@ -440,21 +250,16 @@
           "path": "bench_scale_020_mixed\\dir_07\\sub_00\\file_0007.bin",
           "md5": "58f77b9650fbb340a2a207213255a368",
           "size": 2986
-        },
-        {
-          "path": "udp\\0-9393_udp0",
-          "md5": "6923a51dca7582d20f3925a2b45357f1",
-          "size": 201
         }
       ]
     },
     "content_only": {
       "tp": 46,
-      "fp": 7,
+      "fp": 6,
       "fn": 5,
-      "precision": 0.8679245283018868,
+      "precision": 0.8846153846153846,
       "recall": 0.9019607843137255,
-      "f1": 0.8846153846153846,
+      "f1": 0.8932038834951457,
       "missing": [
         {
           "md5": "1db2a6d1a594672b46a6a6db99e5ccde",
@@ -491,10 +296,6 @@
           "size": 2986
         },
         {
-          "md5": "6923a51dca7582d20f3925a2b45357f1",
-          "size": 201
-        },
-        {
           "md5": "b3d4cfbe25ca02a747b08fe53a65343f",
           "size": 262144
         },
@@ -517,7 +318,7 @@
       "note": "This scenario has no observed/read baseline versions."
     },
     "index_version_tp": 44,
-    "index_version_fp": 9,
+    "index_version_fp": 8,
     "index_version_fn": 7,
     "index_content_hash_accuracy": 0.9318181818181818,
     "index_size_accuracy": 0.9318181818181818,
@@ -583,24 +384,20 @@
       {
         "path": "bench_scale_020_mixed\\dir_07\\sub_00\\file_0007.bin",
         "version": 1
-      },
-      {
-        "path": "udp\\0-9393_udp0",
-        "version": 0
       }
     ],
     "index_wrong_hash": [
-      {
-        "path": "bench_scale_020_mixed\\dir_07\\sub_00\\file_0007_final.bin",
-        "version": 0,
-        "expected_md5": "20073d4d8f386479d8b32ec556eb2bd8",
-        "predicted_md5": "58f77b9650fbb340a2a207213255a368"
-      },
       {
         "path": "bench_scale_020_mixed\\dir_04\\sub_01\\file_0014_final.bin",
         "version": 0,
         "expected_md5": "2ac3373311d5463cb40df8967a70fd5e",
         "predicted_md5": "05aa50d77a6700e069a6ba63dcb1c6b4"
+      },
+      {
+        "path": "bench_scale_020_mixed\\dir_07\\sub_00\\file_0007_final.bin",
+        "version": 0,
+        "expected_md5": "20073d4d8f386479d8b32ec556eb2bd8",
+        "predicted_md5": "58f77b9650fbb340a2a207213255a368"
       },
       {
         "path": "bench_scale_020_mixed\\dir_00\\sub_00\\file_0000_final.bin",
@@ -611,8 +408,8 @@
     ]
   },
   "delta": {
-    "strict_path_version_f1": 0.09464555052790335,
-    "content_only_f1": 0.036953242835595757,
+    "strict_path_version_f1": 0.16504854368932032,
+    "content_only_f1": 0.10679611650485432,
     "mutation_content_f1": "not_applicable_for_pcapfs"
   }
 }

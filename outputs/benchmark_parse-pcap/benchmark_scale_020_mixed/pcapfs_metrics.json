@@ -1,13 +1,13 @@
 {
   "version_tp": 43,
-  "version_fp": 10,
+  "version_fp": 9,
   "version_fn": 8,
-  "version_precision": 0.8113207547169812,
+  "version_precision": 0.8269230769230769,
   "version_recall": 0.8431372549019608,
-  "version_f1": 0.826923076923077,
+  "version_f1": 0.8349514563106797,
   "content_hash_accuracy": 0.8431372549019608,
   "size_accuracy": 0.8431372549019608,
-  "version_count_error": 2,
+  "version_count_error": 1,
   "missing_versions": [
     {
       "path": "bench_scale_020_mixed\\dir_00\\sub_00\\file_0000_final.bin",
@@ -95,21 +95,16 @@
       "path": "bench_scale_020_mixed\\dir_07\\sub_00\\file_0007.bin",
       "md5": "58f77b9650fbb340a2a207213255a368",
       "size": 2986
-    },
-    {
-      "path": "udp\\0-9393_udp0",
-      "md5": "6923a51dca7582d20f3925a2b45357f1",
-      "size": 201
     }
   ],
   "wrong_hash": [],
   "strict_path_content": {
     "tp": 43,
-    "fp": 10,
+    "fp": 9,
     "fn": 8,
-    "precision": 0.8113207547169812,
+    "precision": 0.8269230769230769,
     "recall": 0.8431372549019608,
-    "f1": 0.826923076923077,
+    "f1": 0.8349514563106797,
     "missing": [
       {
         "path": "bench_scale_020_mixed\\dir_00\\sub_00\\file_0000_final.bin",
@@ -197,21 +192,16 @@
         "path": "bench_scale_020_mixed\\dir_07\\sub_00\\file_0007.bin",
         "md5": "58f77b9650fbb340a2a207213255a368",
         "size": 2986
-      },
-      {
-        "path": "udp\\0-9393_udp0",
-        "md5": "6923a51dca7582d20f3925a2b45357f1",
-        "size": 201
       }
     ]
   },
   "content_only": {
     "tp": 46,
-    "fp": 7,
+    "fp": 6,
     "fn": 5,
-    "precision": 0.8679245283018868,
+    "precision": 0.8846153846153846,
     "recall": 0.9019607843137255,
-    "f1": 0.8846153846153846,
+    "f1": 0.8932038834951457,
     "missing": [
       {
         "md5": "1db2a6d1a594672b46a6a6db99e5ccde",
@@ -248,10 +238,6 @@
         "size": 2986
       },
       {
-        "md5": "6923a51dca7582d20f3925a2b45357f1",
-        "size": 201
-      },
-      {
         "md5": "b3d4cfbe25ca02a747b08fe53a65343f",
         "size": 262144
       },
@@ -274,7 +260,7 @@
     "note": "This scenario has no observed/read baseline versions."
   },
   "index_version_tp": 44,
-  "index_version_fp": 9,
+  "index_version_fp": 8,
   "index_version_fn": 7,
   "index_content_hash_accuracy": 0.9318181818181818,
   "index_size_accuracy": 0.9318181818181818,
@@ -340,24 +326,20 @@
     {
       "path": "bench_scale_020_mixed\\dir_07\\sub_00\\file_0007.bin",
       "version": 1
-    },
-    {
-      "path": "udp\\0-9393_udp0",
-      "version": 0
     }
   ],
   "index_wrong_hash": [
-    {
-      "path": "bench_scale_020_mixed\\dir_07\\sub_00\\file_0007_final.bin",
-      "version": 0,
-      "expected_md5": "20073d4d8f386479d8b32ec556eb2bd8",
-      "predicted_md5": "58f77b9650fbb340a2a207213255a368"
-    },
     {
       "path": "bench_scale_020_mixed\\dir_04\\sub_01\\file_0014_final.bin",
       "version": 0,
       "expected_md5": "2ac3373311d5463cb40df8967a70fd5e",
       "predicted_md5": "05aa50d77a6700e069a6ba63dcb1c6b4"
+    },
+    {
+      "path": "bench_scale_020_mixed\\dir_07\\sub_00\\file_0007_final.bin",
+      "version": 0,
+      "expected_md5": "20073d4d8f386479d8b32ec556eb2bd8",
+      "predicted_md5": "58f77b9650fbb340a2a207213255a368"
     },
     {
       "path": "bench_scale_020_mixed\\dir_00\\sub_00\\file_0000_final.bin",

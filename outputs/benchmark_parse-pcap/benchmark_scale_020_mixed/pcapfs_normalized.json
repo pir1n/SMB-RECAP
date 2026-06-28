@@ -776,25 +776,6 @@
         }
       ],
       "events": []
-    },
-    {
-      "path": "udp\\0-9393_udp0",
-      "is_dir": false,
-      "deleted": false,
-      "object_type": "file",
-      "versions": [
-        {
-          "version": 0,
-          "op": null,
-          "version_kind": "content",
-          "size": 201,
-          "md5": "6923a51dca7582d20f3925a2b45357f1",
-          "metadata": {
-            "source_path": "udp\\0-9393_udp0"
-          }
-        }
-      ],
-      "events": []
     }
   ],
   "events": []

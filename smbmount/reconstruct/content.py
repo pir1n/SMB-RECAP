@@ -249,19 +249,46 @@ def process_packets(packets, timestamp_mode="hybrid"):
             data = pkt.get("smb2_read_blob")
 
             if offset is not None and length is not None:
+                actual_length = int(length)
+
+                if data is not None:
+                    try:
+                        actual_length = len(data)
+                    except Exception:
+                        actual_length = int(length)
+
+                latest_content = file_obj.versions.latest_content_version()
+
+                replace_content = False
+
+                if latest_content is not None and latest_content.last_op == "read":
+                    previous_size = int(latest_content.size or 0)
+
+                    replace_content = (
+                        int(offset) == 0
+                        and actual_length > 0
+                        and actual_length < previous_size
+                    )
+
+                final_size = None
+                if replace_content:
+                    final_size = int(offset) + actual_length
+
                 file_obj.add_write(
                     offset,
-                    length,
+                    actual_length,
                     data=data,
                     timestamp=version_time,
                     pkt=event_pkt,
+                    replace_content=replace_content,
+                    final_size=final_size,
                 )
 
                 if file_obj.versions.current:
                     file_obj.versions.current.snapshot_metadata = ts.snapshot_metadata(
                         file_obj,
                         pkt,
-                        size=file_obj.metadata.size,
+                        size=file_obj.versions.current.size,
                     )
 
                 if file_obj.path:

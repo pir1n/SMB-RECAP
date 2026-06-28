@@ -14,6 +14,8 @@ class FileVersion:
         self._data_hash = None
         self.data_chunks = deepcopy(getattr(previous, "data_chunks", [])) if (previous is not None and inherit_chunks) else []
         self.data_map = deepcopy(previous.data_map) if (previous is not None and inherit_chunks) else {}
+        self.expected_size = None
+        self.is_observed_complete = False
 
         if previous is not None and inherit_chunks and not self.data_chunks and self.data_map:
             self.data_chunks = [
@@ -108,6 +110,38 @@ class FileVersion:
             self._data_hash = hashlib.md5(data).hexdigest()
 
         return self._data_hash
+    
+    def has_full_coverage(self, expected_size):
+        if expected_size is None:
+            return False
+
+        expected_size = int(expected_size)
+        if expected_size <= 0:
+            return False
+
+        ranges = []
+
+        for offset, data in self.data_chunks:
+            start = int(offset)
+            end = start + len(data)
+            if end > start:
+                ranges.append((start, end))
+
+        if not ranges:
+            return False
+
+        ranges.sort()
+
+        covered_until = 0
+
+        for start, end in ranges:
+            if start > covered_until:
+                return False
+            covered_until = max(covered_until, end)
+            if covered_until >= expected_size:
+                return True
+
+        return covered_until >= expected_size
     
     def truncate(self, new_size):
         """
@@ -325,22 +359,11 @@ class VersionManager:
         expected_size=None,
         allow_after_prior_content=False,
     ):
-        """
-        Materialize READ thành version chỉ khi READ đủ tin cậy.
-
-        Rule:
-        1. Phải có data.
-        2. Phải đọc từ offset 0.
-        3. Nếu chưa có content version trước đó:
-        -> cho phép tạo baseline read version.
-        4. Nếu đã có content trước đó:
-        -> chỉ cho phép nếu caller xác nhận có external-change hint.
-        5. Nếu biết expected_size thì data phải bao phủ expected_size.
-        """
         if offset is None or length is None or data is None:
             return False
 
         offset = int(offset)
+        length = int(length)
 
         if isinstance(data, bytes):
             raw = data
@@ -359,52 +382,86 @@ class VersionManager:
         if not raw:
             return False
 
-        actual_length = len(raw)
-
-        # Không materialize partial/non-zero-offset read.
-        if offset != 0:
-            return False
-
-        latest = self.latest_content_version()
-        has_prior_content = latest is not None and latest.last_op is not None
-
-        # Nếu đã có version content rồi, READ sau đó thường chỉ là verify/cache.
-        # Chỉ chấp nhận nếu content.py phát hiện external-change hint.
-        if has_prior_content and not allow_after_prior_content:
-            return False
+        actual_length = min(length, len(raw))
+        raw = raw[:actual_length]
 
         if expected_size is None or int(expected_size or 0) <= 0:
-            expected_size = actual_length
+            expected_size = offset + actual_length
 
         expected_size = int(expected_size)
 
-        # Nếu READ không đủ bao phủ size kỳ vọng thì không tạo version.
-        if actual_length < expected_size:
-            return False
-
-        observed = FileVersion(
-            len(self.versions) + 1,
-            None,
-            inherit_chunks=False,
-            file_id=file_id,
+        current_read_in_progress = (
+            self.current is not None
+            and self.current.last_op == "read"
+            and not getattr(self.current, "is_observed_complete", False)
         )
-        observed.modified = timestamp
-        observed.add_chunk(
-            0,
+
+        # Nếu không phải đang nối tiếp một READ baseline còn thiếu chunk,
+        # thì phải quyết định có được tạo READ version mới hay không.
+        if not current_read_in_progress:
+            # READ sau WRITE/TRUNCATE thường chỉ là verify/cache.
+            # Không được biến nó thành observed version.
+            if not allow_after_prior_content and self.latest_mutation_version() is not None:
+                return False
+
+            # Bắt đầu observed READ baseline thì phải bắt đầu từ offset 0.
+            if offset != 0:
+                return False
+
+            observed = FileVersion(
+                len(self.versions) + 1,
+                None,
+                inherit_chunks=False,
+                file_id=file_id,
+            )
+
+            observed.modified = timestamp
+            observed.last_op = "read"
+            observed.size = expected_size
+            observed.expected_size = expected_size
+            observed.is_observed_complete = False
+
+            self.versions.append(observed)
+            self.current = observed
+
+        # Đang có READ baseline in-progress thì cho phép ghép tiếp chunk offset > 0.
+        self.current.expected_size = max(
+            int(getattr(self.current, "expected_size", 0) or 0),
             expected_size,
-            data=raw[:expected_size],
+        )
+
+        self.current.add_chunk(
+            offset,
+            actual_length,
+            data=raw,
             op="read",
         )
 
-        if latest is not None and observed.same_content_as(latest):
-            return False
+        self.current.size = max(
+            int(self.current.size or 0),
+            int(self.current.expected_size or expected_size),
+        )
 
-        self.versions.append(observed)
-        self.current = observed
+        if timestamp is not None:
+            self.current.modified = timestamp
 
-        return True
+        self.current.file_id = file_id or self.current.file_id
 
-    def add_write(self, offset, length, data=None, timestamp=None, file_id=None):
+        complete = self.current.has_full_coverage(self.current.expected_size)
+        self.current.is_observed_complete = complete
+
+        return complete
+
+    def add_write(
+        self,
+        offset,
+        length,
+        data=None,
+        timestamp=None,
+        file_id=None,
+        replace_content=False,
+        final_size=None,
+    ):
         if offset is None or length is None:
             return
 
@@ -414,7 +471,8 @@ class VersionManager:
         if self.current is None:
             self.start_new_version(
                 timestamp,
-                inherit=bool(self.versions),
+                inherit=(bool(self.versions) and not replace_content),
+                inherit_chunks=not replace_content,
                 file_id=file_id,
             )
 
@@ -426,19 +484,22 @@ class VersionManager:
                 file_id=file_id,
             )
 
-        # elif self.current.last_op == "observed_read":
-        #     self.commit(self.current.modified)
-        #     self.start_new_version(
-        #         timestamp,
-        #         inherit=True,
-        #         file_id=file_id,
-        #     )
-        
+        elif self.current.last_op == "read":
+            # WRITE sau observed READ có 2 khả năng:
+            # 1. patch/overwrite một phần file cũ  -> inherit=True
+            # 2. replace/supersede toàn bộ content -> inherit=False
+            self.commit(self.current.modified)
+
+            self.start_new_version(
+                timestamp,
+                inherit=not replace_content,
+                inherit_chunks=not replace_content,
+                file_id=file_id,
+            )
+
         elif self.current.last_op == "truncate":
             current_size = int(self.current.size or 0)
 
-            # Nếu truncate xong WRITE từ offset 0 và ghi đủ size mới,
-            # thì không export truncate riêng. Version hiện tại chuyển thành write.
             if offset == 0 and length >= current_size:
                 pass
             else:
@@ -450,23 +511,21 @@ class VersionManager:
                 )
 
         elif self.current.last_op == "write":
-            expected_offset = self.current.size
+            expected_offset = int(self.current.size or 0)
 
             if offset < expected_offset:
-                # Ghi đè hoặc ghi overlap.
-                # Đây là version mới, nhưng phải inherit=True để giữ phần không bị ghi đè.
-                self.commit(self.current.modified)
-                self.start_new_version(
-                    timestamp,
-                    inherit=True,
-                    file_id=file_id,
-                )
+                has_prior_committed_content = any(
+                    v is not self.current and v.last_op in ("write", "truncate", "read")
+                    for v in self.versions
+                ) or self.base_version is not None
 
-            elif timestamp is not None and self.current.modified is None:
-                self.current.modified = timestamp
-
-        elif timestamp is not None and self.current.modified is None:
-            self.current.modified = timestamp
+                if has_prior_committed_content:
+                    self.commit(self.current.modified)
+                    self.start_new_version(
+                        timestamp,
+                        inherit=True,
+                        file_id=file_id,
+                    )
 
         self.current.add_chunk(
             offset,
@@ -474,6 +533,35 @@ class VersionManager:
             data=data,
             op="write",
         )
+
+        self.current.modified = timestamp
+        self.current.file_id = file_id or self.current.file_id
+        
+        if final_size is not None:
+            final_size = int(final_size)
+            self.current.size = final_size
+
+            # Cắt data_map/data_chunks để không giữ tail cũ sau replace.
+            new_data_chunks = []
+            for chunk_offset, chunk_data in self.current.data_chunks:
+                chunk_offset = int(chunk_offset)
+
+                if chunk_offset >= final_size:
+                    continue
+
+                keep_len = final_size - chunk_offset
+                new_chunk_data = chunk_data[:keep_len]
+
+                if new_chunk_data:
+                    new_data_chunks.append((chunk_offset, new_chunk_data))
+
+            self.current.data_chunks = new_data_chunks
+            self.current.data_map = {
+                int(chunk_offset): chunk_data
+                for chunk_offset, chunk_data in new_data_chunks
+            }
+            self.current._data_hash = None
+        
         
     def truncate(self, new_size, timestamp=None, file_id=None):
         if new_size is None:
@@ -514,7 +602,9 @@ class VersionManager:
         deduped = []
 
         for version in self.versions:
-            # Bỏ version rỗng không có content và không có operation
+            if version.last_op == "read" and not getattr(version, "is_observed_complete", True):
+                continue
+
             if version.last_op is None and not version.data_map:
                 continue
 

@@ -38,13 +38,24 @@ class FileObject:
     def open(self, timestamp=None):
         self.versions.open_session(timestamp, file_id=self.file_id)
 
-    def write(self, offset, length, timestamp=None, data=None, pkt=None):
+    def write(
+        self,
+        offset,
+        length,
+        timestamp=None,
+        data=None,
+        pkt=None,
+        replace_content=False,
+        final_size=None,
+    ):
         self.add_write(
             offset,
             length,
             data=data,
             timestamp=timestamp,
             pkt=pkt,
+            replace_content=replace_content,
+            final_size=final_size,
         )
 
     def commit(self, timestamp=None):
@@ -119,13 +130,24 @@ class FileObject:
 
         return observed
     
-    def add_write(self, offset, length, data=None, timestamp=None, pkt=None):
+    def add_write(
+        self,
+        offset,
+        length,
+        data=None,
+        timestamp=None,
+        pkt=None,
+        replace_content=False,
+        final_size=None,
+    ):
         self.semantic_write(
             offset,
             length,
             data=data,
             timestamp=timestamp,
             pkt=pkt,
+            replace_content=replace_content,
+            final_size=final_size,
         )
 
     def set_path(self, path, timestamp=None):
@@ -238,7 +260,16 @@ class FileObject:
             },
         )
 
-    def semantic_write(self, offset, length, data=None, timestamp=None, pkt=None):
+    def semantic_write(
+        self,
+        offset,
+        length,
+        data=None,
+        timestamp=None,
+        pkt=None,
+        replace_content=False,
+        final_size=None,
+    ):
         if offset is None or length is None:
             return
 
@@ -260,12 +291,18 @@ class FileObject:
             data=data,
             timestamp=timestamp,
             file_id=self.file_id,
+            replace_content=replace_content,
+            final_size=final_size,
         )
 
         new_size = self.versions.current_size()
 
         old_meta_size = self.metadata.size or 0
-        self.metadata.size = max(old_meta_size, new_size)
+
+        if replace_content:
+            self.metadata.size = new_size
+        else:
+            self.metadata.size = max(old_meta_size, new_size)
 
         self.add_event(
             op,

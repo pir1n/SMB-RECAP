@@ -3,10 +3,10 @@ from pathlib import Path
 
 import click
 
-from smbmount.benchmark.normalize_ours import normalize_ours
-from smbmount.benchmark.normalize_pcapfs import normalize_pcapfs
-from smbmount.benchmark.metrics import score_versions, event_confusion
-from smbmount.benchmark.report import (
+from smbmount.benchmark_parsepcap.normalize_ours import normalize_ours
+from smbmount.benchmark_parsepcap.normalize_pcapfs import normalize_pcapfs
+from smbmount.benchmark_parsepcap.metrics import score_versions, event_confusion
+from smbmount.benchmark_parsepcap.report import (
     write_json,
     write_confusion_csv,
     write_markdown_report,

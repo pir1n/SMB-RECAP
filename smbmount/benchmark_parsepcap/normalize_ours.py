@@ -110,15 +110,25 @@ def normalize_ours(input_json_path):
         #     })
 
         versions = []
-        for v in item.get("versions", []):
-            if v.get("op") == "read":
-                continue
 
+        for v in item.get("versions", []):
             metadata = v.get("metadata") or {}
+            op = v.get("op")
+
+            version_kind = v.get("version_kind")
+
+            if version_kind is None:
+                if op in ("read", "observed_read"):
+                    version_kind = "observed"
+                elif op in ("write", "truncate", "append", "overwrite"):
+                    version_kind = "mutation"
+                else:
+                    version_kind = "content"
 
             versions.append({
                 "version": len(versions),
-                "op": v.get("op"),
+                "op": op,
+                "version_kind": version_kind,
                 "md5": v.get("md5") or v.get("hash"),
                 "size": metadata.get("size"),
                 "metadata": metadata,

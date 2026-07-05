@@ -1,0 +1,324 @@
+{
+  "scenario_id": "scale_005_large_chunks",
+  "scenario_dir": "bench_scale_005_large_chunks",
+  "parameters": {
+    "files": 5,
+    "seed": 1337,
+    "dir_count": 10,
+    "min_size": 4194304,
+    "max_size": 4194304,
+    "large_every": 1,
+    "large_size": 4194304,
+    "append_every": 1,
+    "overwrite_every": 3,
+    "truncate_every": 5,
+    "rename_every": 7,
+    "delete_every": 11
+  },
+  "files": [
+    {
+      "path": "bench_scale_005_large_chunks\\dir_00\\sub_00\\file_0000_final.bin",
+      "is_dir": false,
+      "deleted": true,
+      "path_history": [
+        "bench_scale_005_large_chunks\\dir_00\\sub_00\\file_0000.bin",
+        "bench_scale_005_large_chunks\\dir_00\\sub_00\\file_0000_final.bin"
+      ],
+      "versions": [
+        {
+          "version": 0,
+          "op": "write",
+          "size": 4194304,
+          "md5": "cc833fbbc37bd4481a463c1efe215b1a"
+        },
+        {
+          "version": 1,
+          "op": "append",
+          "size": 4194816,
+          "md5": "b3c2f878f041915f5453d5be69899d78"
+        },
+        {
+          "version": 2,
+          "op": "overwrite",
+          "size": 4194816,
+          "md5": "4d58aa759c644e7873c78adb501bc957"
+        },
+        {
+          "version": 3,
+          "op": "truncate",
+          "size": 2097408,
+          "md5": "6bbdba893727c511a7203ac73f2e3989"
+        }
+      ]
+    },
+    {
+      "path": "bench_scale_005_large_chunks\\dir_01\\sub_00\\file_0001.bin",
+      "is_dir": false,
+      "deleted": false,
+      "path_history": [
+        "bench_scale_005_large_chunks\\dir_01\\sub_00\\file_0001.bin"
+      ],
+      "versions": [
+        {
+          "version": 0,
+          "op": "write",
+          "size": 4194304,
+          "md5": "ca7b938ee87a2e8751a2869bf38584b1"
+        },
+        {
+          "version": 1,
+          "op": "append",
+          "size": 4194816,
+          "md5": "628bb6502a225447b871b6fe449d8293"
+        }
+      ]
+    },
+    {
+      "path": "bench_scale_005_large_chunks\\dir_02\\sub_00\\file_0002.bin",
+      "is_dir": false,
+      "deleted": false,
+      "path_history": [
+        "bench_scale_005_large_chunks\\dir_02\\sub_00\\file_0002.bin"
+      ],
+      "versions": [
+        {
+          "version": 0,
+          "op": "write",
+          "size": 4194304,
+          "md5": "b838bd523db4946092d56eb8b7b4cb06"
+        },
+        {
+          "version": 1,
+          "op": "append",
+          "size": 4194816,
+          "md5": "8c0e65312bd15517acb70e98b5cc90f8"
+        }
+      ]
+    },
+    {
+      "path": "bench_scale_005_large_chunks\\dir_03\\sub_00\\file_0003.bin",
+      "is_dir": false,
+      "deleted": false,
+      "path_history": [
+        "bench_scale_005_large_chunks\\dir_03\\sub_00\\file_0003.bin"
+      ],
+      "versions": [
+        {
+          "version": 0,
+          "op": "write",
+          "size": 4194304,
+          "md5": "b65bd2d9ae3e09ad8c50715f1eb1d913"
+        },
+        {
+          "version": 1,
+          "op": "append",
+          "size": 4194816,
+          "md5": "e850dbdadc0909a1d20a427db0ad1e37"
+        },
+        {
+          "version": 2,
+          "op": "overwrite",
+          "size": 4194816,
+          "md5": "c223558c02e0c11834ae9f16b26ab203"
+        }
+      ]
+    },
+    {
+      "path": "bench_scale_005_large_chunks\\dir_04\\sub_00\\file_0004.bin",
+      "is_dir": false,
+      "deleted": false,
+      "path_history": [
+        "bench_scale_005_large_chunks\\dir_04\\sub_00\\file_0004.bin"
+      ],
+      "versions": [
+        {
+          "version": 0,
+          "op": "write",
+          "size": 4194304,
+          "md5": "5b048d813a97261cab7b3e59860efa73"
+        },
+        {
+          "version": 1,
+          "op": "append",
+          "size": 4194816,
+          "md5": "d3f04c0ca2928069981df226215e6871"
+        }
+      ]
+    },
+    {
+      "path": "bench_scale_005_large_chunks\\empty_00",
+      "is_dir": true,
+      "deleted": true,
+      "versions": []
+    },
+    {
+      "path": "bench_scale_005_large_chunks\\empty_01",
+      "is_dir": true,
+      "deleted": true,
+      "versions": []
+    },
+    {
+      "path": "bench_scale_005_large_chunks\\empty_02",
+      "is_dir": true,
+      "deleted": true,
+      "versions": []
+    }
+  ],
+  "events": [
+    {
+      "op": "mkdir",
+      "path": "bench_scale_005_large_chunks"
+    },
+    {
+      "op": "mkdir",
+      "path": "bench_scale_005_large_chunks\\dir_00"
+    },
+    {
+      "op": "mkdir",
+      "path": "bench_scale_005_large_chunks\\dir_01"
+    },
+    {
+      "op": "mkdir",
+      "path": "bench_scale_005_large_chunks\\dir_02"
+    },
+    {
+      "op": "mkdir",
+      "path": "bench_scale_005_large_chunks\\dir_03"
+    },
+    {
+      "op": "mkdir",
+      "path": "bench_scale_005_large_chunks\\dir_04"
+    },
+    {
+      "op": "mkdir",
+      "path": "bench_scale_005_large_chunks\\dir_05"
+    },
+    {
+      "op": "mkdir",
+      "path": "bench_scale_005_large_chunks\\dir_06"
+    },
+    {
+      "op": "mkdir",
+      "path": "bench_scale_005_large_chunks\\dir_07"
+    },
+    {
+      "op": "mkdir",
+      "path": "bench_scale_005_large_chunks\\dir_08"
+    },
+    {
+      "op": "mkdir",
+      "path": "bench_scale_005_large_chunks\\dir_09"
+    },
+    {
+      "op": "mkdir",
+      "path": "bench_scale_005_large_chunks\\empty_00"
+    },
+    {
+      "op": "mkdir",
+      "path": "bench_scale_005_large_chunks\\empty_01"
+    },
+    {
+      "op": "mkdir",
+      "path": "bench_scale_005_large_chunks\\empty_02"
+    },
+    {
+      "op": "mkdir",
+      "path": "bench_scale_005_large_chunks\\dir_00\\sub_00"
+    },
+    {
+      "op": "append",
+      "path": "bench_scale_005_large_chunks\\dir_00\\sub_00\\file_0000.bin"
+    },
+    {
+      "op": "append",
+      "path": "bench_scale_005_large_chunks\\dir_00\\sub_00\\file_0000.bin"
+    },
+    {
+      "op": "overwrite",
+      "path": "bench_scale_005_large_chunks\\dir_00\\sub_00\\file_0000.bin",
+      "offset": 0,
+      "length": 128
+    },
+    {
+      "op": "truncate",
+      "path": "bench_scale_005_large_chunks\\dir_00\\sub_00\\file_0000.bin",
+      "size": 2097408
+    },
+    {
+      "op": "rename",
+      "path": "bench_scale_005_large_chunks\\dir_00\\sub_00\\file_0000_final.bin",
+      "old_path": "bench_scale_005_large_chunks\\dir_00\\sub_00\\file_0000.bin",
+      "new_path": "bench_scale_005_large_chunks\\dir_00\\sub_00\\file_0000_final.bin"
+    },
+    {
+      "op": "delete",
+      "path": "bench_scale_005_large_chunks\\dir_00\\sub_00\\file_0000_final.bin"
+    },
+    {
+      "op": "mkdir",
+      "path": "bench_scale_005_large_chunks\\dir_01\\sub_00"
+    },
+    {
+      "op": "append",
+      "path": "bench_scale_005_large_chunks\\dir_01\\sub_00\\file_0001.bin"
+    },
+    {
+      "op": "append",
+      "path": "bench_scale_005_large_chunks\\dir_01\\sub_00\\file_0001.bin"
+    },
+    {
+      "op": "mkdir",
+      "path": "bench_scale_005_large_chunks\\dir_02\\sub_00"
+    },
+    {
+      "op": "append",
+      "path": "bench_scale_005_large_chunks\\dir_02\\sub_00\\file_0002.bin"
+    },
+    {
+      "op": "append",
+      "path": "bench_scale_005_large_chunks\\dir_02\\sub_00\\file_0002.bin"
+    },
+    {
+      "op": "mkdir",
+      "path": "bench_scale_005_large_chunks\\dir_03\\sub_00"
+    },
+    {
+      "op": "append",
+      "path": "bench_scale_005_large_chunks\\dir_03\\sub_00\\file_0003.bin"
+    },
+    {
+      "op": "append",
+      "path": "bench_scale_005_large_chunks\\dir_03\\sub_00\\file_0003.bin"
+    },
+    {
+      "op": "overwrite",
+      "path": "bench_scale_005_large_chunks\\dir_03\\sub_00\\file_0003.bin",
+      "offset": 1398272,
+      "length": 128
+    },
+    {
+      "op": "mkdir",
+      "path": "bench_scale_005_large_chunks\\dir_04\\sub_00"
+    },
+    {
+      "op": "append",
+      "path": "bench_scale_005_large_chunks\\dir_04\\sub_00\\file_0004.bin"
+    },
+    {
+      "op": "append",
+      "path": "bench_scale_005_large_chunks\\dir_04\\sub_00\\file_0004.bin"
+    },
+    {
+      "op": "rmdir",
+      "path": "bench_scale_005_large_chunks\\empty_00"
+    },
+    {
+      "op": "rmdir",
+      "path": "bench_scale_005_large_chunks\\empty_01"
+    },
+    {
+      "op": "rmdir",
+      "path": "bench_scale_005_large_chunks\\empty_02"
+    }
+  ]
+}

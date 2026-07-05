@@ -1,0 +1,177 @@
+{
+  "scenario_id": "multi_file_versioning_001",
+  "scenario_dir": "bench_multi_version_001",
+  "files": [
+    {
+      "path": "bench_multi_version_001\\docs\\report_final.txt",
+      "is_dir": false,
+      "deleted": false,
+      "path_history": [
+        "bench_multi_version_001\\docs\\report.txt",
+        "bench_multi_version_001\\docs\\report_final.txt"
+      ],
+      "versions": [
+        {
+          "version": 0,
+          "op": "write",
+          "size": 6,
+          "md5": "9f9f90dbe3e5ee1218c86b8839db1995"
+        },
+        {
+          "version": 1,
+          "op": "append",
+          "size": 11,
+          "md5": "852e77b490fb4e8653fbc11f4c6f89c2"
+        },
+        {
+          "version": 2,
+          "op": "overwrite",
+          "size": 11,
+          "md5": "75bafddaa9e8e5c67e20b0f3f91512c1"
+        }
+      ]
+    },
+    {
+      "path": "bench_multi_version_001\\docs\\notes.txt",
+      "is_dir": false,
+      "deleted": false,
+      "versions": [
+        {
+          "version": 0,
+          "op": "write",
+          "size": 37,
+          "md5": "7f3c6345eb1c1123cb5bc3670975acd9"
+        },
+        {
+          "version": 1,
+          "op": "truncate",
+          "size": 10,
+          "md5": "781e5e245d69b566979b86e28d23f2c7"
+        }
+      ]
+    },
+    {
+      "path": "bench_multi_version_001\\bin\\large.bin",
+      "is_dir": false,
+      "deleted": false,
+      "versions": [
+        {
+          "version": 0,
+          "op": "write",
+          "size": 1500000,
+          "md5": "d913c4ff38ad6a222efd33a9acaf07e3"
+        },
+        {
+          "version": 1,
+          "op": "overwrite",
+          "size": 1500000,
+          "md5": "2f303f70ae2a9312336615fd61868549"
+        }
+      ]
+    },
+    {
+      "path": "bench_multi_version_001\\folder\\nested.txt",
+      "is_dir": false,
+      "deleted": false,
+      "versions": [
+        {
+          "version": 0,
+          "op": "write",
+          "size": 20,
+          "md5": "2f57e8e57f2d96845941e075f0683aea"
+        }
+      ]
+    },
+    {
+      "path": "bench_multi_version_001\\tmp\\delete_me.tmp",
+      "is_dir": false,
+      "deleted": true,
+      "versions": [
+        {
+          "version": 0,
+          "op": "write",
+          "size": 18,
+          "md5": "88df8d1383a9058e343806218a0b6f99"
+        }
+      ]
+    },
+    {
+      "path": "bench_multi_version_001\\emptydir",
+      "is_dir": true,
+      "deleted": true,
+      "versions": []
+    }
+  ],
+  "events": [
+    {
+      "op": "mkdir",
+      "path": "bench_multi_version_001\\docs"
+    },
+    {
+      "op": "mkdir",
+      "path": "bench_multi_version_001\\bin"
+    },
+    {
+      "op": "mkdir",
+      "path": "bench_multi_version_001\\tmp"
+    },
+    {
+      "op": "mkdir",
+      "path": "bench_multi_version_001\\folder"
+    },
+    {
+      "op": "mkdir",
+      "path": "bench_multi_version_001\\emptydir"
+    },
+    {
+      "op": "append",
+      "path": "bench_multi_version_001\\docs\\report.txt"
+    },
+    {
+      "op": "append",
+      "path": "bench_multi_version_001\\docs\\report.txt"
+    },
+    {
+      "op": "overwrite",
+      "path": "bench_multi_version_001\\docs\\report.txt"
+    },
+    {
+      "op": "rename",
+      "path": "bench_multi_version_001\\docs\\report_final.txt",
+      "old_path": "bench_multi_version_001\\docs\\report.txt",
+      "new_path": "bench_multi_version_001\\docs\\report_final.txt"
+    },
+    {
+      "op": "append",
+      "path": "bench_multi_version_001\\docs\\notes.txt"
+    },
+    {
+      "op": "truncate",
+      "path": "bench_multi_version_001\\docs\\notes.txt"
+    },
+    {
+      "op": "append",
+      "path": "bench_multi_version_001\\bin\\large.bin"
+    },
+    {
+      "op": "overwrite",
+      "path": "bench_multi_version_001\\bin\\large.bin"
+    },
+    {
+      "op": "append",
+      "path": "bench_multi_version_001\\folder\\nested.txt"
+    },
+    {
+      "op": "append",
+      "path": "bench_multi_version_001\\tmp\\delete_me.tmp"
+    },
+    {
+      "op": "delete",
+      "path": "bench_multi_version_001\\tmp\\delete_me.tmp"
+    },
+    {
+      "op": "rmdir",
+      "path": "bench_multi_version_001\\emptydir"
+    }
+  ]
+}

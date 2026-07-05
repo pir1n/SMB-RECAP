@@ -1,0 +1,1867 @@
+{
+  "files": [
+    {
+      "path": "unknown",
+      "object_type": "directory",
+      "source": "observed",
+      "sources": [
+        "observed"
+      ],
+      "is_dir": true,
+      "deleted": false,
+      "delete_time": null,
+      "semantic_summary": {
+        "semantic_ops": [],
+        "smb_commands": [],
+        "event_count": 0,
+        "version_count": 0,
+        "has_content": false
+      },
+      "path_history": [],
+      "events": [],
+      "versions": []
+    },
+    {
+      "path": "Desktop.ini",
+      "object_type": "file",
+      "source": "context_only",
+      "sources": [
+        "context_only"
+      ],
+      "is_dir": false,
+      "deleted": false,
+      "delete_time": null,
+      "semantic_summary": {
+        "semantic_ops": [
+          "context_seen"
+        ],
+        "smb_commands": [
+          "CREATE"
+        ],
+        "event_count": 1,
+        "version_count": 0,
+        "has_content": false
+      },
+      "path_history": [
+        {
+          "timestamp": 1782467235.76594,
+          "path": "Desktop.ini"
+        }
+      ],
+      "events": [
+        {
+          "op": "context_seen",
+          "timestamp": 1782467235.76594,
+          "timestamp_source": "network",
+          "network_timestamp": 1782467235.76594,
+          "fs_timestamp": null,
+          "timestamp_mode": "network",
+          "frame_number": 32,
+          "path": "Desktop.ini",
+          "old_path": null,
+          "new_path": null,
+          "file_id": "path:Desktop.ini",
+          "is_dir": false,
+          "size_before": null,
+          "size_after": null,
+          "smb_command": "CREATE",
+          "evidence": {
+            "synthetic_id": "path:Desktop.ini"
+          }
+        }
+      ],
+      "versions": []
+    },
+    {
+      "path": "AutoRun.inf",
+      "object_type": "file",
+      "source": "context_only",
+      "sources": [
+        "context_only"
+      ],
+      "is_dir": false,
+      "deleted": false,
+      "delete_time": null,
+      "semantic_summary": {
+        "semantic_ops": [
+          "context_seen"
+        ],
+        "smb_commands": [
+          "CREATE"
+        ],
+        "event_count": 1,
+        "version_count": 0,
+        "has_content": false
+      },
+      "path_history": [
+        {
+          "timestamp": 1782467235.76706,
+          "path": "AutoRun.inf"
+        }
+      ],
+      "events": [
+        {
+          "op": "context_seen",
+          "timestamp": 1782467235.76706,
+          "timestamp_source": "network",
+          "network_timestamp": 1782467235.76706,
+          "fs_timestamp": null,
+          "timestamp_mode": "network",
+          "frame_number": 34,
+          "path": "AutoRun.inf",
+          "old_path": null,
+          "new_path": null,
+          "file_id": "path:AutoRun.inf",
+          "is_dir": false,
+          "size_before": null,
+          "size_after": null,
+          "smb_command": "CREATE",
+          "evidence": {
+            "synthetic_id": "path:AutoRun.inf"
+          }
+        }
+      ],
+      "versions": []
+    },
+    {
+      "path": "bench_multi_version_001",
+      "object_type": "directory",
+      "source": "observed",
+      "sources": [
+        "context_only",
+        "observed"
+      ],
+      "is_dir": true,
+      "deleted": false,
+      "delete_time": null,
+      "semantic_summary": {
+        "semantic_ops": [
+          "context_seen",
+          "mkdir"
+        ],
+        "smb_commands": [
+          "CREATE"
+        ],
+        "event_count": 2,
+        "version_count": 0,
+        "has_content": false
+      },
+      "path_history": [
+        {
+          "timestamp": 1782467249.027567,
+          "path": "bench_multi_version_001"
+        }
+      ],
+      "events": [
+        {
+          "op": "context_seen",
+          "timestamp": 1782467249.027567,
+          "timestamp_source": "network",
+          "network_timestamp": 1782467249.027567,
+          "fs_timestamp": null,
+          "timestamp_mode": "network",
+          "frame_number": 40,
+          "path": "bench_multi_version_001",
+          "old_path": null,
+          "new_path": null,
+          "file_id": "path:bench_multi_version_001",
+          "is_dir": false,
+          "size_before": null,
+          "size_after": null,
+          "smb_command": "CREATE",
+          "evidence": {
+            "synthetic_id": "path:bench_multi_version_001"
+          }
+        },
+        {
+          "op": "mkdir",
+          "timestamp": 1782467249.031953,
+          "timestamp_source": "network",
+          "network_timestamp": 1782467249.031953,
+          "fs_timestamp": 1782467248.7942924,
+          "timestamp_mode": "network",
+          "frame_number": 43,
+          "path": "bench_multi_version_001",
+          "old_path": null,
+          "new_path": null,
+          "file_id": "f5000000130000000d00000013000000",
+          "is_dir": true,
+          "size_before": null,
+          "size_after": null,
+          "smb_command": "CREATE",
+          "evidence": {
+            "create_action": 2,
+            "create_options": [
+              "FILE_DIRECTORY_FILE",
+              "FILE_SYNCHRONOUS_IO_ALERT",
+              "FILE_OPEN_REPARSE_POINT"
+            ],
+            "create_options_raw": 2097169
+          }
+        }
+      ],
+      "versions": []
+    },
+    {
+      "path": "bench_multi_version_001\\docs",
+      "object_type": "directory",
+      "source": "observed",
+      "sources": [
+        "context_only",
+        "observed"
+      ],
+      "is_dir": true,
+      "deleted": false,
+      "delete_time": null,
+      "semantic_summary": {
+        "semantic_ops": [
+          "context_seen",
+          "mkdir"
+        ],
+        "smb_commands": [
+          "CREATE"
+        ],
+        "event_count": 2,
+        "version_count": 0,
+        "has_content": false
+      },
+      "path_history": [
+        {
+          "timestamp": 1782467249.042679,
+          "path": "bench_multi_version_001\\docs"
+        }
+      ],
+      "events": [
+        {
+          "op": "context_seen",
+          "timestamp": 1782467249.042679,
+          "timestamp_source": "network",
+          "network_timestamp": 1782467249.042679,
+          "fs_timestamp": null,
+          "timestamp_mode": "network",
+          "frame_number": 64,
+          "path": "bench_multi_version_001\\docs",
+          "old_path": null,
+          "new_path": null,
+          "file_id": "path:bench_multi_version_001\\docs",
+          "is_dir": false,
+          "size_before": null,
+          "size_after": null,
+          "smb_command": "CREATE",
+          "evidence": {
+            "synthetic_id": "path:bench_multi_version_001\\docs"
+          }
+        },
+        {
+          "op": "mkdir",
+          "timestamp": 1782467249.044052,
+          "timestamp_source": "network",
+          "network_timestamp": 1782467249.044052,
+          "fs_timestamp": 1782467248.8095322,
+          "timestamp_mode": "network",
+          "frame_number": 67,
+          "path": "bench_multi_version_001\\docs",
+          "old_path": null,
+          "new_path": null,
+          "file_id": "f9000000130000001d00000013000000",
+          "is_dir": true,
+          "size_before": null,
+          "size_after": null,
+          "smb_command": "CREATE",
+          "evidence": {
+            "create_action": 2,
+            "create_options": [
+              "FILE_DIRECTORY_FILE",
+              "FILE_SYNCHRONOUS_IO_ALERT",
+              "FILE_OPEN_REPARSE_POINT"
+            ],
+            "create_options_raw": 2097169
+          }
+        }
+      ],
+      "versions": []
+    },
+    {
+      "path": "bench_multi_version_001\\bin",
+      "object_type": "directory",
+      "source": "observed",
+      "sources": [
+        "context_only",
+        "observed"
+      ],
+      "is_dir": true,
+      "deleted": false,
+      "delete_time": null,
+      "semantic_summary": {
+        "semantic_ops": [
+          "context_seen",
+          "mkdir"
+        ],
+        "smb_commands": [
+          "CREATE"
+        ],
+        "event_count": 2,
+        "version_count": 0,
+        "has_content": false
+      },
+      "path_history": [
+        {
+          "timestamp": 1782467249.294527,
+          "path": "bench_multi_version_001\\bin"
+        }
+      ],
+      "events": [
+        {
+          "op": "context_seen",
+          "timestamp": 1782467249.294527,
+          "timestamp_source": "network",
+          "network_timestamp": 1782467249.294527,
+          "fs_timestamp": null,
+          "timestamp_mode": "network",
+          "frame_number": 89,
+          "path": "bench_multi_version_001\\bin",
+          "old_path": null,
+          "new_path": null,
+          "file_id": "path:bench_multi_version_001\\bin",
+          "is_dir": false,
+          "size_before": null,
+          "size_after": null,
+          "smb_command": "CREATE",
+          "evidence": {
+            "synthetic_id": "path:bench_multi_version_001\\bin"
+          }
+        },
+        {
+          "op": "mkdir",
+          "timestamp": 1782467249.296346,
+          "timestamp_source": "network",
+          "network_timestamp": 1782467249.296346,
+          "fs_timestamp": 1782467249.060131,
+          "timestamp_mode": "network",
+          "frame_number": 92,
+          "path": "bench_multi_version_001\\bin",
+          "old_path": null,
+          "new_path": null,
+          "file_id": "fd000000130000002d00000013000000",
+          "is_dir": true,
+          "size_before": null,
+          "size_after": null,
+          "smb_command": "CREATE",
+          "evidence": {
+            "create_action": 2,
+            "create_options": [
+              "FILE_DIRECTORY_FILE",
+              "FILE_SYNCHRONOUS_IO_ALERT",
+              "FILE_OPEN_REPARSE_POINT"
+            ],
+            "create_options_raw": 2097169
+          }
+        }
+      ],
+      "versions": []
+    },
+    {
+      "path": "bench_multi_version_001\\tmp",
+      "object_type": "directory",
+      "source": "observed",
+      "sources": [
+        "context_only",
+        "observed"
+      ],
+      "is_dir": true,
+      "deleted": false,
+      "delete_time": null,
+      "semantic_summary": {
+        "semantic_ops": [
+          "context_seen",
+          "mkdir"
+        ],
+        "smb_commands": [
+          "CREATE"
+        ],
+        "event_count": 2,
+        "version_count": 0,
+        "has_content": false
+      },
+      "path_history": [
+        {
+          "timestamp": 1782467249.547749,
+          "path": "bench_multi_version_001\\tmp"
+        }
+      ],
+      "events": [
+        {
+          "op": "context_seen",
+          "timestamp": 1782467249.547749,
+          "timestamp_source": "network",
+          "network_timestamp": 1782467249.547749,
+          "fs_timestamp": null,
+          "timestamp_mode": "network",
+          "frame_number": 114,
+          "path": "bench_multi_version_001\\tmp",
+          "old_path": null,
+          "new_path": null,
+          "file_id": "path:bench_multi_version_001\\tmp",
+          "is_dir": false,
+          "size_before": null,
+          "size_after": null,
+          "smb_command": "CREATE",
+          "evidence": {
+            "synthetic_id": "path:bench_multi_version_001\\tmp"
+          }
+        },
+        {
+          "op": "mkdir",
+          "timestamp": 1782467249.549437,
+          "timestamp_source": "network",
+          "network_timestamp": 1782467249.549437,
+          "fs_timestamp": 1782467249.3097515,
+          "timestamp_mode": "network",
+          "frame_number": 117,
+          "path": "bench_multi_version_001\\tmp",
+          "old_path": null,
+          "new_path": null,
+          "file_id": "01010000130000003d00000013000000",
+          "is_dir": true,
+          "size_before": null,
+          "size_after": null,
+          "smb_command": "CREATE",
+          "evidence": {
+            "create_action": 2,
+            "create_options": [
+              "FILE_DIRECTORY_FILE",
+              "FILE_SYNCHRONOUS_IO_ALERT",
+              "FILE_OPEN_REPARSE_POINT"
+            ],
+            "create_options_raw": 2097169
+          }
+        }
+      ],
+      "versions": []
+    },
+    {
+      "path": "bench_multi_version_001\\folder",
+      "object_type": "directory",
+      "source": "observed",
+      "sources": [
+        "context_only",
+        "observed"
+      ],
+      "is_dir": true,
+      "deleted": false,
+      "delete_time": null,
+      "semantic_summary": {
+        "semantic_ops": [
+          "context_seen",
+          "mkdir"
+        ],
+        "smb_commands": [
+          "CREATE"
+        ],
+        "event_count": 2,
+        "version_count": 0,
+        "has_content": false
+      },
+      "path_history": [
+        {
+          "timestamp": 1782467249.808932,
+          "path": "bench_multi_version_001\\folder"
+        }
+      ],
+      "events": [
+        {
+          "op": "context_seen",
+          "timestamp": 1782467249.808932,
+          "timestamp_source": "network",
+          "network_timestamp": 1782467249.808932,
+          "fs_timestamp": null,
+          "timestamp_mode": "network",
+          "frame_number": 139,
+          "path": "bench_multi_version_001\\folder",
+          "old_path": null,
+          "new_path": null,
+          "file_id": "path:bench_multi_version_001\\folder",
+          "is_dir": false,
+          "size_before": null,
+          "size_after": null,
+          "smb_command": "CREATE",
+          "evidence": {
+            "synthetic_id": "path:bench_multi_version_001\\folder"
+          }
+        },
+        {
+          "op": "mkdir",
+          "timestamp": 1782467249.811042,
+          "timestamp_source": "network",
+          "network_timestamp": 1782467249.811042,
+          "fs_timestamp": 1782467249.57555,
+          "timestamp_mode": "network",
+          "frame_number": 142,
+          "path": "bench_multi_version_001\\folder",
+          "old_path": null,
+          "new_path": null,
+          "file_id": "05010000130000004d00000013000000",
+          "is_dir": true,
+          "size_before": null,
+          "size_after": null,
+          "smb_command": "CREATE",
+          "evidence": {
+            "create_action": 2,
+            "create_options": [
+              "FILE_DIRECTORY_FILE",
+              "FILE_SYNCHRONOUS_IO_ALERT",
+              "FILE_OPEN_REPARSE_POINT"
+            ],
+            "create_options_raw": 2097169
+          }
+        }
+      ],
+      "versions": []
+    },
+    {
+      "path": "bench_multi_version_001\\emptydir",
+      "object_type": "directory",
+      "source": "observed",
+      "sources": [
+        "context_only",
+        "observed"
+      ],
+      "is_dir": true,
+      "deleted": true,
+      "delete_time": 1782467253.768967,
+      "semantic_summary": {
+        "semantic_ops": [
+          "context_seen",
+          "mkdir",
+          "delete"
+        ],
+        "smb_commands": [
+          "CREATE",
+          "SET_INFO"
+        ],
+        "event_count": 3,
+        "version_count": 0,
+        "has_content": false
+      },
+      "path_history": [
+        {
+          "timestamp": 1782467250.071366,
+          "path": "bench_multi_version_001\\emptydir"
+        }
+      ],
+      "events": [
+        {
+          "op": "context_seen",
+          "timestamp": 1782467250.071366,
+          "timestamp_source": "network",
+          "network_timestamp": 1782467250.071366,
+          "fs_timestamp": null,
+          "timestamp_mode": "network",
+          "frame_number": 164,
+          "path": "bench_multi_version_001\\emptydir",
+          "old_path": null,
+          "new_path": null,
+          "file_id": "path:bench_multi_version_001\\emptydir",
+          "is_dir": false,
+          "size_before": null,
+          "size_after": null,
+          "smb_command": "CREATE",
+          "evidence": {
+            "synthetic_id": "path:bench_multi_version_001\\emptydir"
+          }
+        },
+        {
+          "op": "mkdir",
+          "timestamp": 1782467250.073759,
+          "timestamp_source": "network",
+          "network_timestamp": 1782467250.073759,
+          "fs_timestamp": 1782467249.8407059,
+          "timestamp_mode": "network",
+          "frame_number": 167,
+          "path": "bench_multi_version_001\\emptydir",
+          "old_path": null,
+          "new_path": null,
+          "file_id": "09010000130000005d00000013000000",
+          "is_dir": true,
+          "size_before": null,
+          "size_after": null,
+          "smb_command": "CREATE",
+          "evidence": {
+            "create_action": 2,
+            "create_options": [
+              "FILE_DIRECTORY_FILE",
+              "FILE_SYNCHRONOUS_IO_ALERT",
+              "FILE_OPEN_REPARSE_POINT"
+            ],
+            "create_options_raw": 2097169
+          }
+        },
+        {
+          "op": "delete",
+          "timestamp": 1782467253.768967,
+          "timestamp_source": "network",
+          "network_timestamp": 1782467253.768967,
+          "fs_timestamp": 1782467249.8407059,
+          "timestamp_mode": "network",
+          "frame_number": 2510,
+          "path": "bench_multi_version_001\\emptydir",
+          "old_path": null,
+          "new_path": null,
+          "file_id": "a001000013000000d500200013000000",
+          "is_dir": false,
+          "size_before": null,
+          "size_after": null,
+          "smb_command": "SET_INFO",
+          "evidence": {
+            "file_info_class": "FileDispositionInformation",
+            "delete_pending": true,
+            "disposition_flags": null
+          }
+        }
+      ],
+      "versions": []
+    },
+    {
+      "path": "bench_multi_version_001\\docs\\report_final.txt",
+      "object_type": "file",
+      "source": "observed",
+      "sources": [
+        "context_only",
+        "observed"
+      ],
+      "is_dir": false,
+      "deleted": false,
+      "delete_time": null,
+      "semantic_summary": {
+        "semantic_ops": [
+          "context_seen",
+          "metadata_update",
+          "append",
+          "read",
+          "overwrite",
+          "rename"
+        ],
+        "smb_commands": [
+          "CREATE",
+          "SET_INFO",
+          "WRITE",
+          "READ"
+        ],
+        "event_count": 10,
+        "version_count": 3,
+        "has_content": true
+      },
+      "path_history": [
+        {
+          "timestamp": 1782467251.295596,
+          "path": "bench_multi_version_001\\docs\\report.txt"
+        },
+        {
+          "timestamp": 1782467251.295596,
+          "path": "bench_multi_version_001\\docs\\report_final.txt"
+        }
+      ],
+      "events": [
+        {
+          "op": "context_seen",
+          "timestamp": 1782467250.375023,
+          "timestamp_source": "network",
+          "network_timestamp": 1782467250.375023,
+          "fs_timestamp": null,
+          "timestamp_mode": "network",
+          "frame_number": 262,
+          "path": "bench_multi_version_001\\docs\\report.txt",
+          "old_path": null,
+          "new_path": null,
+          "file_id": "path:bench_multi_version_001\\docs\\report.txt",
+          "is_dir": false,
+          "size_before": null,
+          "size_after": null,
+          "smb_command": "CREATE",
+          "evidence": {
+            "synthetic_id": "path:bench_multi_version_001\\docs\\report.txt"
+          }
+        },
+        {
+          "op": "metadata_update",
+          "timestamp": 1782467250.385591,
+          "timestamp_source": "network",
+          "network_timestamp": 1782467250.385591,
+          "fs_timestamp": 1782467250.1535988,
+          "timestamp_mode": "network",
+          "frame_number": 275,
+          "path": "bench_multi_version_001\\docs\\report.txt",
+          "old_path": null,
+          "new_path": null,
+          "file_id": "19010000130000009d00000013000000",
+          "is_dir": false,
+          "size_before": null,
+          "size_after": null,
+          "smb_command": "SET_INFO",
+          "evidence": {
+            "file_info_class": "FileAllInformation",
+            "file_info_class_raw": 19,
+            "create_time": 1782467250.1535988,
+            "last_access_time": 1782467250.1535988,
+            "last_write_time": 1782467250.1535988,
+            "change_time": 1782467250.1535988
+          }
+        },
+        {
+          "op": "append",
+          "timestamp": 1782467250.388303,
+          "timestamp_source": "network",
+          "network_timestamp": 1782467250.388303,
+          "fs_timestamp": 1782467250.1535988,
+          "timestamp_mode": "network",
+          "frame_number": 277,
+          "path": "bench_multi_version_001\\docs\\report.txt",
+          "old_path": null,
+          "new_path": null,
+          "file_id": "19010000130000009d00000013000000",
+          "is_dir": false,
+          "size_before": 0,
+          "size_after": 6,
+          "smb_command": "WRITE",
+          "evidence": {
+            "offset": 0,
+            "length": 6
+          }
+        },
+        {
+          "op": "read",
+          "timestamp": 1782467250.695284,
+          "timestamp_source": "network",
+          "network_timestamp": 1782467250.695284,
+          "fs_timestamp": 1782467250.1535988,
+          "timestamp_mode": "network",
+          "frame_number": 374,
+          "path": "bench_multi_version_001\\docs\\report.txt",
+          "old_path": null,
+          "new_path": null,
+          "file_id": "2901000013000000dd00000013000000",
+          "is_dir": false,
+          "size_before": null,
+          "size_after": 6,
+          "smb_command": "READ",
+          "evidence": {
+            "offset": 0,
+            "length": 6,
+            "data_len": 6,
+            "data_md5": "a1ffc34bbc3119e5baeb9bb1538a467d",
+            "observed": false,
+            "expected_size": 6,
+            "allow_after_prior_content": false
+          }
+        },
+        {
+          "op": "append",
+          "timestamp": 1782467250.702071,
+          "timestamp_source": "network",
+          "network_timestamp": 1782467250.702071,
+          "fs_timestamp": 1782467250.1535988,
+          "timestamp_mode": "network",
+          "frame_number": 380,
+          "path": "bench_multi_version_001\\docs\\report.txt",
+          "old_path": null,
+          "new_path": null,
+          "file_id": "2901000013000000dd00000013000000",
+          "is_dir": false,
+          "size_before": 6,
+          "size_after": 11,
+          "smb_command": "WRITE",
+          "evidence": {
+            "offset": 6,
+            "length": 5
+          }
+        },
+        {
+          "op": "read",
+          "timestamp": 1782467251.011112,
+          "timestamp_source": "network",
+          "network_timestamp": 1782467251.011112,
+          "fs_timestamp": 1782467250.4658318,
+          "timestamp_mode": "network",
+          "frame_number": 477,
+          "path": "bench_multi_version_001\\docs\\report.txt",
+          "old_path": null,
+          "new_path": null,
+          "file_id": "39010000130000001d00100013000000",
+          "is_dir": false,
+          "size_before": null,
+          "size_after": 11,
+          "smb_command": "READ",
+          "evidence": {
+            "offset": 0,
+            "length": 11,
+            "data_len": 11,
+            "data_md5": "fcfda7ea704e944c2dcc907ebba4bb8f",
+            "observed": false,
+            "expected_size": 11,
+            "allow_after_prior_content": false
+          }
+        },
+        {
+          "op": "read",
+          "timestamp": 1782467251.016796,
+          "timestamp_source": "network",
+          "network_timestamp": 1782467251.016796,
+          "fs_timestamp": 1782467250.4658318,
+          "timestamp_mode": "network",
+          "frame_number": 483,
+          "path": "bench_multi_version_001\\docs\\report.txt",
+          "old_path": null,
+          "new_path": null,
+          "file_id": "39010000130000001d00100013000000",
+          "is_dir": false,
+          "size_before": null,
+          "size_after": 11,
+          "smb_command": "READ",
+          "evidence": {
+            "offset": 0,
+            "length": 11,
+            "data_len": 11,
+            "data_md5": "852e77b490fb4e8653fbc11f4c6f89c2",
+            "observed": false,
+            "expected_size": 11,
+            "allow_after_prior_content": false
+          }
+        },
+        {
+          "op": "overwrite",
+          "timestamp": 1782467251.019382,
+          "timestamp_source": "network",
+          "network_timestamp": 1782467251.019382,
+          "fs_timestamp": 1782467250.4658318,
+          "timestamp_mode": "network",
+          "frame_number": 485,
+          "path": "bench_multi_version_001\\docs\\report.txt",
+          "old_path": null,
+          "new_path": null,
+          "file_id": "39010000130000001d00100013000000",
+          "is_dir": false,
+          "size_before": 11,
+          "size_after": 11,
+          "smb_command": "WRITE",
+          "evidence": {
+            "offset": 0,
+            "length": 11
+          }
+        },
+        {
+          "op": "context_seen",
+          "timestamp": 1782467251.281568,
+          "timestamp_source": "network",
+          "network_timestamp": 1782467251.281568,
+          "fs_timestamp": null,
+          "timestamp_mode": "network",
+          "frame_number": 519,
+          "path": "bench_multi_version_001\\docs\\report_final.txt",
+          "old_path": null,
+          "new_path": null,
+          "file_id": "path:bench_multi_version_001\\docs\\report_final.txt",
+          "is_dir": false,
+          "size_before": null,
+          "size_after": null,
+          "smb_command": "CREATE",
+          "evidence": {
+            "synthetic_id": "path:bench_multi_version_001\\docs\\report_final.txt"
+          }
+        },
+        {
+          "op": "rename",
+          "timestamp": 1782467251.295596,
+          "timestamp_source": "network",
+          "network_timestamp": 1782467251.295596,
+          "fs_timestamp": 1782467250.7940578,
+          "timestamp_mode": "network",
+          "frame_number": 530,
+          "path": "bench_multi_version_001\\docs\\report.txt",
+          "old_path": "bench_multi_version_001\\docs\\report.txt",
+          "new_path": "bench_multi_version_001\\docs\\report_final.txt",
+          "file_id": "39010000130000001d00100013000000",
+          "is_dir": false,
+          "size_before": null,
+          "size_after": null,
+          "smb_command": "SET_INFO",
+          "evidence": {
+            "file_info_class": "FileRenameInformation"
+          }
+        }
+      ],
+      "versions": [
+        {
+          "version": 0,
+          "file_id": "19010000130000009d00000013000000",
+          "op": "write",
+          "metadata": {
+            "created": 1782467250.1535988,
+            "modified": 1782467250.1535988,
+            "accessed": 1782467250.1535988,
+            "changed": 1782467250.1535988,
+            "size": 6,
+            "timestamp_mode": "network",
+            "version_timestamp_source": "network",
+            "network_timestamp": 1782467250.396762
+          },
+          "hash": "9f9f90dbe3e5ee1218c86b8839db1995"
+        },
+        {
+          "version": 1,
+          "file_id": "2901000013000000dd00000013000000",
+          "op": "write",
+          "metadata": {
+            "created": 1782467250.1535988,
+            "modified": 1782467250.4658318,
+            "accessed": 1782467250.4658318,
+            "changed": 1782467250.4658318,
+            "size": 11,
+            "timestamp_mode": "network",
+            "version_timestamp_source": "network",
+            "network_timestamp": 1782467250.709328
+          },
+          "hash": "852e77b490fb4e8653fbc11f4c6f89c2"
+        },
+        {
+          "version": 2,
+          "file_id": "39010000130000001d00100013000000",
+          "op": "write",
+          "metadata": {
+            "created": 1782467250.1535988,
+            "modified": 1782467250.7940578,
+            "accessed": 1782467250.7940578,
+            "changed": 1782467250.7940578,
+            "size": 11,
+            "timestamp_mode": "network",
+            "version_timestamp_source": "network",
+            "network_timestamp": 1782467251.286309
+          },
+          "hash": "75bafddaa9e8e5c67e20b0f3f91512c1"
+        }
+      ]
+    },
+    {
+      "path": "bench_multi_version_001\\docs\\notes.txt",
+      "object_type": "file",
+      "source": "observed",
+      "sources": [
+        "context_only",
+        "observed"
+      ],
+      "is_dir": false,
+      "deleted": false,
+      "delete_time": null,
+      "semantic_summary": {
+        "semantic_ops": [
+          "context_seen",
+          "metadata_update",
+          "append",
+          "read",
+          "truncate"
+        ],
+        "smb_commands": [
+          "CREATE",
+          "SET_INFO",
+          "WRITE",
+          "READ"
+        ],
+        "event_count": 6,
+        "version_count": 2,
+        "has_content": true
+      },
+      "path_history": [
+        {
+          "timestamp": 1782467251.583522,
+          "path": "bench_multi_version_001\\docs\\notes.txt"
+        }
+      ],
+      "events": [
+        {
+          "op": "context_seen",
+          "timestamp": 1782467251.583522,
+          "timestamp_source": "network",
+          "network_timestamp": 1782467251.583522,
+          "fs_timestamp": null,
+          "timestamp_mode": "network",
+          "frame_number": 610,
+          "path": "bench_multi_version_001\\docs\\notes.txt",
+          "old_path": null,
+          "new_path": null,
+          "file_id": "path:bench_multi_version_001\\docs\\notes.txt",
+          "is_dir": false,
+          "size_before": null,
+          "size_after": null,
+          "smb_command": "CREATE",
+          "evidence": {
+            "synthetic_id": "path:bench_multi_version_001\\docs\\notes.txt"
+          }
+        },
+        {
+          "op": "metadata_update",
+          "timestamp": 1782467251.592792,
+          "timestamp_source": "network",
+          "network_timestamp": 1782467251.592792,
+          "fs_timestamp": 1782467251.3565693,
+          "timestamp_mode": "network",
+          "frame_number": 623,
+          "path": "bench_multi_version_001\\docs\\notes.txt",
+          "old_path": null,
+          "new_path": null,
+          "file_id": "4e010000130000007100100013000000",
+          "is_dir": false,
+          "size_before": null,
+          "size_after": null,
+          "smb_command": "SET_INFO",
+          "evidence": {
+            "file_info_class": "FileAllInformation",
+            "file_info_class_raw": 19,
+            "create_time": 1782467251.3565693,
+            "last_access_time": 1782467251.3565693,
+            "last_write_time": 1782467251.3565693,
+            "change_time": 1782467251.3565693
+          }
+        },
+        {
+          "op": "append",
+          "timestamp": 1782467251.594208,
+          "timestamp_source": "network",
+          "network_timestamp": 1782467251.594208,
+          "fs_timestamp": 1782467251.3565693,
+          "timestamp_mode": "network",
+          "frame_number": 625,
+          "path": "bench_multi_version_001\\docs\\notes.txt",
+          "old_path": null,
+          "new_path": null,
+          "file_id": "4e010000130000007100100013000000",
+          "is_dir": false,
+          "size_before": 0,
+          "size_after": 37,
+          "smb_command": "WRITE",
+          "evidence": {
+            "offset": 0,
+            "length": 37
+          }
+        },
+        {
+          "op": "read",
+          "timestamp": 1782467251.873287,
+          "timestamp_source": "network",
+          "network_timestamp": 1782467251.873287,
+          "fs_timestamp": 1782467251.3565693,
+          "timestamp_mode": "network",
+          "frame_number": 668,
+          "path": "bench_multi_version_001\\docs\\notes.txt",
+          "old_path": null,
+          "new_path": null,
+          "file_id": "55010000130000008d00100013000000",
+          "is_dir": false,
+          "size_before": null,
+          "size_after": 37,
+          "smb_command": "READ",
+          "evidence": {
+            "offset": 0,
+            "length": 37,
+            "data_len": 37,
+            "data_md5": "86e5228b31fff75dd377d8098f565695",
+            "observed": false,
+            "expected_size": 37,
+            "allow_after_prior_content": false
+          }
+        },
+        {
+          "op": "truncate",
+          "timestamp": 1782467251.886486,
+          "timestamp_source": "network",
+          "network_timestamp": 1782467251.886486,
+          "fs_timestamp": 1782467251.3565693,
+          "timestamp_mode": "network",
+          "frame_number": 680,
+          "path": "bench_multi_version_001\\docs\\notes.txt",
+          "old_path": null,
+          "new_path": null,
+          "file_id": "58010000130000009900100013000000",
+          "is_dir": false,
+          "size_before": 37,
+          "size_after": 10,
+          "smb_command": "SET_INFO",
+          "evidence": {
+            "file_info_class": "FileAllocationInformation",
+            "file_info_class_raw": 20
+          }
+        },
+        {
+          "op": "metadata_update",
+          "timestamp": 1782467251.887678,
+          "timestamp_source": "network",
+          "network_timestamp": 1782467251.887678,
+          "fs_timestamp": 1782467251.3565693,
+          "timestamp_mode": "network",
+          "frame_number": 682,
+          "path": "bench_multi_version_001\\docs\\notes.txt",
+          "old_path": null,
+          "new_path": null,
+          "file_id": "58010000130000009900100013000000",
+          "is_dir": false,
+          "size_before": null,
+          "size_after": null,
+          "smb_command": "SET_INFO",
+          "evidence": {
+            "file_info_class": "FileBasicInformation",
+            "file_info_class_raw": 4,
+            "create_time": 1782467251.3565693,
+            "last_access_time": 1782467251.3565693,
+            "last_write_time": 1782467251.3565693,
+            "change_time": 1782467251.3565693
+          }
+        }
+      ],
+      "versions": [
+        {
+          "version": 0,
+          "file_id": "4e010000130000007100100013000000",
+          "op": "write",
+          "metadata": {
+            "created": 1782467251.3565693,
+            "modified": 1782467251.3565693,
+            "accessed": 1782467251.3565693,
+            "changed": 1782467251.3565693,
+            "size": 37,
+            "timestamp_mode": "network",
+            "version_timestamp_source": "network",
+            "network_timestamp": 1782467251.60232
+          },
+          "hash": "7f3c6345eb1c1123cb5bc3670975acd9"
+        },
+        {
+          "version": 1,
+          "file_id": "58010000130000009900100013000000",
+          "op": "truncate",
+          "metadata": {
+            "created": 1782467251.3565693,
+            "modified": 1782467251.3565693,
+            "accessed": 1782467251.3565693,
+            "changed": 1782467251.3565693,
+            "size": 10,
+            "timestamp_mode": "network",
+            "version_timestamp_source": "network",
+            "network_timestamp": 1782467251.886486
+          },
+          "hash": "781e5e245d69b566979b86e28d23f2c7"
+        }
+      ]
+    },
+    {
+      "path": "bench_multi_version_001\\bin\\large.bin",
+      "object_type": "file",
+      "source": "observed",
+      "sources": [
+        "context_only",
+        "observed"
+      ],
+      "is_dir": false,
+      "deleted": false,
+      "delete_time": null,
+      "semantic_summary": {
+        "semantic_ops": [
+          "context_seen",
+          "metadata_update",
+          "append",
+          "read",
+          "overwrite"
+        ],
+        "smb_commands": [
+          "CREATE",
+          "SET_INFO",
+          "WRITE",
+          "READ"
+        ],
+        "event_count": 15,
+        "version_count": 2,
+        "has_content": true
+      },
+      "path_history": [
+        {
+          "timestamp": 1782467252.185654,
+          "path": "bench_multi_version_001\\bin\\large.bin"
+        }
+      ],
+      "events": [
+        {
+          "op": "context_seen",
+          "timestamp": 1782467252.185654,
+          "timestamp_source": "network",
+          "network_timestamp": 1782467252.185654,
+          "fs_timestamp": null,
+          "timestamp_mode": "network",
+          "frame_number": 764,
+          "path": "bench_multi_version_001\\bin\\large.bin",
+          "old_path": null,
+          "new_path": null,
+          "file_id": "path:bench_multi_version_001\\bin\\large.bin",
+          "is_dir": false,
+          "size_before": null,
+          "size_after": null,
+          "smb_command": "CREATE",
+          "evidence": {
+            "synthetic_id": "path:bench_multi_version_001\\bin\\large.bin"
+          }
+        },
+        {
+          "op": "metadata_update",
+          "timestamp": 1782467252.196679,
+          "timestamp_source": "network",
+          "network_timestamp": 1782467252.196679,
+          "fs_timestamp": 1782467251.9501781,
+          "timestamp_mode": "network",
+          "frame_number": 777,
+          "path": "bench_multi_version_001\\bin\\large.bin",
+          "old_path": null,
+          "new_path": null,
+          "file_id": "6601000013000000d500100013000000",
+          "is_dir": false,
+          "size_before": null,
+          "size_after": null,
+          "smb_command": "SET_INFO",
+          "evidence": {
+            "file_info_class": "FileAllInformation",
+            "file_info_class_raw": 19,
+            "create_time": 1782467251.9501781,
+            "last_access_time": 1782467251.9501781,
+            "last_write_time": 1782467251.9501781,
+            "change_time": 1782467251.9501781
+          }
+        },
+        {
+          "op": "metadata_update",
+          "timestamp": 1782467252.200602,
+          "timestamp_source": "network",
+          "network_timestamp": 1782467252.200602,
+          "fs_timestamp": 1782467251.9501781,
+          "timestamp_mode": "network",
+          "frame_number": 779,
+          "path": "bench_multi_version_001\\bin\\large.bin",
+          "old_path": null,
+          "new_path": null,
+          "file_id": "6601000013000000d500100013000000",
+          "is_dir": false,
+          "size_before": null,
+          "size_after": null,
+          "smb_command": "SET_INFO",
+          "evidence": {
+            "file_info_class": "FileAllInformation",
+            "file_info_class_raw": 19,
+            "create_time": 1782467251.9501781,
+            "last_access_time": 1782467251.9501781,
+            "last_write_time": 1782467251.9501781,
+            "change_time": 1782467251.9501781
+          }
+        },
+        {
+          "op": "metadata_update",
+          "timestamp": 1782467252.203437,
+          "timestamp_source": "network",
+          "network_timestamp": 1782467252.203437,
+          "fs_timestamp": 1782467251.9501781,
+          "timestamp_mode": "network",
+          "frame_number": 781,
+          "path": "bench_multi_version_001\\bin\\large.bin",
+          "old_path": null,
+          "new_path": null,
+          "file_id": "6601000013000000d500100013000000",
+          "is_dir": false,
+          "size_before": null,
+          "size_after": null,
+          "smb_command": "SET_INFO",
+          "evidence": {
+            "file_info_class": "FileAllInformation",
+            "file_info_class_raw": 19,
+            "create_time": 1782467251.9501781,
+            "last_access_time": 1782467251.9501781,
+            "last_write_time": 1782467251.9501781,
+            "change_time": 1782467251.9501781
+          }
+        },
+        {
+          "op": "metadata_update",
+          "timestamp": 1782467252.208292,
+          "timestamp_source": "network",
+          "network_timestamp": 1782467252.208292,
+          "fs_timestamp": 1782467251.9501781,
+          "timestamp_mode": "network",
+          "frame_number": 783,
+          "path": "bench_multi_version_001\\bin\\large.bin",
+          "old_path": null,
+          "new_path": null,
+          "file_id": "6601000013000000d500100013000000",
+          "is_dir": false,
+          "size_before": null,
+          "size_after": null,
+          "smb_command": "SET_INFO",
+          "evidence": {
+            "file_info_class": "FileAllInformation",
+            "file_info_class_raw": 19,
+            "create_time": 1782467251.9501781,
+            "last_access_time": 1782467251.9501781,
+            "last_write_time": 1782467251.9501781,
+            "change_time": 1782467251.9501781
+          }
+        },
+        {
+          "op": "append",
+          "timestamp": 1782467252.221624,
+          "timestamp_source": "network",
+          "network_timestamp": 1782467252.221624,
+          "fs_timestamp": 1782467251.9501781,
+          "timestamp_mode": "network",
+          "frame_number": 968,
+          "path": "bench_multi_version_001\\bin\\large.bin",
+          "old_path": null,
+          "new_path": null,
+          "file_id": "6601000013000000d500100013000000",
+          "is_dir": false,
+          "size_before": 0,
+          "size_after": 262144,
+          "smb_command": "WRITE",
+          "evidence": {
+            "offset": 0,
+            "length": 262144
+          }
+        },
+        {
+          "op": "append",
+          "timestamp": 1782467252.233112,
+          "timestamp_source": "network",
+          "network_timestamp": 1782467252.233112,
+          "fs_timestamp": 1782467251.9501781,
+          "timestamp_mode": "network",
+          "frame_number": 1519,
+          "path": "bench_multi_version_001\\bin\\large.bin",
+          "old_path": null,
+          "new_path": null,
+          "file_id": "6601000013000000d500100013000000",
+          "is_dir": false,
+          "size_before": 262144,
+          "size_after": 1048576,
+          "smb_command": "WRITE",
+          "evidence": {
+            "offset": 262144,
+            "length": 786432
+          }
+        },
+        {
+          "op": "append",
+          "timestamp": 1782467252.239686,
+          "timestamp_source": "network",
+          "network_timestamp": 1782467252.239686,
+          "fs_timestamp": 1782467251.9501781,
+          "timestamp_mode": "network",
+          "frame_number": 1836,
+          "path": "bench_multi_version_001\\bin\\large.bin",
+          "old_path": null,
+          "new_path": null,
+          "file_id": "6601000013000000d500100013000000",
+          "is_dir": false,
+          "size_before": 1048576,
+          "size_after": 1500000,
+          "smb_command": "WRITE",
+          "evidence": {
+            "offset": 1048576,
+            "length": 451424
+          }
+        },
+        {
+          "op": "read",
+          "timestamp": 1782467252.569848,
+          "timestamp_source": "network",
+          "network_timestamp": 1782467252.569848,
+          "fs_timestamp": 1782467252.0128937,
+          "timestamp_mode": "network",
+          "frame_number": 1933,
+          "path": "bench_multi_version_001\\bin\\large.bin",
+          "old_path": null,
+          "new_path": null,
+          "file_id": "76010000130000001500200013000000",
+          "is_dir": false,
+          "size_before": null,
+          "size_after": 1500000,
+          "smb_command": "READ",
+          "evidence": {
+            "offset": 0,
+            "length": 65536,
+            "data_len": 65536,
+            "data_md5": "8bb666d1a2b413a5afd625be0313ff91",
+            "observed": false,
+            "expected_size": 1500000,
+            "allow_after_prior_content": false
+          }
+        },
+        {
+          "op": "read",
+          "timestamp": 1782467252.574943,
+          "timestamp_source": "network",
+          "network_timestamp": 1782467252.574943,
+          "fs_timestamp": 1782467252.0128937,
+          "timestamp_mode": "network",
+          "frame_number": 1984,
+          "path": "bench_multi_version_001\\bin\\large.bin",
+          "old_path": null,
+          "new_path": null,
+          "file_id": "76010000130000001500200013000000",
+          "is_dir": false,
+          "size_before": null,
+          "size_after": 1500000,
+          "smb_command": "READ",
+          "evidence": {
+            "offset": 1441792,
+            "length": 58208,
+            "data_len": 58208,
+            "data_md5": "1d03c7f22fe2cd0a7fb4ad334ddaaf1d",
+            "observed": false,
+            "expected_size": 1500000,
+            "allow_after_prior_content": false
+          }
+        },
+        {
+          "op": "read",
+          "timestamp": 1782467252.58435,
+          "timestamp_source": "network",
+          "network_timestamp": 1782467252.58435,
+          "fs_timestamp": 1782467252.0128937,
+          "timestamp_mode": "network",
+          "frame_number": 2029,
+          "path": "bench_multi_version_001\\bin\\large.bin",
+          "old_path": null,
+          "new_path": null,
+          "file_id": "76010000130000001500200013000000",
+          "is_dir": false,
+          "size_before": null,
+          "size_after": 1500000,
+          "smb_command": "READ",
+          "evidence": {
+            "offset": 65536,
+            "length": 65536,
+            "data_len": 65536,
+            "data_md5": "1f6c6c9a6f41fcb7bf048830efb9992d",
+            "observed": false,
+            "expected_size": 1500000,
+            "allow_after_prior_content": false
+          }
+        },
+        {
+          "op": "read",
+          "timestamp": 1782467252.58862,
+          "timestamp_source": "network",
+          "network_timestamp": 1782467252.58862,
+          "fs_timestamp": 1782467252.0128937,
+          "timestamp_mode": "network",
+          "frame_number": 2080,
+          "path": "bench_multi_version_001\\bin\\large.bin",
+          "old_path": null,
+          "new_path": null,
+          "file_id": "76010000130000001500200013000000",
+          "is_dir": false,
+          "size_before": null,
+          "size_after": 1500000,
+          "smb_command": "READ",
+          "evidence": {
+            "offset": 131072,
+            "length": 65536,
+            "data_len": 65536,
+            "data_md5": "eb8706c3b5f1ee5d840a985e83b54481",
+            "observed": false,
+            "expected_size": 1500000,
+            "allow_after_prior_content": false
+          }
+        },
+        {
+          "op": "read",
+          "timestamp": 1782467252.592282,
+          "timestamp_source": "network",
+          "network_timestamp": 1782467252.592282,
+          "fs_timestamp": 1782467252.0128937,
+          "timestamp_mode": "network",
+          "frame_number": 2131,
+          "path": "bench_multi_version_001\\bin\\large.bin",
+          "old_path": null,
+          "new_path": null,
+          "file_id": "76010000130000001500200013000000",
+          "is_dir": false,
+          "size_before": null,
+          "size_after": 1500000,
+          "smb_command": "READ",
+          "evidence": {
+            "offset": 196608,
+            "length": 65536,
+            "data_len": 65536,
+            "data_md5": "0e0157effdcf5e51e2f7f1160b55ff99",
+            "observed": false,
+            "expected_size": 1500000,
+            "allow_after_prior_content": false
+          }
+        },
+        {
+          "op": "read",
+          "timestamp": 1782467252.600523,
+          "timestamp_source": "network",
+          "network_timestamp": 1782467252.600523,
+          "fs_timestamp": 1782467252.0128937,
+          "timestamp_mode": "network",
+          "frame_number": 2186,
+          "path": "bench_multi_version_001\\bin\\large.bin",
+          "old_path": null,
+          "new_path": null,
+          "file_id": "76010000130000001500200013000000",
+          "is_dir": false,
+          "size_before": null,
+          "size_after": 1500000,
+          "smb_command": "READ",
+          "evidence": {
+            "offset": 1048576,
+            "length": 65536,
+            "data_len": 65536,
+            "data_md5": "e724978f06a8bd905f6b797cb878e931",
+            "observed": false,
+            "expected_size": 1500000,
+            "allow_after_prior_content": false
+          }
+        },
+        {
+          "op": "overwrite",
+          "timestamp": 1782467252.604243,
+          "timestamp_source": "network",
+          "network_timestamp": 1782467252.604243,
+          "fs_timestamp": 1782467252.0128937,
+          "timestamp_mode": "network",
+          "frame_number": 2240,
+          "path": "bench_multi_version_001\\bin\\large.bin",
+          "old_path": null,
+          "new_path": null,
+          "file_id": "76010000130000001500200013000000",
+          "is_dir": false,
+          "size_before": 1500000,
+          "size_after": 1500000,
+          "smb_command": "WRITE",
+          "evidence": {
+            "offset": 1048576,
+            "length": 4096
+          }
+        }
+      ],
+      "versions": [
+        {
+          "version": 0,
+          "file_id": "6601000013000000d500100013000000",
+          "op": "write",
+          "metadata": {
+            "created": 1782467251.9501781,
+            "modified": 1782467252.0128937,
+            "accessed": 1782467252.0128937,
+            "changed": 1782467252.0128937,
+            "size": 1500000,
+            "timestamp_mode": "network",
+            "version_timestamp_source": "network",
+            "network_timestamp": 1782467252.274957
+          },
+          "hash": "d913c4ff38ad6a222efd33a9acaf07e3"
+        },
+        {
+          "version": 1,
+          "file_id": "76010000130000001500200013000000",
+          "op": "write",
+          "metadata": {
+            "created": 1782467251.9501781,
+            "modified": 1782467252.0128937,
+            "accessed": 1782467252.0128937,
+            "changed": 1782467252.0128937,
+            "size": 1500000,
+            "timestamp_mode": "network",
+            "version_timestamp_source": "network",
+            "network_timestamp": 1782467252.604243
+          },
+          "hash": "2f303f70ae2a9312336615fd61868549"
+        }
+      ]
+    },
+    {
+      "path": "bench_multi_version_001\\folder\\nested.txt",
+      "object_type": "file",
+      "source": "observed",
+      "sources": [
+        "context_only",
+        "observed"
+      ],
+      "is_dir": false,
+      "deleted": false,
+      "delete_time": null,
+      "semantic_summary": {
+        "semantic_ops": [
+          "context_seen",
+          "metadata_update",
+          "append"
+        ],
+        "smb_commands": [
+          "CREATE",
+          "SET_INFO",
+          "WRITE"
+        ],
+        "event_count": 3,
+        "version_count": 1,
+        "has_content": true
+      },
+      "path_history": [
+        {
+          "timestamp": 1782467252.903797,
+          "path": "bench_multi_version_001\\folder\\nested.txt"
+        }
+      ],
+      "events": [
+        {
+          "op": "context_seen",
+          "timestamp": 1782467252.903797,
+          "timestamp_source": "network",
+          "network_timestamp": 1782467252.903797,
+          "fs_timestamp": null,
+          "timestamp_mode": "network",
+          "frame_number": 2322,
+          "path": "bench_multi_version_001\\folder\\nested.txt",
+          "old_path": null,
+          "new_path": null,
+          "file_id": "path:bench_multi_version_001\\folder\\nested.txt",
+          "is_dir": false,
+          "size_before": null,
+          "size_after": null,
+          "smb_command": "CREATE",
+          "evidence": {
+            "synthetic_id": "path:bench_multi_version_001\\folder\\nested.txt"
+          }
+        },
+        {
+          "op": "metadata_update",
+          "timestamp": 1782467252.912054,
+          "timestamp_source": "network",
+          "network_timestamp": 1782467252.912054,
+          "fs_timestamp": 1782467252.6689548,
+          "timestamp_mode": "network",
+          "frame_number": 2335,
+          "path": "bench_multi_version_001\\folder\\nested.txt",
+          "old_path": null,
+          "new_path": null,
+          "file_id": "85010000130000005500200013000000",
+          "is_dir": false,
+          "size_before": null,
+          "size_after": null,
+          "smb_command": "SET_INFO",
+          "evidence": {
+            "file_info_class": "FileAllInformation",
+            "file_info_class_raw": 19,
+            "create_time": 1782467252.6689548,
+            "last_access_time": 1782467252.6689548,
+            "last_write_time": 1782467252.6689548,
+            "change_time": 1782467252.6689548
+          }
+        },
+        {
+          "op": "append",
+          "timestamp": 1782467252.912958,
+          "timestamp_source": "network",
+          "network_timestamp": 1782467252.912958,
+          "fs_timestamp": 1782467252.6689548,
+          "timestamp_mode": "network",
+          "frame_number": 2337,
+          "path": "bench_multi_version_001\\folder\\nested.txt",
+          "old_path": null,
+          "new_path": null,
+          "file_id": "85010000130000005500200013000000",
+          "is_dir": false,
+          "size_before": 0,
+          "size_after": 20,
+          "smb_command": "WRITE",
+          "evidence": {
+            "offset": 0,
+            "length": 20
+          }
+        }
+      ],
+      "versions": [
+        {
+          "version": 0,
+          "file_id": "85010000130000005500200013000000",
+          "op": "write",
+          "metadata": {
+            "created": 1782467252.6689548,
+            "modified": 1782467252.684969,
+            "accessed": 1782467252.684969,
+            "changed": 1782467252.684969,
+            "size": 20,
+            "timestamp_mode": "network",
+            "version_timestamp_source": "network",
+            "network_timestamp": 1782467252.921143
+          },
+          "hash": "2f57e8e57f2d96845941e075f0683aea"
+        }
+      ]
+    },
+    {
+      "path": "bench_multi_version_001\\tmp\\delete_me.tmp",
+      "object_type": "file",
+      "source": "observed",
+      "sources": [
+        "context_only",
+        "observed"
+      ],
+      "is_dir": false,
+      "deleted": true,
+      "delete_time": 1782467253.502475,
+      "semantic_summary": {
+        "semantic_ops": [
+          "context_seen",
+          "metadata_update",
+          "append",
+          "delete"
+        ],
+        "smb_commands": [
+          "CREATE",
+          "SET_INFO",
+          "WRITE"
+        ],
+        "event_count": 4,
+        "version_count": 1,
+        "has_content": true
+      },
+      "path_history": [
+        {
+          "timestamp": 1782467253.212308,
+          "path": "bench_multi_version_001\\tmp\\delete_me.tmp"
+        }
+      ],
+      "events": [
+        {
+          "op": "context_seen",
+          "timestamp": 1782467253.212308,
+          "timestamp_source": "network",
+          "network_timestamp": 1782467253.212308,
+          "fs_timestamp": null,
+          "timestamp_mode": "network",
+          "frame_number": 2421,
+          "path": "bench_multi_version_001\\tmp\\delete_me.tmp",
+          "old_path": null,
+          "new_path": null,
+          "file_id": "path:bench_multi_version_001\\tmp\\delete_me.tmp",
+          "is_dir": false,
+          "size_before": null,
+          "size_after": null,
+          "smb_command": "CREATE",
+          "evidence": {
+            "synthetic_id": "path:bench_multi_version_001\\tmp\\delete_me.tmp"
+          }
+        },
+        {
+          "op": "metadata_update",
+          "timestamp": 1782467253.22127,
+          "timestamp_source": "network",
+          "network_timestamp": 1782467253.22127,
+          "fs_timestamp": 1782467252.9817314,
+          "timestamp_mode": "network",
+          "frame_number": 2434,
+          "path": "bench_multi_version_001\\tmp\\delete_me.tmp",
+          "old_path": null,
+          "new_path": null,
+          "file_id": "9401000013000000a500200013000000",
+          "is_dir": false,
+          "size_before": null,
+          "size_after": null,
+          "smb_command": "SET_INFO",
+          "evidence": {
+            "file_info_class": "FileAllInformation",
+            "file_info_class_raw": 19,
+            "create_time": 1782467252.9817314,
+            "last_access_time": 1782467252.9817314,
+            "last_write_time": 1782467252.9817314,
+            "change_time": 1782467252.9817314
+          }
+        },
+        {
+          "op": "append",
+          "timestamp": 1782467253.222589,
+          "timestamp_source": "network",
+          "network_timestamp": 1782467253.222589,
+          "fs_timestamp": 1782467252.9817314,
+          "timestamp_mode": "network",
+          "frame_number": 2436,
+          "path": "bench_multi_version_001\\tmp\\delete_me.tmp",
+          "old_path": null,
+          "new_path": null,
+          "file_id": "9401000013000000a500200013000000",
+          "is_dir": false,
+          "size_before": 0,
+          "size_after": 18,
+          "smb_command": "WRITE",
+          "evidence": {
+            "offset": 0,
+            "length": 18
+          }
+        },
+        {
+          "op": "delete",
+          "timestamp": 1782467253.502475,
+          "timestamp_source": "network",
+          "network_timestamp": 1782467253.502475,
+          "fs_timestamp": 1782467252.997261,
+          "timestamp_mode": "network",
+          "frame_number": 2479,
+          "path": "bench_multi_version_001\\tmp\\delete_me.tmp",
+          "old_path": null,
+          "new_path": null,
+          "file_id": "9b01000013000000c100200013000000",
+          "is_dir": false,
+          "size_before": null,
+          "size_after": null,
+          "smb_command": "SET_INFO",
+          "evidence": {
+            "file_info_class": "FileDispositionInformation",
+            "delete_pending": true,
+            "disposition_flags": null
+          }
+        }
+      ],
+      "versions": [
+        {
+          "version": 0,
+          "file_id": "9401000013000000a500200013000000",
+          "op": "write",
+          "metadata": {
+            "created": 1782467252.9817314,
+            "modified": 1782467252.997261,
+            "accessed": 1782467252.997261,
+            "changed": 1782467252.997261,
+            "size": 18,
+            "timestamp_mode": "network",
+            "version_timestamp_source": "network",
+            "network_timestamp": 1782467253.229122
+          },
+          "hash": "88df8d1383a9058e343806218a0b6f99"
+        }
+      ]
+    }
+  ],
+  "tree": {
+    "Desktop.ini": {},
+    "AutoRun.inf": {},
+    "bench_multi_version_001": {
+      "docs": {
+        "report_final.txt": {},
+        "notes.txt": {}
+      },
+      "bin": {
+        "large.bin": {}
+      },
+      "tmp": {
+        "delete_me.tmp": {}
+      },
+      "folder": {
+        "nested.txt": {}
+      },
+      "emptydir": {}
+    }
+  }
+}

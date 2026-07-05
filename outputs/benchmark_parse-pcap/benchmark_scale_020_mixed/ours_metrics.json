@@ -1,0 +1,56 @@
+{
+  "version_tp": 51,
+  "version_fp": 0,
+  "version_fn": 0,
+  "version_precision": 1.0,
+  "version_recall": 1.0,
+  "version_f1": 1.0,
+  "content_hash_accuracy": 1.0,
+  "size_accuracy": 1.0,
+  "version_count_error": 0,
+  "missing_versions": [],
+  "extra_versions": [],
+  "wrong_hash": [],
+  "strict_path_content": {
+    "tp": 51,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0,
+    "missing": [],
+    "extra": []
+  },
+  "content_only": {
+    "tp": 51,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0,
+    "missing": [],
+    "extra": []
+  },
+  "mutation_content": {
+    "tp": 51,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0,
+    "missing": [],
+    "extra": []
+  },
+  "observed_content": {
+    "applicable": false,
+    "note": "This scenario has no observed/read baseline versions."
+  },
+  "index_version_tp": 51,
+  "index_version_fp": 0,
+  "index_version_fn": 0,
+  "index_content_hash_accuracy": 1.0,
+  "index_size_accuracy": 1.0,
+  "index_missing_versions": [],
+  "index_extra_versions": [],
+  "index_wrong_hash": []
+}

@@ -1,5 +1,6 @@
 import click
 from rich.console import Console
+import os
 
 from smbmount.parser.pcap_reader import parse_pcap_to_json
 from smbmount.parser.pcap_reader import (
@@ -32,14 +33,133 @@ def main():
 @main.command("parse-pcap")
 @click.argument("input_pcap", type=click.Path(exists=True))
 @click.argument("output_json", type=click.Path())
-def parse_pcap_cmd(input_pcap: str, output_json: str):
+@click.option(
+    "--timestamp-mode",
+    type=click.Choice(["network", "fs", "hybrid"]),
+    default="hybrid",
+    show_default=True,
+    help="Timestamp mode: network, fs, or hybrid.",
+)
+@click.option(
+    "--snapshot-at",
+    type=float,
+    default=None,
+    help="Export filesystem snapshot at this timestamp.",
+)
+@click.option(
+    "--snapshot-time-source",
+    type=click.Choice(["network", "fs"]),
+    default="network",
+    show_default=True,
+    help="Timestamp source used to decide snapshot membership.",
+)
+@click.option(
+    "--snapshot-include-deleted/--no-snapshot-include-deleted",
+    default=True,
+    show_default=True,
+    help="Include deleted files in snapshot output.",
+)
+@click.option(
+    "--fuse-mount",
+    type=click.Path(file_okay=False, dir_okay=True),
+    default=None,
+    help="Mount reconstructed filesystem at this mountpoint using FUSE. This keeps the process running.",
+)
+@click.option(
+    "--fuse-include-deleted/--no-fuse-include-deleted",
+    default=False,
+    show_default=True,
+    help="Include deleted files in FUSE view.",
+)
+@click.option(
+    "--fuse-allow-other/--no-fuse-allow-other",
+    default=False,
+    show_default=True,
+    help="Allow other users to access the FUSE mount. Requires system FUSE config.",
+)
+@click.option(
+    "--fuse-debug/--no-fuse-debug",
+    default=False,
+    show_default=True,
+    help="Enable FUSE debug output.",
+)
+def parse_pcap_cmd(
+    input_pcap: str,
+    output_json: str,
+    timestamp_mode: str,
+    snapshot_at,
+    snapshot_time_source,
+    snapshot_include_deleted,
+    fuse_mount,
+    fuse_include_deleted,
+    fuse_allow_other,
+    fuse_debug,
+):
     """
     Đọc PCAP/PCAPNG và extract SMB2 packet metadata ra JSON.
     """
     console.print(f"[bold cyan]Reading PCAP:[/bold cyan] {input_pcap}")
     console.print(f"[bold cyan]Output JSON:[/bold cyan] {output_json}")
+    console.print(f"[bold cyan]Timestamp mode:[/bold cyan] {timestamp_mode}")
+    if snapshot_at is not None:
+        console.print(f"[bold cyan]Snapshot at:[/bold cyan] {snapshot_at}")
+        console.print(f"[bold cyan]Snapshot time source:[/bold cyan] {snapshot_time_source}")
+    
+    file_table, result = parse_pcap_to_json(
+        input_pcap,
+        output_json,
+        timestamp_mode=timestamp_mode,
+        snapshot_at=snapshot_at,
+        snapshot_time_source=snapshot_time_source,
+        snapshot_include_deleted=snapshot_include_deleted,
+    )
+    
+    if fuse_mount:
+        try:
+            from smbmount.output.fuse_mount import mount_reconstructed_fs
+        except ModuleNotFoundError as exc:
+            if exc.name == "mfusepy":
+                raise click.ClickException(
+                    "FUSE support requires mfusepy. Install dependencies from requirements.txt "
+                    "before using --fuse-mount."
+                ) from exc
+            raise
 
-    parse_pcap_to_json(input_pcap, output_json)
+        os.makedirs(fuse_mount, exist_ok=True)
+
+        console.print(f"[bold cyan]FUSE mount:[/bold cyan] {fuse_mount}")
+
+        if snapshot_at is not None:
+            console.print(
+                f"[bold cyan]FUSE view:[/bold cyan] snapshot at {snapshot_at} "
+                f"using {snapshot_time_source} time"
+            )
+        else:
+            console.print("[bold cyan]FUSE view:[/bold cyan] latest reconstructed state")
+
+        console.print("[yellow]FUSE is running. Press Ctrl+C to unmount/stop.[/yellow]")
+
+        try:
+            mount_reconstructed_fs(
+                file_table,
+                mountpoint=fuse_mount,
+                snapshot_at=snapshot_at,
+                snapshot_time_source=snapshot_time_source,
+                include_deleted=fuse_include_deleted,
+                foreground=True,
+                debug=fuse_debug,
+                allow_other=fuse_allow_other,
+            )
+        except KeyboardInterrupt:
+            console.print("\n[yellow]FUSE stopped.[/yellow]")
+            return
+        except RuntimeError as exc:
+            # mfusepy may return RuntimeError("7") when FUSE is interrupted by Ctrl+C.
+            if str(exc) == "7":
+                console.print("\n[yellow]FUSE stopped.[/yellow]")
+                return
+            raise
+        
 
     console.print("[bold green]Done.[/bold green]")
     

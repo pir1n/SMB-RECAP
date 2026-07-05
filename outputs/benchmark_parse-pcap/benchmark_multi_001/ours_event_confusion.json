@@ -1,0 +1,107 @@
+{
+  "labels": [
+    "append",
+    "context_seen",
+    "delete",
+    "metadata_update",
+    "mkdir",
+    "none",
+    "overwrite",
+    "read",
+    "rename",
+    "rmdir",
+    "truncate"
+  ],
+  "matrix": [
+    {
+      "expected": "append",
+      "predicted": "context_seen",
+      "count": 5
+    },
+    {
+      "expected": "append",
+      "predicted": "metadata_update",
+      "count": 1
+    },
+    {
+      "expected": "delete",
+      "predicted": "metadata_update",
+      "count": 1
+    },
+    {
+      "expected": "mkdir",
+      "predicted": "context_seen",
+      "count": 5
+    },
+    {
+      "expected": "none",
+      "predicted": "append",
+      "count": 7
+    },
+    {
+      "expected": "none",
+      "predicted": "context_seen",
+      "count": 1
+    },
+    {
+      "expected": "none",
+      "predicted": "delete",
+      "count": 2
+    },
+    {
+      "expected": "none",
+      "predicted": "metadata_update",
+      "count": 5
+    },
+    {
+      "expected": "none",
+      "predicted": "mkdir",
+      "count": 5
+    },
+    {
+      "expected": "none",
+      "predicted": "overwrite",
+      "count": 2
+    },
+    {
+      "expected": "none",
+      "predicted": "read",
+      "count": 10
+    },
+    {
+      "expected": "none",
+      "predicted": "rename",
+      "count": 1
+    },
+    {
+      "expected": "none",
+      "predicted": "truncate",
+      "count": 1
+    },
+    {
+      "expected": "overwrite",
+      "predicted": "append",
+      "count": 1
+    },
+    {
+      "expected": "overwrite",
+      "predicted": "metadata_update",
+      "count": 1
+    },
+    {
+      "expected": "rename",
+      "predicted": "context_seen",
+      "count": 1
+    },
+    {
+      "expected": "rmdir",
+      "predicted": "mkdir",
+      "count": 1
+    },
+    {
+      "expected": "truncate",
+      "predicted": "metadata_update",
+      "count": 1
+    }
+  ]
+}

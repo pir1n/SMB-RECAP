@@ -1,0 +1,904 @@
+# SMB Reconstruction Benchmark Report
+
+## 1. Tool của tôi: smbmount
+
+| Metric | Value |
+|---|---:|
+| `version_tp` | 254 |
+| `version_fp` | 0 |
+| `version_fn` | 0 |
+| `version_precision` | 1.0000 |
+| `version_recall` | 1.0000 |
+| `version_f1` | 1.0000 |
+| `content_hash_accuracy` | 1.0000 |
+| `size_accuracy` | 1.0000 |
+| `version_count_error` | 0 |
+| `index_content_hash_accuracy` | 1.0000 |
+
+### Strict path content score `(path, md5, size)`
+
+| Metric | Value |
+|---|---:|
+| `tp` | 254 |
+| `fp` | 0 |
+| `fn` | 0 |
+| `precision` | 1.0000 |
+| `recall` | 1.0000 |
+| `f1` | 1.0000 |
+
+### Content-only score `(md5, size)`
+
+| Metric | Value |
+|---|---:|
+| `tp` | 254 |
+| `fp` | 0 |
+| `fn` | 0 |
+| `precision` | 1.0000 |
+| `recall` | 1.0000 |
+| `f1` | 1.0000 |
+
+### Mutation content score
+
+| Metric | Value |
+|---|---:|
+| `tp` | 254 |
+| `fp` | 0 |
+| `fn` | 0 |
+| `precision` | 1.0000 |
+| `recall` | 1.0000 |
+| `f1` | 1.0000 |
+
+### Observed/read baseline score
+
+Not applicable: This scenario has no observed/read baseline versions.
+
+
+## 2. Tool gốc: pcapFS
+
+| Metric | Value |
+|---|---:|
+| `version_tp` | 207 |
+| `version_fp` | 48 |
+| `version_fn` | 47 |
+| `version_precision` | 0.8118 |
+| `version_recall` | 0.8150 |
+| `version_f1` | 0.8134 |
+| `content_hash_accuracy` | 0.8150 |
+| `size_accuracy` | 0.8150 |
+| `version_count_error` | 1 |
+| `index_content_hash_accuracy` | 0.8858 |
+
+### Strict path content score `(path, md5, size)`
+
+| Metric | Value |
+|---|---:|
+| `tp` | 207 |
+| `fp` | 48 |
+| `fn` | 47 |
+| `precision` | 0.8118 |
+| `recall` | 0.8150 |
+| `f1` | 0.8134 |
+
+### Content-only score `(md5, size)`
+
+| Metric | Value |
+|---|---:|
+| `tp` | 229 |
+| `fp` | 26 |
+| `fn` | 25 |
+| `precision` | 0.8980 |
+| `recall` | 0.9016 |
+| `f1` | 0.8998 |
+
+### Mutation content score
+
+Not applicable: pcapFS does not expose semantic operation labels, so mutation_content is not applicable.
+
+### Observed/read baseline score
+
+Not applicable: This scenario has no observed/read baseline versions.
+
+
+## 3. Cách đọc metric
+
+- `strict_path_content`: chấm theo `(path, md5, size)`. Metric này phạt lỗi rename/path.
+- `content_only`: chấm theo `(md5, size)`. Metric này đo khả năng recover content, bỏ qua khác biệt path.
+- `mutation_content`: chấm các version do WRITE/TRUNCATE tạo ra.
+- `observed_content`: chấm các baseline version do READ hợp lệ tạo ra.
+- `index_*`: metric debug theo `(path, version_number)`, không nên dùng làm kết luận chính.
+- `event_confusion`: chỉ có ý nghĩa với smbmount vì pcapFS không xuất semantic SMB event timeline.
+
+## 4. Missing / Extra / Wrong Hash
+
+### smbmount missing versions
+
+[]
+
+### smbmount extra versions
+
+[]
+
+### smbmount index wrong hash versions
+
+[]
+
+### pcapFS missing versions
+
+[
+  {
+    "path": "bench_scale_100_mixed\\dir_00\\sub_00\\file_0000_final.bin",
+    "md5": "88493d02f98e53e1cb45179a748ec870",
+    "size": 524288
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_00\\sub_00\\file_0000_final.bin",
+    "md5": "c9c08ee3aa664fb80b387e21eda22af3",
+    "size": 524800
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_00\\sub_00\\file_0000_final.bin",
+    "md5": "cbecf1e25b4f667eaad3a6a45ac5f608",
+    "size": 524800
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_00\\sub_00\\file_0000_final.bin",
+    "md5": "f9554e9a8e32f675c4b360b9744e7b7a",
+    "size": 262400
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_00\\sub_00\\file_0040.bin",
+    "md5": "133bba9270e20d4cb2118fe5eae937fb",
+    "size": 1073
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_00\\sub_00\\file_0080.bin",
+    "md5": "cdfc4e458fb42ce2198c5c893ec234df",
+    "size": 1648
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_00\\sub_01\\file_0010.bin",
+    "md5": "ca5dac9d2d2ef9904297249968b2174f",
+    "size": 1929
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_00\\sub_01\\file_0050.bin",
+    "md5": "096f2d9834c1c9235280b535cf74e74c",
+    "size": 524800
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_00\\sub_01\\file_0050.bin",
+    "md5": "b8ed928715f0c1dc05c34ea435747f46",
+    "size": 262400
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_00\\sub_02\\file_0020.bin",
+    "md5": "51daef150bd22cd8e5763aa1bfd466b6",
+    "size": 1749
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_00\\sub_03\\file_0070_final.bin",
+    "md5": "11464827b2e2da1306c08da84f8452a6",
+    "size": 531
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_00\\sub_03\\file_0070_final.bin",
+    "md5": "897b3188dc879ec28339119754f1bc74",
+    "size": 597
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_01\\sub_00\\file_0081.bin",
+    "md5": "20d9ad3a529eadb411a8335a080e5331",
+    "size": 4443
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_01\\sub_01\\file_0091_final.bin",
+    "md5": "b1c2514ac519fd02ab00c1c0bbdece83",
+    "size": 1061
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_01\\sub_02\\file_0021_final.bin",
+    "md5": "0d9776f0ce07a8d95b29552dc360e2bb",
+    "size": 1095
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_01\\sub_02\\file_0021_final.bin",
+    "md5": "2116749ca5193dbbb5ec9c743f60d88f",
+    "size": 1231
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_02\\sub_00\\file_0042_final.bin",
+    "md5": "8a77549a9eee5b9da4de53fe88fedced",
+    "size": 3539
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_02\\sub_00\\file_0042_final.bin",
+    "md5": "b8c38a71e183d2ac2ba2d676bbbfc1f7",
+    "size": 3981
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_03\\sub_02\\file_0063_final.bin",
+    "md5": "26806303ca3c2dbd5fd0b36219bf0134",
+    "size": 3073
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_03\\sub_02\\file_0063_final.bin",
+    "md5": "4d04c78e484daba26283bfbddedc4aae",
+    "size": 2732
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_03\\sub_03\\file_0033.bin",
+    "md5": "8c42b22c6e60ca857767bb124b1bcd0c",
+    "size": 4434
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_04\\sub_00\\file_0084_final.bin",
+    "md5": "7949974a01d64f07d8bec56bd3cd298d",
+    "size": 3400
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_04\\sub_00\\file_0084_final.bin",
+    "md5": "daa7e9fb4ec44900c1c8e8ae93e5f180",
+    "size": 3023
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_04\\sub_01\\file_0014_final.bin",
+    "md5": "35fdbc18ea9ceb67cfcd231e547f632d",
+    "size": 2856
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_04\\sub_02\\file_0024.bin",
+    "md5": "4d5169242846b89a73e0c8bd4cde1677",
+    "size": 4268
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_05\\sub_00\\file_0005.bin",
+    "md5": "fe48323b345be7e638db52d8bc9548ce",
+    "size": 986
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_05\\sub_00\\file_0085.bin",
+    "md5": "1fc958e1ce62e4507d4accf4b76967b6",
+    "size": 183
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_05\\sub_01\\file_0055.bin",
+    "md5": "bd2fb3dc1693f5f4a2048b32ef1f9c10",
+    "size": 538
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_05\\sub_01\\file_0095.bin",
+    "md5": "bf33312c3757e5c150590e2dbb8eb7ce",
+    "size": 1982
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_05\\sub_02\\file_0025.bin",
+    "md5": "06a67efdf7a42eac32809b4abb25a778",
+    "size": 524800
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_05\\sub_02\\file_0025.bin",
+    "md5": "6b5c1537344f4cfd5bb4383dbe4e8452",
+    "size": 262400
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_05\\sub_02\\file_0065.bin",
+    "md5": "f229e2ed6e6102c13d119edf959bfadb",
+    "size": 1533
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_05\\sub_03\\file_0035_final.bin",
+    "md5": "1bbab93ea61883d49b49c2fb917239ca",
+    "size": 2616
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_05\\sub_03\\file_0035_final.bin",
+    "md5": "8129d277d5001542954d2a1764c56382",
+    "size": 2326
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_05\\sub_03\\file_0075.bin",
+    "md5": "043e13491fd85e4b1049a512a05db5aa",
+    "size": 524800
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_05\\sub_03\\file_0075.bin",
+    "md5": "5a1124b310b671c089478420fb3f39c3",
+    "size": 262400
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_05\\sub_03\\file_0075.bin",
+    "md5": "ab6da100e7814d0e629c8f1f01262a43",
+    "size": 524800
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_06\\sub_01\\file_0056_final.bin",
+    "md5": "88c2c0b334d6c19ba272c0fc4d8e16a4",
+    "size": 3515
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_07\\sub_00\\file_0007_final.bin",
+    "md5": "44e4102ad1909e78efb25ac7ad8c5563",
+    "size": 2655
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_07\\sub_01\\file_0057.bin",
+    "md5": "04327c8b34eee4ccf9de200f34b7b6ea",
+    "size": 4213
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_07\\sub_03\\file_0077_final.bin",
+    "md5": "29bb059d5e013cc0bb39f9f7da91d507",
+    "size": 435
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_07\\sub_03\\file_0077_final.bin",
+    "md5": "bddc886e6fa170d53436397fda01cfb3",
+    "size": 489
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_08\\sub_00\\file_0048.bin",
+    "md5": "8133e8749b71d2cfa052517a67343099",
+    "size": 4123
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_08\\sub_01\\file_0098_final.bin",
+    "md5": "591c96cf5820ef589a93f54985591c94",
+    "size": 307
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_08\\sub_02\\file_0028_final.bin",
+    "md5": "016874695c3409d2fa1e89464b18ff79",
+    "size": 703
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_09\\sub_00\\file_0049_final.bin",
+    "md5": "d94c42107c7faed4a4796a0f785e73bb",
+    "size": 1702
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_09\\sub_03\\file_0039.bin",
+    "md5": "1552297944c34c17329a90d27ff9e8d8",
+    "size": 4380
+  }
+]
+
+### pcapFS extra versions
+
+[
+  {
+    "path": "bench_scale_100_mixed\\dir_00\\sub_00\\file_0000.bin",
+    "md5": "0296aec23e70d870cfe43bf2fe0fdaec",
+    "size": 65536
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_00\\sub_00\\file_0000.bin",
+    "md5": "88493d02f98e53e1cb45179a748ec870",
+    "size": 524288
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_00\\sub_00\\file_0000.bin",
+    "md5": "999057eec7c046635a6aeb7848095a7d",
+    "size": 4096
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_00\\sub_00\\file_0000.bin",
+    "md5": "fcc49d31a2aba96e8a97773f858d14f7",
+    "size": 262144
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_00\\sub_00\\file_0000_final.bin",
+    "md5": "d41d8cd98f00b204e9800998ecf8427e",
+    "size": 0
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_00\\sub_01\\file_0050.bin",
+    "md5": "f0b97a3dec60b2bc1afa3ee9641409b9",
+    "size": 262144
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_00\\sub_03\\file_0070.bin",
+    "md5": "11464827b2e2da1306c08da84f8452a6",
+    "size": 531
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_00\\sub_03\\file_0070.bin",
+    "md5": "897b3188dc879ec28339119754f1bc74",
+    "size": 597
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_01\\sub_00\\file_0081.bin",
+    "md5": "beb0a998bdcf55ef710fa5a763b3e57e",
+    "size": 4096
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_01\\sub_01\\file_0091.bin",
+    "md5": "56fefd2bbc174b048a7e12e0c912d406",
+    "size": 1193
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_01\\sub_01\\file_0091.bin",
+    "md5": "b1c2514ac519fd02ab00c1c0bbdece83",
+    "size": 1061
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_01\\sub_02\\file_0021.bin",
+    "md5": "0d9776f0ce07a8d95b29552dc360e2bb",
+    "size": 1095
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_01\\sub_02\\file_0021.bin",
+    "md5": "2116749ca5193dbbb5ec9c743f60d88f",
+    "size": 1231
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_01\\sub_02\\file_0021.bin",
+    "md5": "bd05c0acd0b8a1347fbc30468c8a7d59",
+    "size": 1231
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_02\\sub_00\\file_0042.bin",
+    "md5": "8a77549a9eee5b9da4de53fe88fedced",
+    "size": 3539
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_02\\sub_00\\file_0042.bin",
+    "md5": "8dbcceb163589e67002d823392d091b5",
+    "size": 3981
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_02\\sub_00\\file_0042.bin",
+    "md5": "b8c38a71e183d2ac2ba2d676bbbfc1f7",
+    "size": 3981
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_03\\sub_02\\file_0063.bin",
+    "md5": "26806303ca3c2dbd5fd0b36219bf0134",
+    "size": 3073
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_03\\sub_02\\file_0063.bin",
+    "md5": "4d04c78e484daba26283bfbddedc4aae",
+    "size": 2732
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_03\\sub_02\\file_0063.bin",
+    "md5": "9ac6aef9aa26147e29103fb2651f600e",
+    "size": 3073
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_03\\sub_03\\file_0033.bin",
+    "md5": "58ac5c8e56ff20378cd60404e89b6713",
+    "size": 4096
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_04\\sub_00\\file_0084.bin",
+    "md5": "7949974a01d64f07d8bec56bd3cd298d",
+    "size": 3400
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_04\\sub_00\\file_0084.bin",
+    "md5": "9004f77aec346f577accf9d0b40ef98e",
+    "size": 3400
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_04\\sub_00\\file_0084.bin",
+    "md5": "daa7e9fb4ec44900c1c8e8ae93e5f180",
+    "size": 3023
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_04\\sub_01\\file_0014.bin",
+    "md5": "35baee1942f5a02729f412b38dd8930c",
+    "size": 3213
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_04\\sub_01\\file_0014.bin",
+    "md5": "35fdbc18ea9ceb67cfcd231e547f632d",
+    "size": 2856
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_04\\sub_02\\file_0024.bin",
+    "md5": "6989c1bb8fe28ca3285a7511fd53de5f",
+    "size": 4096
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_05\\sub_02\\file_0025.bin",
+    "md5": "c2ca9997abff61825361d671001ceb85",
+    "size": 262144
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_05\\sub_03\\file_0035.bin",
+    "md5": "1bbab93ea61883d49b49c2fb917239ca",
+    "size": 2616
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_05\\sub_03\\file_0035.bin",
+    "md5": "8129d277d5001542954d2a1764c56382",
+    "size": 2326
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_05\\sub_03\\file_0075.bin",
+    "md5": "004c98b371093af726df49da017deed8",
+    "size": 262144
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_05\\sub_03\\file_0075.bin",
+    "md5": "e4d18ff3dacb1b7710940662f1aa485c",
+    "size": 262400
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_06\\sub_01\\file_0056.bin",
+    "md5": "88c2c0b334d6c19ba272c0fc4d8e16a4",
+    "size": 3515
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_06\\sub_01\\file_0056.bin",
+    "md5": "93ed125d55f43dbe2810889fc8aa569a",
+    "size": 3954
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_07\\sub_00\\file_0007.bin",
+    "md5": "44e4102ad1909e78efb25ac7ad8c5563",
+    "size": 2655
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_07\\sub_00\\file_0007.bin",
+    "md5": "cc7c897b8a30af9aeb68fccf9473456c",
+    "size": 2986
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_07\\sub_01\\file_0057.bin",
+    "md5": "ff5b3e241e1d996377a39c48d9a0294e",
+    "size": 4096
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_07\\sub_03\\file_0077.bin",
+    "md5": "29bb059d5e013cc0bb39f9f7da91d507",
+    "size": 435
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_07\\sub_03\\file_0077.bin",
+    "md5": "bddc886e6fa170d53436397fda01cfb3",
+    "size": 489
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_07\\sub_03\\file_0077_final.bin",
+    "md5": "d41d8cd98f00b204e9800998ecf8427e",
+    "size": 0
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_08\\sub_00\\file_0048.bin",
+    "md5": "b38c8e7f33023c5b31ee7ebf68583483",
+    "size": 4096
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_08\\sub_01\\file_0098.bin",
+    "md5": "591c96cf5820ef589a93f54985591c94",
+    "size": 307
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_08\\sub_01\\file_0098.bin",
+    "md5": "bd2b6dd702f0e7caa021dba212eaa372",
+    "size": 345
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_08\\sub_02\\file_0028.bin",
+    "md5": "016874695c3409d2fa1e89464b18ff79",
+    "size": 703
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_08\\sub_02\\file_0028.bin",
+    "md5": "0cf1d4d4fbe8ebd74b3c599a4bca5d59",
+    "size": 790
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_09\\sub_00\\file_0049.bin",
+    "md5": "c01ef694f05c1c54e3f311763a303607",
+    "size": 1914
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_09\\sub_00\\file_0049.bin",
+    "md5": "d94c42107c7faed4a4796a0f785e73bb",
+    "size": 1702
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_09\\sub_03\\file_0039.bin",
+    "md5": "5e335bb3e505768ad462e88052da776a",
+    "size": 4096
+  }
+]
+
+### pcapFS index wrong hash versions
+
+[
+  {
+    "path": "bench_scale_100_mixed\\dir_05\\sub_03\\file_0075.bin",
+    "version": 2,
+    "expected_md5": "ab6da100e7814d0e629c8f1f01262a43",
+    "predicted_md5": "e4d18ff3dacb1b7710940662f1aa485c"
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_08\\sub_02\\file_0028_final.bin",
+    "version": 0,
+    "expected_md5": "016874695c3409d2fa1e89464b18ff79",
+    "predicted_md5": "0cf1d4d4fbe8ebd74b3c599a4bca5d59"
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_05\\sub_03\\file_0035_final.bin",
+    "version": 0,
+    "expected_md5": "8129d277d5001542954d2a1764c56382",
+    "predicted_md5": "a5be15fd5af8c428db4854560e081c3d"
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_07\\sub_01\\file_0057.bin",
+    "version": 2,
+    "expected_md5": "04327c8b34eee4ccf9de200f34b7b6ea",
+    "predicted_md5": "ff5b3e241e1d996377a39c48d9a0294e"
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_04\\sub_00\\file_0084_final.bin",
+    "version": 0,
+    "expected_md5": "daa7e9fb4ec44900c1c8e8ae93e5f180",
+    "predicted_md5": "9004f77aec346f577accf9d0b40ef98e"
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_06\\sub_01\\file_0056_final.bin",
+    "version": 0,
+    "expected_md5": "88c2c0b334d6c19ba272c0fc4d8e16a4",
+    "predicted_md5": "93ed125d55f43dbe2810889fc8aa569a"
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_09\\sub_00\\file_0049_final.bin",
+    "version": 0,
+    "expected_md5": "d94c42107c7faed4a4796a0f785e73bb",
+    "predicted_md5": "c01ef694f05c1c54e3f311763a303607"
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_04\\sub_01\\file_0014_final.bin",
+    "version": 0,
+    "expected_md5": "35fdbc18ea9ceb67cfcd231e547f632d",
+    "predicted_md5": "35baee1942f5a02729f412b38dd8930c"
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_05\\sub_02\\file_0025.bin",
+    "version": 1,
+    "expected_md5": "06a67efdf7a42eac32809b4abb25a778",
+    "predicted_md5": "c2ca9997abff61825361d671001ceb85"
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_07\\sub_00\\file_0007_final.bin",
+    "version": 0,
+    "expected_md5": "44e4102ad1909e78efb25ac7ad8c5563",
+    "predicted_md5": "cc7c897b8a30af9aeb68fccf9473456c"
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_03\\sub_02\\file_0063_final.bin",
+    "version": 0,
+    "expected_md5": "4d04c78e484daba26283bfbddedc4aae",
+    "predicted_md5": "9ac6aef9aa26147e29103fb2651f600e"
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_09\\sub_03\\file_0039.bin",
+    "version": 2,
+    "expected_md5": "1552297944c34c17329a90d27ff9e8d8",
+    "predicted_md5": "5e335bb3e505768ad462e88052da776a"
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_00\\sub_00\\file_0000_final.bin",
+    "version": 0,
+    "expected_md5": "88493d02f98e53e1cb45179a748ec870",
+    "predicted_md5": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_01\\sub_00\\file_0081.bin",
+    "version": 2,
+    "expected_md5": "20d9ad3a529eadb411a8335a080e5331",
+    "predicted_md5": "beb0a998bdcf55ef710fa5a763b3e57e"
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_04\\sub_02\\file_0024.bin",
+    "version": 2,
+    "expected_md5": "4d5169242846b89a73e0c8bd4cde1677",
+    "predicted_md5": "6989c1bb8fe28ca3285a7511fd53de5f"
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_07\\sub_03\\file_0077_final.bin",
+    "version": 0,
+    "expected_md5": "29bb059d5e013cc0bb39f9f7da91d507",
+    "predicted_md5": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_05\\sub_03\\file_0075.bin",
+    "version": 1,
+    "expected_md5": "043e13491fd85e4b1049a512a05db5aa",
+    "predicted_md5": "004c98b371093af726df49da017deed8"
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_01\\sub_01\\file_0091_final.bin",
+    "version": 0,
+    "expected_md5": "b1c2514ac519fd02ab00c1c0bbdece83",
+    "predicted_md5": "56fefd2bbc174b048a7e12e0c912d406"
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_03\\sub_03\\file_0033.bin",
+    "version": 2,
+    "expected_md5": "8c42b22c6e60ca857767bb124b1bcd0c",
+    "predicted_md5": "58ac5c8e56ff20378cd60404e89b6713"
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_00\\sub_03\\file_0070_final.bin",
+    "version": 0,
+    "expected_md5": "11464827b2e2da1306c08da84f8452a6",
+    "predicted_md5": "91b954e97969b5b74ddacd01f8a7d657"
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_08\\sub_00\\file_0048.bin",
+    "version": 2,
+    "expected_md5": "8133e8749b71d2cfa052517a67343099",
+    "predicted_md5": "b38c8e7f33023c5b31ee7ebf68583483"
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_08\\sub_01\\file_0098_final.bin",
+    "version": 0,
+    "expected_md5": "591c96cf5820ef589a93f54985591c94",
+    "predicted_md5": "bd2b6dd702f0e7caa021dba212eaa372"
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_00\\sub_01\\file_0050.bin",
+    "version": 1,
+    "expected_md5": "096f2d9834c1c9235280b535cf74e74c",
+    "predicted_md5": "f0b97a3dec60b2bc1afa3ee9641409b9"
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_01\\sub_02\\file_0021_final.bin",
+    "version": 0,
+    "expected_md5": "0d9776f0ce07a8d95b29552dc360e2bb",
+    "predicted_md5": "bd05c0acd0b8a1347fbc30468c8a7d59"
+  },
+  {
+    "path": "bench_scale_100_mixed\\dir_02\\sub_00\\file_0042_final.bin",
+    "version": 0,
+    "expected_md5": "8a77549a9eee5b9da4de53fe88fedced",
+    "predicted_md5": "8dbcceb163589e67002d823392d091b5"
+  }
+]
+
+## 5. Event Confusion 
+
+### smbmount
+
+{
+  "labels": [
+    "append",
+    "context_seen",
+    "delete",
+    "metadata_update",
+    "missing",
+    "mkdir",
+    "none",
+    "overwrite",
+    "read",
+    "rename",
+    "rmdir",
+    "truncate"
+  ],
+  "matrix": [
+    {
+      "expected": "append",
+      "predicted": "context_seen",
+      "count": 100
+    },
+    {
+      "expected": "append",
+      "predicted": "metadata_update",
+      "count": 100
+    },
+    {
+      "expected": "delete",
+      "predicted": "append",
+      "count": 4
+    },
+    {
+      "expected": "delete",
+      "predicted": "delete",
+      "count": 1
+    },
+    {
+      "expected": "delete",
+      "predicted": "missing",
+      "count": 1
+    },
+    {
+      "expected": "delete",
+      "predicted": "read",
+      "count": 4
+    },
+    {
+      "expected": "mkdir",
+      "predicted": "context_seen",
+      "count": 54
+    },
+    {
+      "expected": "none",
+      "predicted": "append",
+      "count": 157
+    },
+    {
+      "expected": "none",
+      "predicted": "delete",
+      "count": 13
+    },
+    {
+      "expected": "none",
+      "predicted": "metadata_update",
+      "count": 22
+    },
+    {
+      "expected": "none",
+      "predicted": "mkdir",
+      "count": 51
+    },
+    {
+      "expected": "none",
+      "predicted": "overwrite",
+      "count": 41
+    },
+    {
+      "expected": "none",
+      "predicted": "read",
+      "count": 223
+    },
+    {
+      "expected": "none",
+      "predicted": "rename",
+      "count": 15
+    },
+    {
+      "expected": "none",
+      "predicted": "truncate",
+      "count": 20
+    },
+    {
+      "expected": "overwrite",
+      "predicted": "append",
+      "count": 32
+    },
+    {
+      "expected": "overwrite",
+      "predicted": "metadata_update",
+      "count": 2
+    },
+    {
+      "expected": "rename",
+      "predicted": "context_seen",
+      "count": 15
+    },
+    {
+      "expected": "rmdir",
+      "predicted": "mkdir",
+      "count": 3
+    },
+    {
+      "expected": "truncate",
+      "predicted": "append",
+      "count": 11
+    },
+    {
+      "expected": "truncate",
+      "predicted": "metadata_update",
+      "count": 4
+    },
+    {
+      "expected": "truncate",
+      "predicted": "read",
+      "count": 5
+    }
+  ]
+}
+
+### pcapFS
+
+{
+  "note": "pcapFS exposes reconstructed filesystem content, not semantic SMB event timeline. Event confusion is not applicable.",
+  "labels": [],
+  "matrix": []
+}

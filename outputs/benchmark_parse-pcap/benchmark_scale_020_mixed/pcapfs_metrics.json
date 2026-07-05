@@ -1,0 +1,351 @@
+{
+  "version_tp": 43,
+  "version_fp": 9,
+  "version_fn": 8,
+  "version_precision": 0.8269230769230769,
+  "version_recall": 0.8431372549019608,
+  "version_f1": 0.8349514563106797,
+  "content_hash_accuracy": 0.8431372549019608,
+  "size_accuracy": 0.8431372549019608,
+  "version_count_error": 1,
+  "missing_versions": [
+    {
+      "path": "bench_scale_020_mixed\\dir_00\\sub_00\\file_0000_final.bin",
+      "md5": "1db2a6d1a594672b46a6a6db99e5ccde",
+      "size": 524800
+    },
+    {
+      "path": "bench_scale_020_mixed\\dir_00\\sub_00\\file_0000_final.bin",
+      "md5": "7ba28798b485035f812c6197dfdf0fce",
+      "size": 524288
+    },
+    {
+      "path": "bench_scale_020_mixed\\dir_00\\sub_00\\file_0000_final.bin",
+      "md5": "a75d36bcd001cd89cb1112100b59e909",
+      "size": 524800
+    },
+    {
+      "path": "bench_scale_020_mixed\\dir_00\\sub_00\\file_0000_final.bin",
+      "md5": "b8a5679bfbe76b5248cb3ed963575280",
+      "size": 262400
+    },
+    {
+      "path": "bench_scale_020_mixed\\dir_00\\sub_01\\file_0010.bin",
+      "md5": "efd3396f7555e9adcd5ac399b4bc34b0",
+      "size": 1929
+    },
+    {
+      "path": "bench_scale_020_mixed\\dir_04\\sub_01\\file_0014_final.bin",
+      "md5": "2ac3373311d5463cb40df8967a70fd5e",
+      "size": 2856
+    },
+    {
+      "path": "bench_scale_020_mixed\\dir_05\\sub_00\\file_0005.bin",
+      "md5": "ca480ef6a53b954685269128fee5539f",
+      "size": 986
+    },
+    {
+      "path": "bench_scale_020_mixed\\dir_07\\sub_00\\file_0007_final.bin",
+      "md5": "20073d4d8f386479d8b32ec556eb2bd8",
+      "size": 2655
+    }
+  ],
+  "extra_versions": [
+    {
+      "path": "bench_scale_020_mixed\\dir_00\\sub_00\\file_0000.bin",
+      "md5": "232ab3062063cce5e23eefe2aa1618cb",
+      "size": 65536
+    },
+    {
+      "path": "bench_scale_020_mixed\\dir_00\\sub_00\\file_0000.bin",
+      "md5": "7ba28798b485035f812c6197dfdf0fce",
+      "size": 524288
+    },
+    {
+      "path": "bench_scale_020_mixed\\dir_00\\sub_00\\file_0000.bin",
+      "md5": "b3d4cfbe25ca02a747b08fe53a65343f",
+      "size": 262144
+    },
+    {
+      "path": "bench_scale_020_mixed\\dir_00\\sub_00\\file_0000.bin",
+      "md5": "d951ec495ca9c53cb2176592e361c48a",
+      "size": 4096
+    },
+    {
+      "path": "bench_scale_020_mixed\\dir_00\\sub_00\\file_0000_final.bin",
+      "md5": "d41d8cd98f00b204e9800998ecf8427e",
+      "size": 0
+    },
+    {
+      "path": "bench_scale_020_mixed\\dir_04\\sub_01\\file_0014.bin",
+      "md5": "05aa50d77a6700e069a6ba63dcb1c6b4",
+      "size": 3213
+    },
+    {
+      "path": "bench_scale_020_mixed\\dir_04\\sub_01\\file_0014.bin",
+      "md5": "2ac3373311d5463cb40df8967a70fd5e",
+      "size": 2856
+    },
+    {
+      "path": "bench_scale_020_mixed\\dir_07\\sub_00\\file_0007.bin",
+      "md5": "20073d4d8f386479d8b32ec556eb2bd8",
+      "size": 2655
+    },
+    {
+      "path": "bench_scale_020_mixed\\dir_07\\sub_00\\file_0007.bin",
+      "md5": "58f77b9650fbb340a2a207213255a368",
+      "size": 2986
+    }
+  ],
+  "wrong_hash": [],
+  "strict_path_content": {
+    "tp": 43,
+    "fp": 9,
+    "fn": 8,
+    "precision": 0.8269230769230769,
+    "recall": 0.8431372549019608,
+    "f1": 0.8349514563106797,
+    "missing": [
+      {
+        "path": "bench_scale_020_mixed\\dir_00\\sub_00\\file_0000_final.bin",
+        "md5": "1db2a6d1a594672b46a6a6db99e5ccde",
+        "size": 524800
+      },
+      {
+        "path": "bench_scale_020_mixed\\dir_00\\sub_00\\file_0000_final.bin",
+        "md5": "7ba28798b485035f812c6197dfdf0fce",
+        "size": 524288
+      },
+      {
+        "path": "bench_scale_020_mixed\\dir_00\\sub_00\\file_0000_final.bin",
+        "md5": "a75d36bcd001cd89cb1112100b59e909",
+        "size": 524800
+      },
+      {
+        "path": "bench_scale_020_mixed\\dir_00\\sub_00\\file_0000_final.bin",
+        "md5": "b8a5679bfbe76b5248cb3ed963575280",
+        "size": 262400
+      },
+      {
+        "path": "bench_scale_020_mixed\\dir_00\\sub_01\\file_0010.bin",
+        "md5": "efd3396f7555e9adcd5ac399b4bc34b0",
+        "size": 1929
+      },
+      {
+        "path": "bench_scale_020_mixed\\dir_04\\sub_01\\file_0014_final.bin",
+        "md5": "2ac3373311d5463cb40df8967a70fd5e",
+        "size": 2856
+      },
+      {
+        "path": "bench_scale_020_mixed\\dir_05\\sub_00\\file_0005.bin",
+        "md5": "ca480ef6a53b954685269128fee5539f",
+        "size": 986
+      },
+      {
+        "path": "bench_scale_020_mixed\\dir_07\\sub_00\\file_0007_final.bin",
+        "md5": "20073d4d8f386479d8b32ec556eb2bd8",
+        "size": 2655
+      }
+    ],
+    "extra": [
+      {
+        "path": "bench_scale_020_mixed\\dir_00\\sub_00\\file_0000.bin",
+        "md5": "232ab3062063cce5e23eefe2aa1618cb",
+        "size": 65536
+      },
+      {
+        "path": "bench_scale_020_mixed\\dir_00\\sub_00\\file_0000.bin",
+        "md5": "7ba28798b485035f812c6197dfdf0fce",
+        "size": 524288
+      },
+      {
+        "path": "bench_scale_020_mixed\\dir_00\\sub_00\\file_0000.bin",
+        "md5": "b3d4cfbe25ca02a747b08fe53a65343f",
+        "size": 262144
+      },
+      {
+        "path": "bench_scale_020_mixed\\dir_00\\sub_00\\file_0000.bin",
+        "md5": "d951ec495ca9c53cb2176592e361c48a",
+        "size": 4096
+      },
+      {
+        "path": "bench_scale_020_mixed\\dir_00\\sub_00\\file_0000_final.bin",
+        "md5": "d41d8cd98f00b204e9800998ecf8427e",
+        "size": 0
+      },
+      {
+        "path": "bench_scale_020_mixed\\dir_04\\sub_01\\file_0014.bin",
+        "md5": "05aa50d77a6700e069a6ba63dcb1c6b4",
+        "size": 3213
+      },
+      {
+        "path": "bench_scale_020_mixed\\dir_04\\sub_01\\file_0014.bin",
+        "md5": "2ac3373311d5463cb40df8967a70fd5e",
+        "size": 2856
+      },
+      {
+        "path": "bench_scale_020_mixed\\dir_07\\sub_00\\file_0007.bin",
+        "md5": "20073d4d8f386479d8b32ec556eb2bd8",
+        "size": 2655
+      },
+      {
+        "path": "bench_scale_020_mixed\\dir_07\\sub_00\\file_0007.bin",
+        "md5": "58f77b9650fbb340a2a207213255a368",
+        "size": 2986
+      }
+    ]
+  },
+  "content_only": {
+    "tp": 46,
+    "fp": 6,
+    "fn": 5,
+    "precision": 0.8846153846153846,
+    "recall": 0.9019607843137255,
+    "f1": 0.8932038834951457,
+    "missing": [
+      {
+        "md5": "1db2a6d1a594672b46a6a6db99e5ccde",
+        "size": 524800
+      },
+      {
+        "md5": "a75d36bcd001cd89cb1112100b59e909",
+        "size": 524800
+      },
+      {
+        "md5": "b8a5679bfbe76b5248cb3ed963575280",
+        "size": 262400
+      },
+      {
+        "md5": "ca480ef6a53b954685269128fee5539f",
+        "size": 986
+      },
+      {
+        "md5": "efd3396f7555e9adcd5ac399b4bc34b0",
+        "size": 1929
+      }
+    ],
+    "extra": [
+      {
+        "md5": "05aa50d77a6700e069a6ba63dcb1c6b4",
+        "size": 3213
+      },
+      {
+        "md5": "232ab3062063cce5e23eefe2aa1618cb",
+        "size": 65536
+      },
+      {
+        "md5": "58f77b9650fbb340a2a207213255a368",
+        "size": 2986
+      },
+      {
+        "md5": "b3d4cfbe25ca02a747b08fe53a65343f",
+        "size": 262144
+      },
+      {
+        "md5": "d41d8cd98f00b204e9800998ecf8427e",
+        "size": 0
+      },
+      {
+        "md5": "d951ec495ca9c53cb2176592e361c48a",
+        "size": 4096
+      }
+    ]
+  },
+  "mutation_content": {
+    "applicable": false,
+    "note": "pcapFS does not expose semantic operation labels, so mutation_content is not applicable."
+  },
+  "observed_content": {
+    "applicable": false,
+    "note": "This scenario has no observed/read baseline versions."
+  },
+  "index_version_tp": 44,
+  "index_version_fp": 8,
+  "index_version_fn": 7,
+  "index_content_hash_accuracy": 0.9318181818181818,
+  "index_size_accuracy": 0.9318181818181818,
+  "index_missing_versions": [
+    {
+      "path": "bench_scale_020_mixed\\dir_00\\sub_00\\file_0000_final.bin",
+      "version": 1
+    },
+    {
+      "path": "bench_scale_020_mixed\\dir_00\\sub_00\\file_0000_final.bin",
+      "version": 2
+    },
+    {
+      "path": "bench_scale_020_mixed\\dir_00\\sub_00\\file_0000_final.bin",
+      "version": 3
+    },
+    {
+      "path": "bench_scale_020_mixed\\dir_00\\sub_01\\file_0010.bin",
+      "version": 2
+    },
+    {
+      "path": "bench_scale_020_mixed\\dir_04\\sub_01\\file_0014_final.bin",
+      "version": 1
+    },
+    {
+      "path": "bench_scale_020_mixed\\dir_05\\sub_00\\file_0005.bin",
+      "version": 2
+    },
+    {
+      "path": "bench_scale_020_mixed\\dir_07\\sub_00\\file_0007_final.bin",
+      "version": 1
+    }
+  ],
+  "index_extra_versions": [
+    {
+      "path": "bench_scale_020_mixed\\dir_00\\sub_00\\file_0000.bin",
+      "version": 0
+    },
+    {
+      "path": "bench_scale_020_mixed\\dir_00\\sub_00\\file_0000.bin",
+      "version": 1
+    },
+    {
+      "path": "bench_scale_020_mixed\\dir_00\\sub_00\\file_0000.bin",
+      "version": 2
+    },
+    {
+      "path": "bench_scale_020_mixed\\dir_00\\sub_00\\file_0000.bin",
+      "version": 3
+    },
+    {
+      "path": "bench_scale_020_mixed\\dir_04\\sub_01\\file_0014.bin",
+      "version": 0
+    },
+    {
+      "path": "bench_scale_020_mixed\\dir_04\\sub_01\\file_0014.bin",
+      "version": 1
+    },
+    {
+      "path": "bench_scale_020_mixed\\dir_07\\sub_00\\file_0007.bin",
+      "version": 0
+    },
+    {
+      "path": "bench_scale_020_mixed\\dir_07\\sub_00\\file_0007.bin",
+      "version": 1
+    }
+  ],
+  "index_wrong_hash": [
+    {
+      "path": "bench_scale_020_mixed\\dir_04\\sub_01\\file_0014_final.bin",
+      "version": 0,
+      "expected_md5": "2ac3373311d5463cb40df8967a70fd5e",
+      "predicted_md5": "05aa50d77a6700e069a6ba63dcb1c6b4"
+    },
+    {
+      "path": "bench_scale_020_mixed\\dir_07\\sub_00\\file_0007_final.bin",
+      "version": 0,
+      "expected_md5": "20073d4d8f386479d8b32ec556eb2bd8",
+      "predicted_md5": "58f77b9650fbb340a2a207213255a368"
+    },
+    {
+      "path": "bench_scale_020_mixed\\dir_00\\sub_00\\file_0000_final.bin",
+      "version": 0,
+      "expected_md5": "7ba28798b485035f812c6197dfdf0fce",
+      "predicted_md5": "d41d8cd98f00b204e9800998ecf8427e"
+    }
+  ]
+}

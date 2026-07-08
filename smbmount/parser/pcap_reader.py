@@ -1,18 +1,21 @@
-import cmd
 import json
 import struct
 from pathlib import Path
 from typing import Any, Dict, List, Optional
-from scapy.all import rdpcap, TCP, Raw, SMB2_Header, sniff
+from scapy.all import RawPcapReader, TCP, SMB2_Header
 from smbmount.reconstruct.content import process_packets
 from smbmount.output.fs_export import export_files
 from smbmount.reconstruct.hierarchy import build_tree
+from smbmount.output.snapshot_export import build_snapshot
 from smbmount.parser.utils import *
 from smbmount.parser.smb2_constants import *
 from smbmount.parser.smb2_extractors import *
-from smbmount.parser.tcp_reassembler import reassemble_tcp_streams
+from smbmount.parser.tcp_reassembler import (
+    StreamingSmb2Reassembler,
+    iter_smb2_messages_from_tcp_payload,
+    reassemble_tcp_streams,
+)
 from smbmount.parser.streaming_pcap_reader import read_pcap_reconstruction_streaming
-from smbmount.output.snapshot_export import build_snapshot
 
 def _find_smb2_payload_layer(payload_pkt):
     payload_classes = [SMB2_Create_Request, SMB2_Create_Response,
@@ -30,7 +33,304 @@ def _find_smb2_payload_layer(payload_pkt):
             return payload_pkt[layer_cls]
     return None
 
+def _packet_tcp_payload(packet):
+    if not packet.haslayer(TCP):
+        return b""
+    try:
+        return bytes(packet[TCP].payload)
+    except Exception:
+        return b""
+
+
+def _iter_packet_smb2_messages(packet):
+    payload = _packet_tcp_payload(packet)
+    if payload:
+        messages = list(iter_smb2_messages_from_tcp_payload(payload))
+        if messages:
+            return messages
+
+    if packet.haslayer(SMB2_Header):
+        try:
+            return list(iter_smb2_messages_from_tcp_payload(bytes(packet[SMB2_Header])))
+        except Exception:
+            return []
+
+    return []
+
+
+def _metadata_timestamp(meta):
+    try:
+        if hasattr(meta, "tshigh") and hasattr(meta, "tslow"):
+            raw_ts = (int(meta.tshigh) << 32) + int(meta.tslow)
+            return raw_ts / float(meta.tsresol)
+        if hasattr(meta, "sec") and hasattr(meta, "usec"):
+            return float(meta.sec) + (float(meta.usec) / 1_000_000)
+    except Exception:
+        return None
+    return None
+
+
+def _format_ipv4(raw_addr):
+    return ".".join(str(part) for part in raw_addr)
+
+
+def _format_ipv6(raw_addr):
+    parts = [raw_addr[i:i + 2].hex() for i in range(0, 16, 2)]
+    return ":".join(parts)
+
+
+def _parse_raw_tcp_packet(raw_frame, timestamp):
+    if len(raw_frame) < 14:
+        return None
+
+    offset = 14
+    eth_type = int.from_bytes(raw_frame[12:14], "big")
+    while eth_type in (0x8100, 0x88A8, 0x9100):
+        if len(raw_frame) < offset + 4:
+            return None
+        eth_type = int.from_bytes(raw_frame[offset + 2:offset + 4], "big")
+        offset += 4
+
+    if eth_type == 0x0800:
+        if len(raw_frame) < offset + 20:
+            return None
+        version_ihl = raw_frame[offset]
+        if version_ihl >> 4 != 4:
+            return None
+        ihl = (version_ihl & 0x0F) * 4
+        if ihl < 20 or len(raw_frame) < offset + ihl:
+            return None
+        if raw_frame[offset + 9] != 6:
+            return None
+        total_len = int.from_bytes(raw_frame[offset + 2:offset + 4], "big")
+        ip_end = offset + total_len if total_len else len(raw_frame)
+        src_ip = _format_ipv4(raw_frame[offset + 12:offset + 16])
+        dst_ip = _format_ipv4(raw_frame[offset + 16:offset + 20])
+        tcp_offset = offset + ihl
+
+    elif eth_type == 0x86DD:
+        if len(raw_frame) < offset + 40:
+            return None
+        if raw_frame[offset] >> 4 != 6:
+            return None
+        payload_len = int.from_bytes(raw_frame[offset + 4:offset + 6], "big")
+        next_header = raw_frame[offset + 6]
+        if next_header != 6:
+            return None
+        ip_end = offset + 40 + payload_len
+        src_ip = _format_ipv6(raw_frame[offset + 8:offset + 24])
+        dst_ip = _format_ipv6(raw_frame[offset + 24:offset + 40])
+        tcp_offset = offset + 40
+
+    else:
+        return None
+
+    if len(raw_frame) < tcp_offset + 20:
+        return None
+
+    src_port = int.from_bytes(raw_frame[tcp_offset:tcp_offset + 2], "big")
+    dst_port = int.from_bytes(raw_frame[tcp_offset + 2:tcp_offset + 4], "big")
+    if src_port != 445 and dst_port != 445:
+        return None
+
+    seq = int.from_bytes(raw_frame[tcp_offset + 4:tcp_offset + 8], "big")
+    tcp_header_len = (raw_frame[tcp_offset + 12] >> 4) * 4
+    if tcp_header_len < 20:
+        return None
+
+    payload_start = tcp_offset + tcp_header_len
+    payload_end = min(ip_end, len(raw_frame))
+    if payload_start > payload_end:
+        return None
+
+    payload = raw_frame[payload_start:payload_end]
+    if not payload:
+        return None
+
+    basic_info = {
+        "frame_number": None,
+        "timestamp": timestamp,
+        "highest_layer": None,
+        "src_ip": src_ip,
+        "dst_ip": dst_ip,
+        "src_port": src_port,
+        "dst_port": dst_port,
+        "tcp_stream": None,
+        "has_smb2": False,
+    }
+    return basic_info, (src_ip, dst_ip, src_port, dst_port), seq, payload
+
+
+def _build_smb2_record(basic_info, raw_smb2, tcp_responses, tcp_write_requests):
+    smb2_hdr = SMB2_Header(raw_smb2)
+    mid = safe_get(smb2_hdr, "MID")
+    is_response = bool((safe_get(smb2_hdr, "Flags") or 0) & 0x01)
+    cmd = safe_get(smb2_hdr, "Command")
+    session_key = (
+        basic_info["src_ip"],
+        basic_info["dst_ip"],
+        basic_info["src_port"],
+        basic_info["dst_port"],
+    )
+
+    payload_pkt = smb2_hdr
+    if is_response and str(cmd) == "8" and mid in tcp_responses.get(session_key, {}):
+        payload_pkt = tcp_responses[session_key][mid]
+    elif not is_response and str(cmd) == "9":
+        session_writes = tcp_write_requests.get(session_key, {})
+        if mid in session_writes:
+            payload_pkt = session_writes[mid]
+
+    payload_layer = _find_smb2_payload_layer(payload_pkt)
+
+    record = basic_info.copy()
+    record.update(get_smb2_info(smb2_hdr))
+    record.update(get_smb2_payload(
+        payload_layer,
+        raw_smb2=raw_smb2,
+        cmd=cmd,
+        is_response=is_response,
+    ))
+    record.update(get_smb2_create_metadata(payload_layer))
+    record.update(get_smb2_metadata_scf(
+        payload_layer,
+        raw_smb2=raw_smb2,
+        cmd=cmd,
+        is_response=is_response,
+    ))
+    return record
+
+
 def read_pcap_basic(input_pcap: str) -> List[Dict[str, Any]]:
+    """
+    Read PCAP/PCAPNG as a stream and extract SMB2 records without rdpcap().
+    """
+    input_path = Path(input_pcap)
+    if not input_path.exists():
+        raise FileNotFoundError(f"Khong tim thay file PCAP: {input_pcap}")
+
+    packets: List[Dict[str, Any]] = []
+
+    packet_counter = 0
+    smb2_counter = 0
+    records_before = len(packets)
+    total_packets = 0
+    stream_reassembler = StreamingSmb2Reassembler()
+    tcp_responses = stream_reassembler.tcp_responses
+    tcp_write_requests = stream_reassembler.tcp_write_requests
+
+    print("Reading SMB2 packets from PCAP stream...")
+    with RawPcapReader(str(input_path)) as reader:
+        for idx, (raw_frame, meta) in enumerate(reader, start=1):
+            total_packets = idx
+            parsed = _parse_raw_tcp_packet(raw_frame, _metadata_timestamp(meta))
+            if parsed is None:
+                if idx % 100000 == 0:
+                    print(f"Read packet scan: {idx} packets")
+                continue
+
+            basic_info, session_key, seq, payload = parsed
+            stream_reassembler.feed_tcp(session_key, seq, payload)
+            raw_messages = list(iter_smb2_messages_from_tcp_payload(payload))
+            if not raw_messages:
+                if idx % 100000 == 0:
+                    print(f"Read packet scan: {idx} packets")
+                continue
+
+            packet_counter += 1
+            basic_info["frame_number"] = idx
+            basic_info["highest_layer"] = "SMB2"
+            basic_info["has_smb2"] = True
+
+            for raw_smb2 in raw_messages:
+                try:
+                    packets.append(_build_smb2_record(
+                        basic_info,
+                        raw_smb2,
+                        tcp_responses,
+                        tcp_write_requests,
+                    ))
+                    smb2_counter += 1
+                except Exception:
+                    continue
+
+            if idx % 100000 == 0:
+                print(f"Read packet scan: {idx} packets")
+
+    seen_messages = set()
+    request_frames = {}
+    for record in packets:
+        msg_id = safe_int(record.get("smb2_message_id"))
+        cmd = safe_int(record.get("smb2_command"))
+        is_response = record.get("smb2_is_response")
+        session_key = (
+            record.get("src_ip"), record.get("dst_ip"),
+            record.get("src_port"), record.get("dst_port")
+        )
+        seen_messages.add((session_key, msg_id, cmd, is_response))
+        if is_response is False and msg_id is not None:
+            request_frames[(session_key, msg_id)] = record.get("frame_number")
+
+    supplemental_records = []
+
+    def add_reassembled_record(session_key, msg_id, hdr, fallback_cmd, is_response):
+        cmd = safe_int(safe_get(hdr, "Command"), fallback_cmd)
+        if (session_key, msg_id, cmd, is_response) in seen_messages:
+            return
+
+        reverse_key = (session_key[1], session_key[0], session_key[3], session_key[2])
+        request_frame = request_frames.get((reverse_key if is_response else session_key, msg_id))
+        frame_number = (request_frame + 0.1) if request_frame is not None else None
+
+        payload_layer = _find_smb2_payload_layer(hdr)
+        record = {
+            "frame_number": frame_number,
+            "timestamp": None,
+            "highest_layer": "SMB2",
+            "src_ip": session_key[0],
+            "dst_ip": session_key[1],
+            "src_port": session_key[2],
+            "dst_port": session_key[3],
+            "tcp_stream": None,
+            "has_smb2": True,
+        }
+        record.update(get_smb2_info(hdr))
+        record.update(get_smb2_payload(
+            payload_layer,
+            raw_smb2=bytes(hdr),
+            cmd=cmd,
+            is_response=is_response,
+        ))
+        record.update(get_smb2_create_metadata(payload_layer))
+        supplemental_records.append(record)
+        seen_messages.add((session_key, msg_id, cmd, is_response))
+
+    for session_key, responses in tcp_responses.items():
+        for msg_id, hdr in responses.items():
+            add_reassembled_record(session_key, msg_id, hdr, 8, True)
+
+    for session_key, requests in tcp_write_requests.items():
+        for msg_id, hdr in requests.items():
+            add_reassembled_record(session_key, msg_id, hdr, 9, False)
+
+    if supplemental_records:
+        packets.extend(supplemental_records)
+        packets.sort(key=lambda pkt: (
+            pkt.get("frame_number") is None,
+            pkt.get("frame_number") if pkt.get("frame_number") is not None else float("inf")
+        ))
+        print(f"Supplemented {len(supplemental_records)} SMB2 records from reassembled TCP streams")
+
+    records_after = len(packets)
+    if records_after - records_before > 3:
+        print(f"Read {total_packets} packets and extracted {records_after - records_before} records")
+    print(f"\nExtraction complete: {packet_counter} packets with SMB2, {records_after} SMB2 records extracted")
+    return packets
+
+
+def read_pcap_basic_legacy(input_pcap: str) -> List[Dict[str, Any]]:
+    from scapy.all import rdpcap
+
     """
     Đọc PCAP bằng scapy, lọc SMB2, extract thông tin frame/IP/TCP/SMB2 cơ bản.
     Hỗ trợ extract nhiều layer SMB2 trong một packet.

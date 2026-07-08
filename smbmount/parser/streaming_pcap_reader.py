@@ -1,9 +1,13 @@
-import resource
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Tuple
 
 import ipaddress
+
+try:
+    import resource
+except ImportError:
+    resource = None
 
 from scapy.all import SMB2_Header
 from scapy.utils import RawPcapReader
@@ -57,6 +61,8 @@ def _find_smb2_payload_layer(payload_pkt):
 
 
 def _rss_mb() -> float:
+    if resource is None:
+        return 0.0
     rss_kb = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
     return rss_kb / 1024.0
 

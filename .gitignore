@@ -63,3 +63,17 @@ testing
 debug.json
 digest_smbmount_pcapfs_reproduce_no_scf.txt
 digest*
+
+# Generated SCF evaluation artifacts. Keep curated tracked samples only.
+outputs/
+*.pcap
+*.pcapng
+data/eval/generated/ground_truth/*.jsonl
+data/eval/generated/ground_truth_expected/*.expected.jsonl
+data/eval/generated/manifests/*.json
+data/eval/generated/plans/*.jsonl
+data/eval/generated/workloads/**/*.cmd
+data/eval/generated/workloads/**/*.ps1
+data/eval/generated/workloads/**/*.sh
+data/eval/generated/workloads/**/*.smbclient
+data/eval/generated/workloads/**/local/

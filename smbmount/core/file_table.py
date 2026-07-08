@@ -320,6 +320,7 @@ class FileTable:
     def __init__(self):
         self.files: Dict[str, FileObject] = {}
         self.path_index: Dict[str, FileObject] = {}
+        self.path_objects: Dict[str, set] = {}
 
     def get_or_create(self, file_id: str) -> FileObject:
         key = self.normalize_file_id(file_id)
@@ -370,8 +371,8 @@ class FileTable:
         best_version = None
         best_key = (float("-inf"), -1)
 
-        for obj in self.files.values():
-            if obj is exclude or obj.path != path:
+        for obj in self.objects_for_path(path):
+            if obj is exclude:
                 continue
 
             candidate = obj.versions.latest_content_version()
@@ -394,6 +395,13 @@ class FileTable:
         if not path:
             return
 
+        if file_obj.path == path:
+            self.path_index[path] = file_obj
+            self.path_objects.setdefault(path, set()).add(
+                self.normalize_file_id(file_obj.file_id)
+            )
+            return
+
         file_obj.versions.set_base_version(
             self.latest_content_for_path(path, exclude=file_obj)
         )
@@ -408,9 +416,17 @@ class FileTable:
 
         for old_path in stale_paths:
             del self.path_index[old_path]
+            keys = self.path_objects.get(old_path)
+            if keys is not None:
+                keys.discard(self.normalize_file_id(file_obj.file_id))
+                if not keys:
+                    del self.path_objects[old_path]
 
         file_obj.set_path(path, timestamp=timestamp)
         self.path_index[path] = file_obj
+        self.path_objects.setdefault(path, set()).add(
+            self.normalize_file_id(file_obj.file_id)
+        )
     
     def get_or_create_path_context(self, path: str, is_dir=False, timestamp=None, pkt=None) -> FileObject:
         if path in self.path_index:
@@ -452,10 +468,14 @@ class FileTable:
         if not path:
             return []
 
+        keys = self.path_objects.get(path)
+        if not keys:
+            return []
+
         return [
-            obj
-            for obj in self.files.values()
-            if obj.path == path
+            self.files[key]
+            for key in list(keys)
+            if key in self.files and self.files[key].path == path
         ]
 
 
@@ -539,7 +559,9 @@ class FileTable:
 
         # Tất cả object đang ở old_path phải chuyển sang new_path
         # để export không còn tạo file report.txt riêng.
-        for obj in self.objects_for_path(old_path):
+        old_path_objects = self.objects_for_path(old_path)
+
+        for obj in old_path_objects:
             obj.set_path(new_path, timestamp=timestamp)
 
         # Handle rename hiện tại cũng chuyển sang new_path để events được group chung.
@@ -551,5 +573,16 @@ class FileTable:
             del self.path_index[old_path]
 
         self.path_index[new_path] = target_obj
+
+        old_keys = self.path_objects.pop(old_path, set())
+
+        for obj in old_path_objects:
+            old_keys.add(self.normalize_file_id(obj.file_id))
+
+        if handle_obj is not None:
+            old_keys.add(self.normalize_file_id(handle_obj.file_id))
+
+        if old_keys:
+            self.path_objects.setdefault(new_path, set()).update(old_keys)
 
         return target_obj

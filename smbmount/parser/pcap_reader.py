@@ -11,6 +11,7 @@ from smbmount.parser.utils import *
 from smbmount.parser.smb2_constants import *
 from smbmount.parser.smb2_extractors import *
 from smbmount.parser.tcp_reassembler import reassemble_tcp_streams
+from smbmount.parser.streaming_pcap_reader import read_pcap_reconstruction_streaming
 from smbmount.output.snapshot_export import build_snapshot
 
 def _find_smb2_payload_layer(payload_pkt):
@@ -574,8 +575,15 @@ def parse_pcap_to_json(
     snapshot_at: float = None,
     snapshot_time_source: str = "network",
     snapshot_include_deleted: bool = True,
+    reader: str = "streaming",
 ) -> None:
-    packets = read_pcap_basic(input_pcap)
+    if reader == "streaming":
+        packets = read_pcap_reconstruction_streaming(input_pcap)
+    elif reader == "legacy":
+        packets = read_pcap_basic(input_pcap)
+    else:
+        raise ValueError(f"Unsupported PCAP reader: {reader}")
+
     packets = enrich_with_request_mapping(packets)
     packets = enrich_with_file_metadata_mapping(packets)
     packets = enrich_with_query_info_timestamps(packets)

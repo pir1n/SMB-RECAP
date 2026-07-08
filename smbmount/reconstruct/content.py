@@ -231,11 +231,16 @@ def process_packets(packets, timestamp_mode="hybrid"):
                     allow_after_prior_content=allow_after_prior_content,
                 )
 
-                if observed and file_obj.versions.current:
-                    file_obj.versions.current.snapshot_metadata = ts.snapshot_metadata(
+                current_version = file_obj.versions.current
+
+                if (
+                    current_version is not None
+                    and current_version.last_op == "read"
+                ):
+                    current_version.snapshot_metadata = ts.snapshot_metadata(
                         file_obj,
                         pkt,
-                        size=file_obj.versions.current.size,
+                        size=current_version.size,
                     )
 
             continue

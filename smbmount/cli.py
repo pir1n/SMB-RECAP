@@ -83,6 +83,13 @@ def main():
     show_default=True,
     help="Enable FUSE debug output.",
 )
+@click.option(
+    "--reader",
+    type=click.Choice(["streaming", "legacy"]),
+    default="streaming",
+    show_default=True,
+    help="PCAP reader used by parse-pcap reconstruction.",
+)
 def parse_pcap_cmd(
     input_pcap: str,
     output_json: str,
@@ -94,6 +101,7 @@ def parse_pcap_cmd(
     fuse_include_deleted,
     fuse_allow_other,
     fuse_debug,
+    reader,
 ):
     """
     Đọc PCAP/PCAPNG và extract SMB2 packet metadata ra JSON.
@@ -101,6 +109,7 @@ def parse_pcap_cmd(
     console.print(f"[bold cyan]Reading PCAP:[/bold cyan] {input_pcap}")
     console.print(f"[bold cyan]Output JSON:[/bold cyan] {output_json}")
     console.print(f"[bold cyan]Timestamp mode:[/bold cyan] {timestamp_mode}")
+    console.print(f"[bold cyan]Reader:[/bold cyan] {reader}")
     if snapshot_at is not None:
         console.print(f"[bold cyan]Snapshot at:[/bold cyan] {snapshot_at}")
         console.print(f"[bold cyan]Snapshot time source:[/bold cyan] {snapshot_time_source}")
@@ -112,6 +121,7 @@ def parse_pcap_cmd(
         snapshot_at=snapshot_at,
         snapshot_time_source=snapshot_time_source,
         snapshot_include_deleted=snapshot_include_deleted,
+        reader=reader,
     )
     
     if fuse_mount:

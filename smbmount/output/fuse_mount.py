@@ -4,6 +4,7 @@ import stat
 import time
 from dataclasses import dataclass
 from collections import defaultdict
+from typing import Any
 
 import mfusepy as fuse
 
@@ -23,9 +24,20 @@ class FuseEntry:
     path: str
     is_dir: bool
     data: bytes = b""
+    version: Any = None
     metadata: dict = None
     source: str = "observed"
     object_type: str = "file"
+
+    def size(self):
+        if self.version is not None:
+            return int(getattr(self.version, "size", 0) or 0)
+        return len(self.data)
+
+    def read_range(self, offset, size):
+        if self.version is not None and hasattr(self.version, "read_range"):
+            return self.version.read_range(offset, size)
+        return self.data[offset: offset + size]
 
 
 def to_ns(value):
@@ -161,7 +173,8 @@ def make_file_entry(fuse_path, file_obj, version, metadata, object_type):
     return FuseEntry(
         path=fuse_path,
         is_dir=False,
-        data=version.get_data(),
+        data=b"",
+        version=version,
         metadata=metadata or {},
         source=getattr(file_obj, "source", "observed"),
         object_type=object_type,
@@ -341,7 +354,8 @@ def collect_snapshot_entries(
             entries[fuse_path] = FuseEntry(
                 path=fuse_path,
                 is_dir=False,
-                data=version.get_data(),
+                data=b"",
+                version=version,
                 metadata=metadata or {},
                 source=getattr(file_obj, "source", "observed"),
                 object_type=object_type,
@@ -410,7 +424,7 @@ class SMBMountFuseFS(fuse.Operations):
             nlink = 2
         else:
             mode = stat.S_IFREG | 0o444
-            size = len(entry.data)
+            size = entry.size()
             nlink = 1
 
         mtime = (
@@ -462,7 +476,7 @@ class SMBMountFuseFS(fuse.Operations):
         if entry.is_dir:
             raise fuse.FuseOSError(errno.EISDIR)
 
-        return entry.data[offset: offset + size]
+        return entry.read_range(offset, size)
 
     def statfs(self, path):
         return {

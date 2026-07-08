@@ -175,6 +175,154 @@ def file_id_to_str(fid):
 
     return str(fid)
 
+def version_kind_for_op(op):
+    if op in ("read", "observed_read"):
+        return "observed"
+
+    if op in ("write", "truncate", "append", "overwrite"):
+        return "mutation"
+
+    return "content"
+
+
+def version_expected_size(version, metadata):
+    metadata = metadata or {}
+
+    candidates = [
+        getattr(version, "expected_size", None),
+        metadata.get("size"),
+        getattr(version, "size", None),
+    ]
+
+    for value in candidates:
+        if value is None:
+            continue
+
+        try:
+            return int(value)
+        except Exception:
+            continue
+
+    return 0
+
+
+def version_coverage_bytes(version, expected_size):
+    if hasattr(version, "coverage_bytes"):
+        return int(version.coverage_bytes(expected_size))
+
+    ranges = []
+
+    data_chunks = getattr(version, "data_chunks", []) or []
+
+    for offset, data in data_chunks:
+        start = int(offset)
+        end = start + len(data or b"")
+
+        if end > start:
+            ranges.append((start, end))
+
+    if not ranges:
+        data_map = getattr(version, "data_map", {}) or {}
+
+        for offset, data in data_map.items():
+            start = int(offset)
+            end = start + len(data or b"")
+
+            if end > start:
+                ranges.append((start, end))
+
+    if not ranges:
+        return 0
+
+    ranges.sort()
+
+    merged = []
+    cur_start, cur_end = ranges[0]
+
+    for start, end in ranges[1:]:
+        if start <= cur_end:
+            cur_end = max(cur_end, end)
+        else:
+            merged.append((cur_start, cur_end))
+            cur_start, cur_end = start, end
+
+    merged.append((cur_start, cur_end))
+
+    if expected_size is not None:
+        expected_size = int(expected_size)
+        total = 0
+
+        for start, end in merged:
+            if start >= expected_size:
+                continue
+
+            total += max(0, min(end, expected_size) - start)
+
+        return total
+
+    return sum(end - start for start, end in merged)
+
+
+def version_reconstruction_state(version, metadata):
+    """
+    State cấp version:
+    - complete: đủ coverage theo expected size
+    - partial: có dữ liệu nhưng thiếu coverage
+    - hollow: không có content bytes
+    """
+    op = getattr(version, "last_op", None)
+
+    expected_size = version_expected_size(version, metadata)
+    coverage = version_coverage_bytes(version, expected_size)
+
+    if coverage <= 0:
+        return "hollow"
+
+    if op == "read":
+        observed_state = getattr(version, "observed_state", None)
+
+        if observed_state in ("complete", "partial"):
+            return observed_state
+
+        if bool(getattr(version, "is_observed_complete", False)):
+            return "complete"
+
+        return "partial"
+
+    # Zero-byte file nếu có version và không có content bytes thì vẫn có thể xem là complete.
+    # Nhưng vì coverage <= 0 đã return hollow ở trên, zero-byte version thực tế sẽ hiếm.
+    if expected_size == 0:
+        return "complete"
+
+    if coverage >= expected_size:
+        return "complete"
+
+    return "partial"
+
+
+def file_reconstruction_state(is_dir, versions):
+    """
+    State cấp file để report robustness:
+    - directory: thư mục
+    - hollow: thấy file/path nhưng không có content version
+    - partial: có ít nhất một version partial/hollow
+    - complete: tất cả version đều complete
+    """
+    if is_dir:
+        return "directory"
+
+    if not versions:
+        return "hollow"
+
+    states = {
+        item.get("reconstruction_state")
+        for item in versions
+    }
+
+    if "partial" in states or "hollow" in states:
+        return "partial"
+
+    return "complete"
 
 def merge_bool(file_objs, attr):
     return any(bool(getattr(f, attr, False)) for f in file_objs)
@@ -297,26 +445,66 @@ def export_files(file_table, tree):
         )
 
         for i, (v, fid, meta) in enumerate(final_versions):
-            versions.append({
+            expected_size = version_expected_size(v, meta)
+            coverage_bytes = version_coverage_bytes(v, expected_size)
+
+            if expected_size > 0:
+                coverage_ratio = coverage_bytes / expected_size
+            else:
+                coverage_ratio = 1.0
+
+            reconstruction_state = version_reconstruction_state(v, meta)
+
+            version_item = {
                 "version": i,
                 "file_id": file_id_to_str(fid),
                 "op": v.last_op,
+                "version_kind": version_kind_for_op(v.last_op),
+                "reconstruction_state": reconstruction_state,
+                "expected_size": expected_size,
+                "coverage_bytes": coverage_bytes,
+                "coverage_ratio": coverage_ratio,
                 "metadata": meta,
                 "hash": v.get_hash(),
-            })
+            }
+
+            if v.last_op == "read":
+                version_item["observed_state"] = getattr(
+                    v,
+                    "observed_state",
+                    reconstruction_state,
+                )
+                version_item["observed_complete"] = bool(
+                    getattr(v, "is_observed_complete", False)
+                )
+                version_item["observed_coverage_bytes"] = int(
+                    getattr(v, "observed_coverage_bytes", coverage_bytes) or 0
+                )
+                version_item["observed_coverage_ratio"] = float(
+                    getattr(v, "observed_coverage_ratio", coverage_ratio) or 0.0
+                )
+
+            versions.append(version_item)
 
         sources = sorted(set(
             getattr(f, "source", "observed")
             for f in file_objs
         ))
 
+        is_dir = merge_bool(file_objs, "is_dir")
+
         files.append({
             "path": path,
-            "object_type": infer_object_type(path, merge_bool(file_objs, "is_dir")),
+            "object_type": infer_object_type(path, is_dir),
+
+            "reconstruction_state": file_reconstruction_state(
+                is_dir,
+                versions,
+            ),
 
             "source": representative.source,
             "sources": sources,
-            "is_dir": merge_bool(file_objs, "is_dir"),
+            "is_dir": is_dir,
             "deleted": merge_bool(file_objs, "deleted"),
             "delete_time": representative.delete_time,
 

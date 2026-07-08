@@ -1,4 +1,3 @@
-from copy import deepcopy
 import hashlib
 
 class FileVersion:
@@ -6,21 +5,25 @@ class FileVersion:
         self.version_id = version_id
         self.size = previous.size if previous is not None else 0
         self.modified = None
-        self.chunks = deepcopy(previous.chunks) if (previous is not None and inherit_chunks) else []
+        self.chunks = list(previous.chunks) if (previous is not None and inherit_chunks) else []
         self.last_op = None
         self.file_id = file_id
         self.snapshot_metadata = None
         self._hasher = hashlib.md5()
         self._data_hash = None
-        self.data_chunks = deepcopy(getattr(previous, "data_chunks", [])) if (previous is not None and inherit_chunks) else []
-        self.data_map = deepcopy(previous.data_map) if (previous is not None and inherit_chunks) else {}
+        self.data_chunks = list(getattr(previous, "data_chunks", [])) if (previous is not None and inherit_chunks) else []
+        self.data_map = {}
         self.expected_size = None
         self.is_observed_complete = False
+        self.observed_state = None
+        self.observed_coverage_bytes = 0
+        self.observed_coverage_ratio = 0.0
 
-        if previous is not None and inherit_chunks and not self.data_chunks and self.data_map:
+        previous_data_map = getattr(previous, "data_map", {}) if previous is not None else {}
+        if previous is not None and inherit_chunks and not self.data_chunks and previous_data_map:
             self.data_chunks = [
                 (int(offset), data)
-                for offset, data in sorted(self.data_map.items())
+                for offset, data in sorted(previous_data_map.items())
             ]
 
     def add_chunk(self, offset, length, data=None, op=None):
@@ -57,7 +60,6 @@ class FileVersion:
             # Lưu delta theo thứ tự phát sinh. Ghép full content chỉ khi get_data/hash cần.
             # Tránh rebuild toàn bộ file trên mỗi READ/WRITE chunk.
             self.data_chunks.append((offset, raw))
-            self.data_map[offset] = raw
             self._data_hash = None
 
         self.last_op = op
@@ -96,6 +98,41 @@ class FileVersion:
 
             end = min(offset + len(data), logical_size)
             result[offset:end] = data[: end - offset]
+
+        return bytes(result)
+
+    def read_range(self, offset, size):
+        """
+        Return only the requested byte range for FUSE reads.
+        Missing sparse/partial regions are exposed as zero bytes, matching get_data().
+        """
+        offset = int(offset or 0)
+        size = int(size or 0)
+
+        if size <= 0:
+            return b""
+
+        logical_size = int(self.size or 0)
+        if offset >= logical_size:
+            return b""
+
+        end = min(offset + size, logical_size)
+        result = bytearray(end - offset)
+
+        for chunk_offset, data in self.data_chunks:
+            chunk_start = int(chunk_offset)
+            chunk_end = chunk_start + len(data or b"")
+
+            if chunk_end <= offset or chunk_start >= end:
+                continue
+
+            src_start = max(offset, chunk_start)
+            src_end = min(end, chunk_end)
+            dst_start = src_start - offset
+            data_start = src_start - chunk_start
+            result[dst_start:dst_start + (src_end - src_start)] = data[
+                data_start:data_start + (src_end - src_start)
+            ]
 
         return bytes(result)
 
@@ -142,6 +179,55 @@ class FileVersion:
                 return True
 
         return covered_until >= expected_size
+    
+    def coverage_bytes(self, expected_size=None):
+        """
+        Tính số byte thật sự có dữ liệu trong reconstructed version.
+
+        Dùng cho robustness:
+        - coverage == expected_size  -> complete
+        - 0 < coverage < expected    -> partial
+        - coverage == 0              -> hollow/no content
+        """
+        ranges = []
+
+        for offset, data in self.data_chunks:
+            start = int(offset)
+            end = start + len(data or b"")
+
+            if end > start:
+                ranges.append((start, end))
+
+        if not ranges:
+            return 0
+
+        ranges.sort()
+
+        merged = []
+        cur_start, cur_end = ranges[0]
+
+        for start, end in ranges[1:]:
+            if start <= cur_end:
+                cur_end = max(cur_end, end)
+            else:
+                merged.append((cur_start, cur_end))
+                cur_start, cur_end = start, end
+
+        merged.append((cur_start, cur_end))
+
+        if expected_size is not None:
+            expected_size = int(expected_size)
+            total = 0
+
+            for start, end in merged:
+                if start >= expected_size:
+                    continue
+
+                total += max(0, min(end, expected_size) - start)
+
+            return total
+
+        return sum(end - start for start, end in merged)
     
     def truncate(self, new_size):
         """
@@ -190,11 +276,7 @@ class FileVersion:
 
         self.data_chunks = new_data_chunks
 
-        new_data_map = {}
-        for offset, data in new_data_chunks:
-            new_data_map[offset] = data
-
-        self.data_map = new_data_map
+        self.data_map = {}
 
         self.last_op = "truncate"
         self._data_hash = None
@@ -317,7 +399,7 @@ class VersionManager:
         if self.current is None:
             return
 
-        if self.current.last_op in ("write", "truncate", "observed_read"):
+        if self.current.last_op in ("write", "truncate", "read", "observed_read"):
             self.current.modified = timestamp
 
             if self.current.modified is not None and self.current.modified != timestamp:
@@ -447,8 +529,25 @@ class VersionManager:
 
         self.current.file_id = file_id or self.current.file_id
 
-        complete = self.current.has_full_coverage(self.current.expected_size)
+        coverage_bytes = self.current.coverage_bytes(
+            self.current.expected_size
+        )
+
+        self.current.observed_coverage_bytes = coverage_bytes
+
+        if self.current.expected_size:
+            self.current.observed_coverage_ratio = (
+                coverage_bytes / int(self.current.expected_size)
+            )
+        else:
+            self.current.observed_coverage_ratio = 0.0
+
+        complete = self.current.has_full_coverage(
+            self.current.expected_size
+        )
+
         self.current.is_observed_complete = complete
+        self.current.observed_state = "complete" if complete else "partial"
 
         return complete
 
@@ -556,10 +655,7 @@ class VersionManager:
                     new_data_chunks.append((chunk_offset, new_chunk_data))
 
             self.current.data_chunks = new_data_chunks
-            self.current.data_map = {
-                int(chunk_offset): chunk_data
-                for chunk_offset, chunk_data in new_data_chunks
-            }
+            self.current.data_map = {}
             self.current._data_hash = None
         
         
@@ -602,10 +698,12 @@ class VersionManager:
         deduped = []
 
         for version in self.versions:
-            if version.last_op == "read" and not getattr(version, "is_observed_complete", True):
+            # Không bỏ partial READ nữa.
+            # Partial READ cần được export để robustness test phân loại partial.
+            if version.last_op == "read" and not version.data_chunks:
                 continue
 
-            if version.last_op is None and not version.data_map:
+            if version.last_op is None and not version.data_chunks:
                 continue
 
             if deduped and version.same_content_as(deduped[-1]):

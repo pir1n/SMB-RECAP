@@ -351,28 +351,10 @@ Các option chính của `python -m smbmount parse-pcap <input_pcap> <output_jso
 - `--timestamp-mode network`: dùng timestamp của packet để dựng timeline. Đây là mode dùng cho benchmark vì ổn định theo capture.
 - `--timestamp-mode fs`: ưu tiên timestamp lấy từ metadata filesystem trong SMB response.
 - `--timestamp-mode hybrid`: mode mặc định, kết hợp network timestamp và filesystem timestamp.
-- `--reader streaming`: reader mặc định, đọc PCAP theo dòng để giảm memory khi file lớn.
-- `--reader legacy`: reader cũ, dùng khi cần đối chiếu parser đời trước.
 - `--snapshot-at <time>` và `--snapshot-time-source network|fs`: xuất snapshot tại một mốc thời gian cụ thể.
 - `--fuse-mount <mountpoint>`: mount filesystem tái dựng bằng FUSE tại thư mục chỉ định; process sẽ tiếp tục chạy cho tới khi dừng bằng `Ctrl+C`.
 - `--fuse-include-deleted`: hiển thị cả file đã bị delete trong FUSE view.
 - `--fuse-allow-other` và `--fuse-debug`: bật quyền truy cập khác user hoặc log debug khi cần điều tra lỗi mount.
-
-Các option chính của benchmark:
-
-- `--ground-truth`: file JSON ground truth sinh bởi workload generator.
-- `--ours-json`: file JSON đầu ra từ `parse-pcap`.
-- `--pcapfs-root`: thư mục mount của pcapFS để benchmark so sánh.
-- `--scenario-dir`: thư mục gốc của scenario, ví dụ `bench_scale_0050_mixed`; dùng để strip path trước khi so khớp.
-- `--out`: thư mục ghi metrics, confusion matrix và report.
-
-Các option chính của `sample/fuse_module_sample/measure_runtime.sh`:
-
-- `--repeats`: số lần chạy lặp lại.
-- `--out-dir`: thư mục ghi output.
-- `--pcapfs-mount`: mountpoint tạm cho pcapFS.
-- `--tool`: chọn `both`, `smbmount` hoặc `pcapfs`; mặc định `both`.
-- `--case-file`: TSV chạy nhiều testcase, mỗi dòng gồm `case_id`, `files`, `pcap`, `ground_truth`, `scenario_dir`.
 
 ## Chạy Nhanh parse-pcap
 
@@ -435,13 +417,6 @@ scripts/eval/
   render_powershell.py
   render_smbclient.py
   score_timeline.py
-
-sample/fuse_module_sample/
-  pcaps/scale_0050_mixed.pcapng
-  ground_truth/scale_0050_mixed.json
-  README.md
-  expected_output.md
-  measure_runtime.sh
 
 outputs/eval/
   timelines/

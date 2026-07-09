@@ -303,18 +303,6 @@ Các chỉ số chính:
 
 Module `parse-pcap` đọc PCAP/PCAPNG chứa SMB traffic, tái dựng cây thư mục/file, version nội dung và metadata. Kết quả có thể xuất ra JSON hoặc mount bằng FUSE để duyệt như filesystem.
 
-Sample tái lập nhỏ 50 file nằm trong `sample/fuse_module_sample/`:
-
-```text
-README.md
-pcaps/scale_0050_mixed.pcapng
-ground_truth/scale_0050_mixed.json
-expected_output.md
-measure_runtime.sh
-```
-
-Xem hướng dẫn manual, benchmark runtime, tạo workload, filter PCAP và expected output trong `sample/fuse_module_sample/README.md`.
-
 ## Môi Trường parse-pcap/FUSE
 
 Tạo virtual environment và cài dependency:
@@ -326,13 +314,6 @@ pip install -r requirements.txt
 
 sudo apt install tshark fuse3
 pcapfs --help
-```
-
-Nếu `pip install -r requirements.txt` lỗi encoding trên Linux/WSL, tạo requirements tạm:
-
-```bash
-iconv -f UTF-16LE -t UTF-8 requirements.txt > /tmp/smbmount_requirements.txt
-pip install -r /tmp/smbmount_requirements.txt
 ```
 
 Kiểm tra CLI:
@@ -378,20 +359,6 @@ python -m smbmount parse-pcap \
   --timestamp-mode network \
   --fuse-mount /tmp/smbmount_recon
 ```
-
-Chạy benchmark tự động giữa `smbmount parse-pcap` và `pcapFS`:
-
-```bash
-sample/fuse_module_sample/measure_runtime.sh --repeats 5
-```
-
-Nếu chỉ muốn kiểm tra riêng SMBmount:
-
-```bash
-sample/fuse_module_sample/measure_runtime.sh --tool smbmount --repeats 1
-```
-
-Lệnh tạo workload, filter PCAP, chạy manual đầy đủ, `case-file` nhiều testcase và expected output nằm trong `sample/fuse_module_sample/README.md`.
 
 ## Cấu Trúc Chính
 

@@ -303,17 +303,17 @@ Các chỉ số chính:
 
 Module `parse-pcap` đọc PCAP/PCAPNG chứa SMB traffic, tái dựng cây thư mục/file, version nội dung và metadata. Kết quả có thể xuất ra JSON hoặc mount bằng FUSE để duyệt như filesystem.
 
-Sample tái lập nhỏ 50 file nằm trong:
+Sample tái lập nhỏ 50 file nằm trong `sample/fuse_module_sample/`:
 
 ```text
-sample/fuse_module_sample/README.md
-sample/fuse_module_sample/pcaps/scale_0050_mixed.pcapng
-sample/fuse_module_sample/ground_truth/scale_0050_mixed.json
-sample/fuse_module_sample/expected_output.md
-sample/fuse_module_sample/measure_runtime.sh
+README.md
+pcaps/scale_0050_mixed.pcapng
+ground_truth/scale_0050_mixed.json
+expected_output.md
+measure_runtime.sh
 ```
 
-Xem hướng dẫn chạy đầy đủ trong `sample/fuse_module_sample/README.md`.
+Xem hướng dẫn manual, benchmark runtime, tạo workload, filter PCAP và expected output trong `sample/fuse_module_sample/README.md`.
 
 ## Môi Trường parse-pcap/FUSE
 
@@ -344,7 +344,7 @@ python -m smbmount.benchmark_parsepcap.cli --help
 
 ## Option parse-pcap
 
-Các option chính của lệnh `python -m smbmount parse-pcap <input_pcap> <output_json>`:
+Các option chính của `python -m smbmount parse-pcap <input_pcap> <output_json>`:
 
 - `<input_pcap>`: file PCAP/PCAPNG đầu vào chứa SMB traffic.
 - `<output_json>`: file JSON đầu ra chứa cây filesystem, metadata, event và content version đã tái dựng.
@@ -353,16 +353,12 @@ Các option chính của lệnh `python -m smbmount parse-pcap <input_pcap> <out
 - `--timestamp-mode hybrid`: mode mặc định, kết hợp network timestamp và filesystem timestamp.
 - `--reader streaming`: reader mặc định, đọc PCAP theo dòng để giảm memory khi file lớn.
 - `--reader legacy`: reader cũ, dùng khi cần đối chiếu parser đời trước.
-- `--snapshot-at <time>`: chỉ xuất snapshot filesystem tại một mốc thời gian cụ thể.
-- `--snapshot-time-source network|fs`: chọn nguồn timestamp khi lọc snapshot.
-- `--snapshot-include-deleted`: giữ cả file đã bị delete trong snapshot output.
-- `--no-snapshot-include-deleted`: bỏ file đã bị delete khỏi snapshot output.
+- `--snapshot-at <time>` và `--snapshot-time-source network|fs`: xuất snapshot tại một mốc thời gian cụ thể.
 - `--fuse-mount <mountpoint>`: mount filesystem tái dựng bằng FUSE tại thư mục chỉ định; process sẽ tiếp tục chạy cho tới khi dừng bằng `Ctrl+C`.
 - `--fuse-include-deleted`: hiển thị cả file đã bị delete trong FUSE view.
-- `--fuse-allow-other`: cho user khác truy cập mountpoint, cần cấu hình FUSE của hệ thống cho phép `allow_other`.
-- `--fuse-debug`: bật log debug của FUSE khi cần điều tra lỗi mount.
+- `--fuse-allow-other` và `--fuse-debug`: bật quyền truy cập khác user hoặc log debug khi cần điều tra lỗi mount.
 
-Các option chính của lệnh benchmark `python -m smbmount.benchmark_parsepcap.cli`:
+Các option chính của benchmark:
 
 - `--ground-truth`: file JSON ground truth sinh bởi workload generator.
 - `--ours-json`: file JSON đầu ra từ `parse-pcap`.
@@ -370,40 +366,13 @@ Các option chính của lệnh benchmark `python -m smbmount.benchmark_parsepca
 - `--scenario-dir`: thư mục gốc của scenario, ví dụ `bench_scale_0050_mixed`; dùng để strip path trước khi so khớp.
 - `--out`: thư mục ghi metrics, confusion matrix và report.
 
-Các option quan trọng của `sample/fuse_module_sample/measure_runtime.sh`:
+Các option chính của `sample/fuse_module_sample/measure_runtime.sh`:
 
 - `--repeats`: số lần chạy lặp lại.
 - `--out-dir`: thư mục ghi output.
 - `--pcapfs-mount`: mountpoint tạm cho pcapFS.
-- `--timestamp-mode`: mode timestamp dùng chung cho `parse-pcap` và pcapFS.
-- `--reader`: reader của `parse-pcap`, thường dùng `streaming`.
 - `--tool`: chọn `both`, `smbmount` hoặc `pcapfs`; mặc định `both`.
 - `--case-file`: TSV chạy nhiều testcase, mỗi dòng gồm `case_id`, `files`, `pcap`, `ground_truth`, `scenario_dir`.
-
-Các option của `scripts/eval_parsepcap/generate_scale_workload.py`:
-
-- `--mount-root`: mountpoint SMB thật nơi workload sẽ tạo file/thư mục, ví dụ `/mnt/smbbench`.
-- `--ground-truth`: đường dẫn JSON ground truth sẽ ghi ra.
-- `--scenario-id`: ID logic của testcase, được dùng để sinh content deterministic và lưu metadata.
-- `--scenario-dir`: thư mục gốc của testcase trong SMB share; script sẽ fail nếu thư mục này đã tồn tại để tránh lẫn dữ liệu cũ vào capture.
-- `--files`: số file chính cần tạo. Với sample tái lập nhanh dùng `50`.
-- `--seed`: seed random để kích thước file và phân bố dữ liệu ổn định giữa các lần chạy.
-- `--dir-count`: số thư mục cấp 1 để rải file, giúp testcase có nhiều path khác nhau.
-- `--min-size` và `--max-size`: khoảng kích thước file thường.
-- `--large-every`: cứ mỗi N file sẽ tạo một file lớn; đặt `0` để tắt file lớn cho sample nhỏ.
-- `--large-size`: kích thước file lớn khi `--large-every` bật.
-- `--append-every`: cứ mỗi N file sẽ có thao tác append; đặt `0` để tắt append.
-- `--overwrite-every`: cứ mỗi N file sẽ có thao tác overwrite một đoạn nội dung.
-- `--truncate-every`: cứ mỗi N file sẽ có thao tác truncate làm ngắn file.
-- `--rename-every`: cứ mỗi N file sẽ rename sang tên `_final.bin`.
-- `--delete-every`: cứ mỗi N file sẽ delete sau khi tạo các version.
-- `--delay`: thời gian nghỉ giữa các thao tác, giúp packet/timestamp tách nhau rõ hơn khi capture.
-
-Các option/tham số dùng khi filter bằng `tshark`:
-
-- `-r <file>`: đọc raw PCAP/PCAPNG đã capture.
-- `-Y "smb || smb2 || tcp"`: display filter giữ lại traffic liên quan tới SMB/TCP để giảm noise khi benchmark.
-- `-w <file>`: ghi PCAP/PCAPNG đã filter ra file mới.
 
 ## Chạy Nhanh parse-pcap
 
@@ -440,35 +409,7 @@ Nếu chỉ muốn kiểm tra riêng SMBmount:
 sample/fuse_module_sample/measure_runtime.sh --tool smbmount --repeats 1
 ```
 
-Lệnh tạo lại workload, filter PCAP, chạy manual đầy đủ và `case-file` nhiều testcase nằm trong `sample/fuse_module_sample/README.md`.
-
-## Expected Output parse-pcap
-
-Expected output đầy đủ của sample được lưu tại:
-
-```text
-sample/fuse_module_sample/expected_output.md
-```
-
-Kết quả đối chiếu của sample `scale_0050_mixed`:
-
-| Tool | strict_path_content TP/FP/FN | Precision | Recall | F1 |
-|---|---:|---:|---:|---:|
-| smbmount parse-pcap | 90/0/0 | 1.0000 | 1.0000 | 1.0000 |
-| pcapFS | 80/13/10 | 0.8602 | 0.8889 | 0.8743 |
-
-## Output parse-pcap
-
-Các file output chính:
-
-```text
-outputs/fuse_module_sample/manual/scale_0050_mixed.json
-outputs/fuse_module_sample/manual/benchmark/ours_metrics.json
-outputs/fuse_module_sample/manual/benchmark/pcapfs_metrics.json
-outputs/fuse_module_sample/manual/benchmark/comparison_metrics.json
-outputs/fuse_module_sample/manual/benchmark/comparison_report.md
-outputs/fuse_module_sample/runtime_metrics.csv
-```
+Lệnh tạo workload, filter PCAP, chạy manual đầy đủ, `case-file` nhiều testcase và expected output nằm trong `sample/fuse_module_sample/README.md`.
 
 ## Cấu Trúc Chính
 

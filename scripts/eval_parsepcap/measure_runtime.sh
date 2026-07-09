@@ -1,43 +1,103 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
+
+CASE_ID="scale_0050_mixed"
+FILES="50"
+PCAP="$SCRIPT_DIR/pcaps/scale_0050_mixed.pcapng"
+GROUND_TRUTH="$SCRIPT_DIR/ground_truth/scale_0050_mixed.json"
+SCENARIO_DIR="bench_scale_0050_mixed"
+CASE_FILE=""
+
 REPEATS="${REPEATS:-5}"
-
-PCAP_DIR="${PCAP_DIR:-data/pcaps/benchmark_parse-pcap}"
-GT_DIR="${GT_DIR:-data/gt_parse-pcap}"
-
-OUT_DIR="${OUT_DIR:-outputs/repeated_benchmark}"
-JSON_DIR="$OUT_DIR/json"
-LOG_DIR="$OUT_DIR/logs"
-BENCH_DIR="$OUT_DIR/benchmark"
-
-PCAPFS_MOUNT="${PCAPFS_MOUNT:-/tmp/pcapfs_mount}"
-
-# Nếu package của bạn là smbmount.benchmark.cli thì đổi env BENCH_MODULE.
-BENCH_MODULE="${BENCH_MODULE:-smbmount.benchmark_parsepcap.cli}"
+OUT_DIR="$ROOT_DIR/outputs/fuse_module_sample"
+PCAPFS_MOUNT="/tmp/pcapfs_fuse_module_sample"
+TIMESTAMP_MODE="network"
+READER="streaming"
+BENCH_MODULE="smbmount.benchmark_parsepcap.cli"
+TOOL_MODE="both"
 
 if [[ -z "${PYTHON_BIN:-}" ]]; then
-  if [[ -x ".venv/bin/python" ]]; then
-    PYTHON_BIN="$PWD/.venv/bin/python"
+  if [[ -x "$ROOT_DIR/.venv/bin/python" ]]; then
+    PYTHON_BIN="$ROOT_DIR/.venv/bin/python"
   else
     PYTHON_BIN="python"
   fi
 fi
 
-mkdir -p "$OUT_DIR" "$JSON_DIR" "$LOG_DIR" "$BENCH_DIR"
+usage() {
+  cat <<'EOF'
+Usage:
+  sample/fuse_module_sample/measure_runtime.sh [options]
 
-LOCK_FILE="$OUT_DIR/.measure_runtime.lock"
-exec 9>"$LOCK_FILE"
-if ! flock -n 9; then
-  echo "[ERROR] Another measure_runtime.sh is already running for OUT_DIR=$OUT_DIR" >&2
-  echo "        Stop it first, or use a different OUT_DIR." >&2
-  exit 1
-fi
+Default:
+  Runs scale_0050_mixed sample in sample/fuse_module_sample.
 
+Options:
+  --case-id ID              Case id used in output filenames.
+  --files N                 Number of files in the case.
+  --pcap PATH               PCAP/PCAPNG input.
+  --ground-truth PATH       Ground truth JSON input.
+  --scenario-dir NAME       Scenario root directory inside the SMB share.
+  --case-file PATH          TSV with: case_id<TAB>files<TAB>pcap<TAB>ground_truth<TAB>scenario_dir.
+  --repeats N               Number of repeated runs. Default: 5.
+  --out-dir PATH            Output directory. Default: outputs/fuse_module_sample.
+  --pcapfs-mount PATH       Temporary pcapFS mountpoint.
+  --timestamp-mode MODE     network, fs, or hybrid. Default: network.
+  --reader MODE             streaming or legacy. Default: streaming.
+  --tool MODE               smbmount, pcapfs, or both. Default: both.
+  --python-bin PATH         Python executable.
+  --bench-module MODULE     Benchmark module. Default: smbmount.benchmark_parsepcap.cli.
+  -h, --help                Show this help.
+
+Environment overrides:
+  PYTHON_BIN, REPEATS
+EOF
+}
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --case-id) CASE_ID="$2"; shift 2 ;;
+    --files) FILES="$2"; shift 2 ;;
+    --pcap) PCAP="$2"; shift 2 ;;
+    --ground-truth) GROUND_TRUTH="$2"; shift 2 ;;
+    --scenario-dir) SCENARIO_DIR="$2"; shift 2 ;;
+    --case-file) CASE_FILE="$2"; shift 2 ;;
+    --repeats) REPEATS="$2"; shift 2 ;;
+    --out-dir) OUT_DIR="$2"; shift 2 ;;
+    --pcapfs-mount) PCAPFS_MOUNT="$2"; shift 2 ;;
+    --timestamp-mode) TIMESTAMP_MODE="$2"; shift 2 ;;
+    --reader) READER="$2"; shift 2 ;;
+    --tool) TOOL_MODE="$2"; shift 2 ;;
+    --python-bin) PYTHON_BIN="$2"; shift 2 ;;
+    --bench-module) BENCH_MODULE="$2"; shift 2 ;;
+    -h|--help) usage; exit 0 ;;
+    *) echo "[ERROR] Unknown option: $1" >&2; usage >&2; exit 2 ;;
+  esac
+done
+
+JSON_DIR="$OUT_DIR/json"
+LOG_DIR="$OUT_DIR/logs"
+BENCH_DIR="$OUT_DIR/benchmark"
 CSV="$OUT_DIR/runtime_metrics.csv"
-echo "tool,case,files,run,runtime_s,precision,recall,f1,status,extra" > "$CSV"
-
 CURRENT_PCAPFS_PID=""
+
+require_cmd() {
+  if ! command -v "$1" >/dev/null 2>&1; then
+    echo "[ERROR] Missing command: $1" >&2
+    exit 1
+  fi
+}
+
+abspath() {
+  "$PYTHON_BIN" - "$1" <<'PY'
+import os
+import sys
+print(os.path.abspath(sys.argv[1]))
+PY
+}
 
 now_ns() {
   "$PYTHON_BIN" -c 'import time; print(time.time_ns())'
@@ -67,6 +127,10 @@ cleanup_pcapfs_mount() {
 }
 
 cleanup_on_exit() {
+  if [[ "$TOOL_MODE" == "smbmount" ]]; then
+    return
+  fi
+
   if [[ -n "${CURRENT_PCAPFS_PID:-}" ]]; then
     kill "$CURRENT_PCAPFS_PID" 2>/dev/null || true
     wait "$CURRENT_PCAPFS_PID" 2>/dev/null || true
@@ -76,27 +140,28 @@ cleanup_on_exit() {
   cleanup_pcapfs_mount "$PCAPFS_MOUNT"
 }
 
-trap cleanup_on_exit EXIT INT TERM
-
 wait_for_mount_ready() {
   local mount_dir="$1"
   local pid="$2"
-
   local waited=0
+  local timeout="${PCAPFS_TIMEOUT:-120}"
 
   while true; do
     if mountpoint -q "$mount_dir" 2>/dev/null; then
       return 0
     fi
 
-    # Nếu pcapFS chết trước khi mount được thì fail thật,
-    # không phải timeout.
     if ! kill -0 "$pid" 2>/dev/null; then
       return 1
     fi
 
     sleep 1
     waited=$((waited + 1))
+
+    if (( waited >= timeout )); then
+      echo "[ERROR] Timeout waiting for pcapFS mount after ${timeout}s" >&2
+      return 1
+    fi
 
     if (( waited % 30 == 0 )); then
       echo "      waiting for pcapFS mount... ${waited}s"
@@ -129,7 +194,6 @@ if status == "ok":
     try:
         with open(metrics_json, "r", encoding="utf-8") as f:
             metrics = json.load(f)
-
         score = metrics.get("strict_path_content") or {}
         precision = score.get("precision", "")
         recall = score.get("recall", "")
@@ -163,16 +227,45 @@ with open(csv_path, "a", newline="", encoding="utf-8") as f:
 PY
 }
 
+score_smbmount_only() {
+  local ground_truth="$1"
+  local out_json="$2"
+  local out_dir="$3"
+
+  mkdir -p "$out_dir"
+
+  "$PYTHON_BIN" - "$ground_truth" "$out_json" "$out_dir" <<'PY'
+import json
+import sys
+from pathlib import Path
+
+from smbmount.benchmark_parsepcap.metrics import score_versions
+from smbmount.benchmark_parsepcap.normalize_ours import normalize_ours
+
+ground_truth_path, ours_json_path, out_dir = sys.argv[1:]
+out = Path(out_dir)
+
+with open(ground_truth_path, "r", encoding="utf-8") as f:
+    ground_truth = json.load(f)
+
+ours_norm = normalize_ours(ours_json_path)
+metrics = score_versions(ground_truth, ours_norm)
+
+with (out / "ours_normalized.json").open("w", encoding="utf-8") as f:
+    json.dump(ours_norm, f, indent=2, ensure_ascii=False)
+
+with (out / "ours_metrics.json").open("w", encoding="utf-8") as f:
+    json.dump(metrics, f, indent=2, ensure_ascii=False)
+PY
+}
+
 run_one_repeat() {
   local case_id="$1"
   local files="$2"
-  local pcap_file="$3"
-  local gt_file="$4"
+  local pcap="$3"
+  local ground_truth="$4"
   local scenario_dir="$5"
   local run_id="$6"
-
-  local pcap="$PCAP_DIR/$pcap_file"
-  local gt="$GT_DIR/$gt_file"
 
   local out_json="$JSON_DIR/${case_id}_run${run_id}.json"
   local smb_log="$LOG_DIR/${case_id}_smbmount_run${run_id}.log"
@@ -182,37 +275,48 @@ run_one_repeat() {
   local smb_start
   local smb_end
   local smb_runtime
-
   local pcapfs_start
   local pcapfs_end
   local pcapfs_runtime
+  local pcapfs_exit_file="$LOG_DIR/${case_id}_pcapfs_run${run_id}.exit"
 
   rm -rf "$bench_out"
   rm -f "$out_json"
+  rm -f "$pcapfs_exit_file"
 
   echo "    [smbmount] parse run $run_id"
-
   smb_start="$(now_ns)"
 
   if "$PYTHON_BIN" -m smbmount parse-pcap \
       "$pcap" \
       "$out_json" \
-      --timestamp-mode network \
+      --timestamp-mode "$TIMESTAMP_MODE" \
+      --reader "$READER" \
       >"$smb_log" 2>&1; then
 
     smb_end="$(now_ns)"
     smb_runtime="$(elapsed_sec "$smb_start" "$smb_end")"
-    smb_status="ok"
-    smb_extra="$out_json"
   else
     smb_end="$(now_ns)"
     smb_runtime="$(elapsed_sec "$smb_start" "$smb_end")"
-    smb_status="fail"
-    smb_extra="$smb_log"
 
     append_metric_row \
       "smbmount" "$case_id" "$files" "$run_id" "$smb_runtime" \
-      "" "$smb_status" "$smb_extra"
+      "" "fail" "$smb_log"
+
+    return
+  fi
+
+  if [[ "$TOOL_MODE" == "smbmount" ]]; then
+    if score_smbmount_only "$ground_truth" "$out_json" "$bench_out"; then
+      append_metric_row \
+        "smbmount" "$case_id" "$files" "$run_id" "$smb_runtime" \
+        "$bench_out/ours_metrics.json" "ok" "$out_json"
+    else
+      append_metric_row \
+        "smbmount" "$case_id" "$files" "$run_id" "$smb_runtime" \
+        "" "benchmark_fail" "$bench_out"
+    fi
 
     return
   fi
@@ -225,13 +329,16 @@ run_one_repeat() {
 
   pcapfs_start="$(now_ns)"
 
-  pcapfs \
-    --timestamp-mode network \
-    --show-metadata \
-    -f \
-    "$pcap" \
-    "$PCAPFS_MOUNT" \
-    >"$pcapfs_log" 2>&1 &
+  (
+    set +e
+    pcapfs \
+      --timestamp-mode "$TIMESTAMP_MODE" \
+      --show-metadata \
+      -f \
+      "$pcap" \
+      "$PCAPFS_MOUNT"
+    echo "$?" > "$pcapfs_exit_file"
+  ) >"$pcapfs_log" 2>&1 &
 
   local pcapfs_pid=$!
   CURRENT_PCAPFS_PID="$pcapfs_pid"
@@ -241,21 +348,9 @@ run_one_repeat() {
     pcapfs_runtime="$(elapsed_sec "$pcapfs_start" "$pcapfs_end")"
     local pcapfs_exit="unknown"
 
-    if ! kill -0 "$pcapfs_pid" 2>/dev/null; then
-      if wait "$pcapfs_pid" 2>/dev/null; then
-        pcapfs_exit="0"
-      else
-        pcapfs_exit="$?"
-      fi
+    if [[ -f "$pcapfs_exit_file" ]]; then
+      pcapfs_exit="$(cat "$pcapfs_exit_file")"
     fi
-
-    {
-      echo
-      echo "[measure_runtime] pcapFS exited before mount became ready"
-      echo "[measure_runtime] exit_code=$pcapfs_exit"
-      echo "[measure_runtime] mountpoint=$PCAPFS_MOUNT"
-      echo "[measure_runtime] pcap=$pcap"
-    } >>"$pcapfs_log"
 
     append_metric_row \
       "smbmount" "$case_id" "$files" "$run_id" "$smb_runtime" \
@@ -273,7 +368,7 @@ run_one_repeat() {
   fi
 
   if "$PYTHON_BIN" -m "$BENCH_MODULE" \
-      --ground-truth "$gt" \
+      --ground-truth "$ground_truth" \
       --ours-json "$out_json" \
       --pcapfs-root "$PCAPFS_MOUNT" \
       --scenario-dir "$scenario_dir" \
@@ -290,7 +385,6 @@ run_one_repeat() {
     append_metric_row \
       "pcapFS" "$case_id" "$files" "$run_id" "$pcapfs_runtime" \
       "$bench_out/pcapfs_metrics.json" "ok" "$PCAPFS_MOUNT"
-
   else
     pcapfs_end="$(now_ns)"
     pcapfs_runtime="$(elapsed_sec "$pcapfs_start" "$pcapfs_end")"
@@ -313,20 +407,20 @@ run_one_repeat() {
 run_case() {
   local case_id="$1"
   local files="$2"
-  local pcap_file="$3"
-  local gt_file="$4"
+  local pcap="$3"
+  local ground_truth="$4"
   local scenario_dir="$5"
 
-  local pcap="$PCAP_DIR/$pcap_file"
-  local gt="$GT_DIR/$gt_file"
+  pcap="$(abspath "$pcap")"
+  ground_truth="$(abspath "$ground_truth")"
 
   if [[ ! -f "$pcap" ]]; then
     echo "[SKIP] Missing PCAP: $pcap"
     return
   fi
 
-  if [[ ! -f "$gt" ]]; then
-    echo "[SKIP] Missing ground truth: $gt"
+  if [[ ! -f "$ground_truth" ]]; then
+    echo "[SKIP] Missing ground truth: $ground_truth"
     return
   fi
 
@@ -334,74 +428,31 @@ run_case() {
   echo "[CASE] $case_id"
   echo "  Files: $files"
   echo "  PCAP: $pcap"
-  echo "  GT: $gt"
+  echo "  Ground truth: $ground_truth"
   echo "  Scenario dir: $scenario_dir"
+  echo "  Repeats: $REPEATS"
 
   for run_id in $(seq 1 "$REPEATS"); do
     run_one_repeat \
       "$case_id" \
       "$files" \
-      "$pcap_file" \
-      "$gt_file" \
+      "$pcap" \
+      "$ground_truth" \
       "$scenario_dir" \
       "$run_id"
   done
 }
 
-# run_case \
-#   "scale_0500_mixed" \
-#   "500" \
-#   "scale_0500_mixed.pcapng" \
-#   "scale_0500_mixed.json" \
-#   "bench_scale_0500_mixed"
-
-# run_case \
-#   "scale_1000_mixed" \
-#   "1000" \
-#   "scale_1000_mixed.pcapng" \
-#   "scale_1000_mixed.json" \
-#   "bench_scale_1000_mixed"
-
-# run_case \
-#   "scale_5000_mixed" \
-#   "5000" \
-#   "scale_5000_mixed.pcapng" \
-#   "scale_5000_mixed.json" \
-#   "bench_scale_5000_mixed"
-
-run_case \
-  "scale_1000_mixed_loss_01" \
-  "1000" \
-  "scale_1000_mixed_loss_01.pcapng" \
-  "scale_1000_mixed.json" \
-  "bench_scale_1000_mixed"
-
-run_case \
-  "scale_1000_mixed_loss_05" \
-  "1000" \
-  "scale_1000_mixed_loss_05.pcapng" \
-  "scale_1000_mixed.json" \
-  "bench_scale_1000_mixed"
-
-run_case \
-  "scale_1000_mixed_loss_10" \
-  "1000" \
-  "scale_1000_mixed_loss_10.pcapng" \
-  "scale_1000_mixed.json" \
-  "bench_scale_1000_mixed"
-
-echo
-echo "[OK] CSV: $CSV"
-
-"$PYTHON_BIN" - "$CSV" <<'PY'
+print_summary() {
+  "$PYTHON_BIN" - "$CSV" <<'PY'
 import csv
 import statistics
 import sys
 from collections import defaultdict
 
 path = sys.argv[1]
-
 rows = []
+
 with open(path, newline="", encoding="utf-8") as f:
     for row in csv.DictReader(f):
         if row["status"] != "ok":
@@ -412,13 +463,12 @@ with open(path, newline="", encoding="utf-8") as f:
         rows.append(row)
 
 groups = defaultdict(list)
-
 for row in rows:
     groups[(row["tool"], row["case"], row["files"])].append(row)
 
 def mean_std(values):
     if not values:
-        return "", ""
+        return 0.0, 0.0
     if len(values) == 1:
         return statistics.mean(values), 0.0
     return statistics.mean(values), statistics.stdev(values)
@@ -464,3 +514,41 @@ else:
     for row in failed:
         print(row)
 PY
+}
+
+if [[ "$TOOL_MODE" != "smbmount" ]]; then
+  require_cmd mountpoint
+  require_cmd pcapfs
+fi
+
+case "$TOOL_MODE" in
+  smbmount|pcapfs|both) ;;
+  *) echo "[ERROR] --tool must be smbmount, pcapfs, or both" >&2; exit 2 ;;
+esac
+mkdir -p "$OUT_DIR" "$JSON_DIR" "$LOG_DIR" "$BENCH_DIR"
+
+LOCK_FILE="$OUT_DIR/.measure_runtime.lock"
+exec 9>"$LOCK_FILE"
+if ! flock -n 9; then
+  echo "[ERROR] Another measure_runtime.sh is already running for OUT_DIR=$OUT_DIR" >&2
+  exit 1
+fi
+
+trap cleanup_on_exit EXIT INT TERM
+
+echo "tool,case,files,run,runtime_s,precision,recall,f1,status,extra" > "$CSV"
+
+cd "$ROOT_DIR"
+
+if [[ -n "$CASE_FILE" ]]; then
+  while IFS=$'\t' read -r case_id files pcap ground_truth scenario_dir; do
+    [[ -z "${case_id:-}" || "${case_id:0:1}" == "#" ]] && continue
+    run_case "$case_id" "$files" "$pcap" "$ground_truth" "$scenario_dir"
+  done < "$CASE_FILE"
+else
+  run_case "$CASE_ID" "$FILES" "$PCAP" "$GROUND_TRUTH" "$SCENARIO_DIR"
+fi
+
+echo
+echo "[OK] CSV: $CSV"
+print_summary

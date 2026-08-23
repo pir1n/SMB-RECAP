@@ -92,10 +92,20 @@ def iter_smb2_messages_from_tcp_payload(payload):
             nbss_len = _nbss_length(payload, nbss_start)
             frame_end = (
                 nbss_start + NBSS_HEADER_LEN + nbss_len
-                if nbss_len is not None
+                if nbss_len is not None and nbss_len > 0
                 else None
             )
-            if frame_end is not None and frame_end <= len(payload):
+            # A TCP fragment can contain four zero bytes immediately before an
+            # SMB magic value.  They are payload data, not a valid zero-length
+            # NBSS frame.  Accepting them used to set pos back to `magic`, so
+            # the next iteration found the same magic forever.  Besides
+            # rejecting empty NBSS frames, require strict forward progress.
+            if (
+                frame_end is not None
+                and frame_end > magic
+                and frame_end > pos
+                and frame_end <= len(payload)
+            ):
                 body = payload[magic:frame_end]
                 for message in _split_compound_smb2(body):
                     yield message[:MAX_MESSAGE_BYTES]

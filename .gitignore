@@ -77,3 +77,5 @@ data/eval/generated/workloads/**/*.ps1
 data/eval/generated/workloads/**/*.sh
 data/eval/generated/workloads/**/*.smbclient
 data/eval/generated/workloads/**/local/
+.venv/
+*/.venv/

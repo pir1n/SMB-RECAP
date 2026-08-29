@@ -1,0 +1,16 @@
+{
+  "application": "application_agnostic",
+  "format": "smbmount-semantic-scf-v2",
+  "source": "Coarse SMB object behaviors independent of client application",
+  "rules": [
+    {"id":"behavior_create_directory","action":"create_directory","pattern":[{"command":"CREATE","features":{"target_type":"directory","create_result":"created"}}],"require_success":true,"require_path":true,"confidence":0.88},
+    {"id":"behavior_create_file","action":"create_file","pattern":[{"command":"CREATE","features":{"target_type":"file","create_result":"created"}}],"require_success":true,"require_path":true,"confidence":0.82},
+    {"id":"behavior_read","action":"read_file","pattern":[{"command":"CREATE","features":{"target_type":"file"},"contains":{"access_intents":["read"]}},{"command":"READ"}],"max_gap":32,"require_success":true,"require_path":true,"confidence":0.78},
+    {"id":"behavior_change","action":"write_file","pattern":[{"command":"CREATE","features":{"target_type":"file"},"contains":{"access_intents":["write"]}},{"command":"WRITE"}],"max_gap":32,"require_success":true,"require_path":true,"confidence":0.78},
+    {"id":"behavior_remove_file_on_close","action":"delete_file","pattern":[{"command":"CREATE","features":{"target_type":"file","delete_on_close":true}}],"require_success":true,"require_path":true,"confidence":0.90},
+    {"id":"behavior_remove_file","action":"delete_file","pattern":[{"command":"SET_INFO","any_features":{"file_info_class":["FileDispositionInformation","FileDispositionInformationEx"]},"features":{"delete_pending":"1"}}],"require_success":true,"require_path":true,"confidence":0.88},
+    {"id":"behavior_remove_directory","action":"delete_directory","pattern":[{"command":"CREATE","features":{"target_type":"directory"},"contains":{"access_intents":["delete"]}},{"command":"SET_INFO","any_features":{"file_info_class":["FileDispositionInformation","FileDispositionInformationEx"]},"features":{"delete_pending":"1"}}],"max_gap":16,"require_success":true,"require_path":true,"confidence":0.90},
+    {"id":"behavior_rename_move","action":"rename_file","pattern":[{"command":"SET_INFO","any_features":{"file_info_class":["FileRenameInformation","FileRenameInformationEx"]},"features":{"rename_target_present":true}}],"require_success":true,"require_path":true,"confidence":0.88},
+    {"id":"behavior_list","action":"directory_listing","pattern":[{"command":"CREATE","features":{"target_type":"directory"}},{"command":"QUERY_DIRECTORY"}],"max_gap":24,"require_success":true,"confidence":0.75}
+  ]
+}

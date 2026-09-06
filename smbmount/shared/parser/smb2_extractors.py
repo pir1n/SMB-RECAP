@@ -36,6 +36,76 @@ from smbmount.shared.parser.smb2_constants import (
     QUERY_DIRECTORY_FLAGS,
 )
 
+
+def _ntlm_security_buffer(data: bytes, descriptor_offset: int) -> Optional[bytes]:
+    """Read an NTLM SECURITY_BUFFER without trusting capture-provided offsets."""
+    if data is None or descriptor_offset < 0 or descriptor_offset + 8 > len(data):
+        return None
+    length = int.from_bytes(data[descriptor_offset:descriptor_offset + 2], "little")
+    offset = int.from_bytes(data[descriptor_offset + 4:descriptor_offset + 8], "little")
+    if length == 0:
+        return b""
+    if offset < 0 or offset + length > len(data):
+        return None
+    return data[offset:offset + length]
+
+
+def parse_ntlm_authenticate_identity(raw_smb2: bytes) -> Dict[str, Any]:
+    """Extract non-secret identity fields from an NTLMSSP AUTHENTICATE message.
+
+    Password material, challenge responses and session keys are deliberately not
+    returned. The NTLM message may be wrapped by SPNEGO, so locate its signature
+    inside the SESSION_SETUP security buffer instead of assuming a fixed wrapper.
+    """
+    result = {
+        "smb2_user": None,
+        "smb2_domain": None,
+        "smb2_workstation": None,
+        "smb2_auth_protocol": None,
+    }
+    if raw_smb2 is None or len(raw_smb2) < 64 + 24:
+        return result
+
+    # SMB2 SESSION_SETUP request: SecurityBufferOffset/Length are relative to
+    # the beginning of the SMB2 header.
+    security_offset = u16(raw_smb2, 64 + 12)
+    security_length = u16(raw_smb2, 64 + 14)
+    if not security_offset or not security_length:
+        return result
+    security_blob = bytes_range(raw_smb2, security_offset, security_length)
+    if not security_blob:
+        return result
+
+    marker = security_blob.find(b"NTLMSSP\x00")
+    if marker < 0:
+        # Kerberos tickets do not expose a safely parseable username here.
+        result["smb2_auth_protocol"] = "kerberos_or_spnego"
+        return result
+    ntlm = security_blob[marker:]
+    if len(ntlm) < 64:
+        return result
+    message_type = int.from_bytes(ntlm[8:12], "little")
+    result["smb2_auth_protocol"] = "ntlmssp"
+    if message_type != 3:
+        return result
+
+    flags = int.from_bytes(ntlm[60:64], "little")
+    encoding = "utf-16-le" if flags & 0x00000001 else "latin-1"
+
+    def decoded(descriptor_offset):
+        value = _ntlm_security_buffer(ntlm, descriptor_offset)
+        if value is None:
+            return None
+        try:
+            return value.decode(encoding, errors="replace").rstrip("\x00") or None
+        except (LookupError, UnicodeError):
+            return None
+
+    result["smb2_domain"] = decoded(28)
+    result["smb2_user"] = decoded(36)
+    result["smb2_workstation"] = decoded(44)
+    return result
+
 def close_request_file_id(raw_smb2: bytes) -> Optional[bytes]:
     """
     SMB2 CLOSE request payload:
@@ -421,7 +491,14 @@ def get_smb2_payload(smb2_layer: Any, raw_smb2: Optional[bytes] = None,
         "smb2_query_returned_names": None,
         "smb2_query_end_of_search": None,
         "smb2_query_total_bytes": None,
+        "smb2_user": None,
+        "smb2_domain": None,
+        "smb2_workstation": None,
+        "smb2_auth_protocol": None,
     }
+
+    if str(cmd) == "1" and is_response is False and raw_smb2 is not None:
+        result.update(parse_ntlm_authenticate_identity(raw_smb2))
 
     if smb2_layer is None:
         return result

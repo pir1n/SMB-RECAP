@@ -30,6 +30,11 @@ Phần SCF hiện tập trung vào các thao tác SMB phổ biến:
 - append/write/overwrite file
 - rename/move file hoặc directory
 
+Nếu capture chứa NTLMSSP Authenticate trong SMB `SESSION_SETUP`, SCF ánh xạ
+identity theo server và `SessionId`, rồi xuất thêm `user`, `domain`, `workstation`
+và `auth_protocol` trong timeline. Capture bắt đầu sau đăng nhập hoặc Kerberos
+không lộ identity sẽ nhận `user: null`; hệ thống không suy đoán user từ IP.
+
 Các rule JSON hiện nằm trong:
 
 ```text

@@ -8,6 +8,7 @@ from smbmount.shared.parser.pcap_reader import (
     enrich_with_request_mapping,
     enrich_with_file_metadata_mapping,
     enrich_with_query_info_timestamps,
+    enrich_with_session_identity,
 )
 from smbmount.scf.loader import load_rules
 from smbmount.scf.detector import SCFDetector
@@ -267,6 +268,7 @@ def scf_cmd(
     packets = enrich_with_query_info_timestamps(
         packets
     )
+    packets = enrich_with_session_identity(packets)
 
     #
     # rules
@@ -336,6 +338,7 @@ def scf_dump_cmd(input_pcap: str, output_file: str):
     packets = enrich_with_request_mapping(packets)
     packets = enrich_with_file_metadata_mapping(packets)
     packets = enrich_with_query_info_timestamps(packets)
+    packets = enrich_with_session_identity(packets)
 
     rows = []
 
@@ -352,6 +355,10 @@ def scf_dump_cmd(input_pcap: str, output_file: str):
             "dst_port": pkt.get("dst_port"),
             "session_id": pkt.get("smb2_session_id"),
             "tree_id": pkt.get("smb2_tree_id"),
+            "user": pkt.get("smb2_user"),
+            "domain": pkt.get("smb2_domain"),
+            "workstation": pkt.get("smb2_workstation"),
+            "auth_protocol": pkt.get("smb2_auth_protocol"),
             "message_id": pkt.get("smb2_message_id"),
             "command": pkt.get("smb2_command_name"),
             "path": pkt.get("smb2_filename"),

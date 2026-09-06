@@ -818,6 +818,65 @@ def enrich_with_request_mapping(packets):
 
     return packets
 
+
+def enrich_with_session_identity(packets: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    """Map an observed SESSION_SETUP identity to every command in its session.
+
+    SessionId is scoped to an SMB server. It is intentionally not keyed by TCP
+    port because SMB Multichannel may move commands across connections.
+    """
+    pending = {}
+    identities = {}
+
+    def transport_key(pkt, reverse=False):
+        if reverse:
+            return (
+                pkt.get("dst_ip"), pkt.get("src_ip"),
+                pkt.get("dst_port"), pkt.get("src_port"),
+                pkt.get("smb2_message_id"),
+            )
+        return (
+            pkt.get("src_ip"), pkt.get("dst_ip"),
+            pkt.get("src_port"), pkt.get("dst_port"),
+            pkt.get("smb2_message_id"),
+        )
+
+    def identity_from(pkt):
+        return {
+            "smb2_user": pkt.get("smb2_user"),
+            "smb2_domain": pkt.get("smb2_domain"),
+            "smb2_workstation": pkt.get("smb2_workstation"),
+            "smb2_auth_protocol": pkt.get("smb2_auth_protocol"),
+        }
+
+    def has_user(identity):
+        return bool(identity and identity.get("smb2_user"))
+
+    for pkt in packets:
+        if pkt.get("smb2_command_name") != "SESSION_SETUP":
+            continue
+        if pkt.get("smb2_is_response") is False:
+            identity = identity_from(pkt)
+            if has_user(identity):
+                pending[transport_key(pkt)] = identity
+                session_id = pkt.get("smb2_session_id")
+                if session_id not in (None, "0", 0):
+                    identities[(pkt.get("dst_ip"), str(session_id))] = identity
+        elif pkt.get("smb2_is_response") is True:
+            identity = pending.get(transport_key(pkt, reverse=True))
+            session_id = pkt.get("smb2_session_id")
+            if has_user(identity) and session_id not in (None, "0", 0):
+                identities[(pkt.get("src_ip"), str(session_id))] = identity
+
+    for pkt in packets:
+        session_id = pkt.get("smb2_session_id")
+        server = pkt.get("src_ip") if pkt.get("smb2_is_response") else pkt.get("dst_ip")
+        identity = identities.get((server, str(session_id))) if session_id is not None else None
+        for field in ("smb2_user", "smb2_domain", "smb2_workstation", "smb2_auth_protocol"):
+            if pkt.get(field) is None:
+                pkt[field] = identity.get(field) if identity else None
+    return packets
+
 def enrich_with_file_metadata_mapping(packets: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     create_metadata_by_file_id: Dict[Any, Dict[str, Any]] = {}
 

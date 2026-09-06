@@ -35,6 +35,7 @@ def render(events):
 
     table.add_column("Timestamp")
     table.add_column("Source")
+    table.add_column("User")
     table.add_column("Rule")
     table.add_column("Status")
     table.add_column("Frames")
@@ -49,6 +50,7 @@ def render(events):
         table.add_row(
             fmt(e.get("timestamp")),
             str(e.get("src_ip")),
+            str(e.get("user") or "unknown"),
             str(e.get("rule_id") or ""),
             fmt_status(e.get("success")),
             ",".join(str(x) for x in e.get("frames", []) if x is not None),

@@ -1,0 +1,1887 @@
+[
+  {
+    "error_type": "FN",
+    "expected_event": "rename_file",
+    "ground_truth": {
+      "client": "powershell",
+      "command": "Rename-Item -Path 'Z:\\rdc4fad1\\rs000003' -NewName 'rt000003'",
+      "end_time": "2026-07-09T13:31:55.6405799Z",
+      "event": "rename_file",
+      "op_id": 33,
+      "path": "rdc4fad1/rs000003",
+      "run_id": "powershell_submission_scale50",
+      "start_time": "2026-07-09T13:31:55.6161714Z",
+      "target_path": "rdc4fad1/rt000003"
+    },
+    "nearest_predictions": [
+      {
+        "action": "creation of directory",
+        "commands": [
+          "CREATE"
+        ],
+        "event": "create_directory",
+        "features": [
+          {
+            "access_intents": [
+              "metadata",
+              "read"
+            ],
+            "access_mask": "0x00100081",
+            "command": "CREATE",
+            "create_action": "0x00000002",
+            "create_disposition": "0x00000002",
+            "create_options": "0x00200021",
+            "create_result": "created",
+            "delete_on_close": false,
+            "disposition_family": "create",
+            "file_attributes": "0x00000080",
+            "schema": "scf-v2",
+            "share_access": "0x00000003",
+            "target_type": "directory"
+          }
+        ],
+        "frames": [
+          1066
+        ],
+        "path": "rdc4fad1\\rs000003",
+        "rule_id": "powershell_new_item_directory",
+        "run_id": "powershell_submission_scale50",
+        "target_path": null,
+        "timestamp": 1783603915.61445
+      },
+      {
+        "action": "directory listing",
+        "commands": [
+          "CREATE",
+          "QUERY_DIRECTORY"
+        ],
+        "event": "directory_listing",
+        "features": [
+          {
+            "access_intents": [
+              "metadata",
+              "read"
+            ],
+            "access_mask": "0x00100081",
+            "command": "CREATE",
+            "create_action": "0x00000001",
+            "create_disposition": "0x00000001",
+            "create_options": "0x00000021",
+            "create_result": "opened",
+            "delete_on_close": false,
+            "disposition_family": "open",
+            "file_attributes": "0x00000000",
+            "schema": "scf-v2",
+            "share_access": "0x00000007",
+            "target_type": "directory"
+          },
+          {
+            "command": "QUERY_DIRECTORY",
+            "file_info_class": "FileIdBothDirectoryInformation",
+            "pattern_class": "wildcard",
+            "query_flags": "0x00000000",
+            "schema": "scf-v2"
+          }
+        ],
+        "frames": [
+          1052,
+          1052
+        ],
+        "path": "rdc4fad1\\ld000003",
+        "rule_id": "powershell_get_child_item_directory",
+        "run_id": "powershell_submission_scale50",
+        "target_path": null,
+        "timestamp": 1783603915.5963056
+      },
+      {
+        "action": "creation of directory",
+        "commands": [
+          "CREATE"
+        ],
+        "event": "create_directory",
+        "features": [
+          {
+            "access_intents": [
+              "metadata",
+              "read"
+            ],
+            "access_mask": "0x00100081",
+            "command": "CREATE",
+            "create_action": "0x00000002",
+            "create_disposition": "0x00000002",
+            "create_options": "0x00200021",
+            "create_result": "created",
+            "delete_on_close": false,
+            "disposition_family": "create",
+            "file_attributes": "0x00000080",
+            "schema": "scf-v2",
+            "share_access": "0x00000003",
+            "target_type": "directory"
+          }
+        ],
+        "frames": [
+          1134
+        ],
+        "path": "rdc4fad1\\ds000003",
+        "rule_id": "powershell_new_item_directory",
+        "run_id": "powershell_submission_scale50",
+        "target_path": null,
+        "timestamp": 1783603915.6558552
+      },
+      {
+        "action": "upload file",
+        "commands": [
+          "CREATE",
+          "WRITE"
+        ],
+        "event": "upload_file",
+        "features": [
+          {
+            "access_intents": [
+              "delete",
+              "metadata",
+              "read",
+              "write"
+            ],
+            "access_mask": "0x0017019f",
+            "command": "CREATE",
+            "create_action": "0x00000002",
+            "create_disposition": "0x00000005",
+            "create_options": "0x00000044",
+            "create_result": "created",
+            "delete_on_close": false,
+            "disposition_family": "overwrite_if",
+            "file_attributes": "0x00000020",
+            "schema": "scf-v2",
+            "share_access": "0x00000000",
+            "target_type": "file"
+          },
+          {
+            "command": "WRITE",
+            "io": "write",
+            "io_size_class": "tiny",
+            "length_class": "nonzero",
+            "schema": "scf-v2"
+          }
+        ],
+        "frames": [
+          1034,
+          1038
+        ],
+        "path": "rdc4fad1\\ld000003\\e",
+        "rule_id": "powershell_upload_file_write",
+        "run_id": "powershell_submission_scale50",
+        "target_path": null,
+        "timestamp": 1783603915.5758922
+      },
+      {
+        "action": "rename or move of file",
+        "commands": [
+          "CREATE",
+          "SET_INFO"
+        ],
+        "event": "rename_file",
+        "features": [
+          {
+            "access_intents": [
+              "delete",
+              "metadata"
+            ],
+            "access_mask": "0x00110080",
+            "command": "CREATE",
+            "create_action": "0x00000001",
+            "create_disposition": "0x00000001",
+            "create_options": "0x00200020",
+            "create_result": "opened",
+            "delete_on_close": false,
+            "disposition_family": "open",
+            "file_attributes": "0x00000000",
+            "schema": "scf-v2",
+            "share_access": "0x00000007",
+            "target_type": "unknown"
+          },
+          {
+            "command": "SET_INFO",
+            "delete_pending": "",
+            "disposition_flags": "",
+            "file_info_class": "FileRenameInformation",
+            "info_type": "0x00000001",
+            "rename_target_present": true,
+            "schema": "scf-v2"
+          }
+        ],
+        "frames": [
+          1140,
+          1164
+        ],
+        "path": "rdc4fad1\\ds000003",
+        "rule_id": "powershell_rename_or_move_file_basic",
+        "run_id": "powershell_submission_scale50",
+        "target_path": "rdc4fad1\\dmv\\dt000003",
+        "timestamp": 1783603915.6719346
+      }
+    ]
+  },
+  {
+    "error_type": "FN",
+    "expected_event": "upload_file",
+    "ground_truth": {
+      "client": "powershell",
+      "command": "Copy-Item -Path 'data\\eval\\generated\\workloads\\powershell\\local\\powershell_submission_scale50\\u' -Destination 'Z:\\rdc4fad1\\ap000004' -Force",
+      "end_time": "2026-07-09T13:31:56.2617012Z",
+      "event": "upload_file",
+      "op_id": 900000053,
+      "path": "rdc4fad1/ap000004",
+      "run_id": "powershell_submission_scale50",
+      "start_time": "2026-07-09T13:31:56.2419191Z",
+      "target_path": ""
+    },
+    "nearest_predictions": [
+      {
+        "action": "directory listing",
+        "commands": [
+          "CREATE",
+          "QUERY_DIRECTORY"
+        ],
+        "event": "directory_listing",
+        "features": [
+          {
+            "access_intents": [
+              "metadata",
+              "read"
+            ],
+            "access_mask": "0x00100081",
+            "command": "CREATE",
+            "create_action": "0x00000001",
+            "create_disposition": "0x00000001",
+            "create_options": "0x00004021",
+            "create_result": "opened",
+            "delete_on_close": false,
+            "disposition_family": "open",
+            "file_attributes": "0x00000080",
+            "schema": "scf-v2",
+            "share_access": "0x00000007",
+            "target_type": "directory"
+          },
+          {
+            "command": "QUERY_DIRECTORY",
+            "file_info_class": "FileIdBothDirectoryInformation",
+            "pattern_class": "wildcard",
+            "query_flags": "0x00000000",
+            "schema": "scf-v2"
+          }
+        ],
+        "frames": [
+          1699,
+          1703
+        ],
+        "path": "rdc4fad1\\fmv",
+        "rule_id": "powershell_get_child_item_directory",
+        "run_id": "powershell_submission_scale50",
+        "target_path": null,
+        "timestamp": 1783603916.2337344
+      },
+      {
+        "action": "rename or move of file",
+        "commands": [
+          "CREATE",
+          "SET_INFO"
+        ],
+        "event": "rename_file",
+        "features": [
+          {
+            "access_intents": [
+              "delete",
+              "metadata"
+            ],
+            "access_mask": "0x00110080",
+            "command": "CREATE",
+            "create_action": "0x00000001",
+            "create_disposition": "0x00000001",
+            "create_options": "0x00200020",
+            "create_result": "opened",
+            "delete_on_close": false,
+            "disposition_family": "open",
+            "file_attributes": "0x00000000",
+            "schema": "scf-v2",
+            "share_access": "0x00000007",
+            "target_type": "unknown"
+          },
+          {
+            "command": "SET_INFO",
+            "delete_pending": "",
+            "disposition_flags": "",
+            "file_info_class": "FileRenameInformation",
+            "info_type": "0x00000001",
+            "rename_target_present": true,
+            "schema": "scf-v2"
+          }
+        ],
+        "frames": [
+          1697,
+          1713
+        ],
+        "path": "rdc4fad1\\ms000004",
+        "rule_id": "powershell_rename_or_move_file_basic",
+        "run_id": "powershell_submission_scale50",
+        "target_path": "rdc4fad1\\fmv\\mt000004",
+        "timestamp": 1783603916.2327094
+      },
+      {
+        "action": "upload file",
+        "commands": [
+          "CREATE",
+          "WRITE"
+        ],
+        "event": "upload_file",
+        "features": [
+          {
+            "access_intents": [
+              "delete",
+              "metadata",
+              "read",
+              "write"
+            ],
+            "access_mask": "0x0017019f",
+            "command": "CREATE",
+            "create_action": "0x00000002",
+            "create_disposition": "0x00000005",
+            "create_options": "0x00000044",
+            "create_result": "created",
+            "delete_on_close": false,
+            "disposition_family": "overwrite_if",
+            "file_attributes": "0x00000020",
+            "schema": "scf-v2",
+            "share_access": "0x00000000",
+            "target_type": "file"
+          },
+          {
+            "command": "WRITE",
+            "io": "write",
+            "io_size_class": "tiny",
+            "length_class": "nonzero",
+            "schema": "scf-v2"
+          }
+        ],
+        "frames": [
+          1683,
+          1687
+        ],
+        "path": "rdc4fad1\\ms000004",
+        "rule_id": "powershell_upload_file_write",
+        "run_id": "powershell_submission_scale50",
+        "target_path": null,
+        "timestamp": 1783603916.2119331
+      },
+      {
+        "action": "rename or move of file",
+        "commands": [
+          "CREATE",
+          "SET_INFO"
+        ],
+        "event": "rename_file",
+        "features": [
+          {
+            "access_intents": [
+              "delete",
+              "metadata"
+            ],
+            "access_mask": "0x00110080",
+            "command": "CREATE",
+            "create_action": "0x00000001",
+            "create_disposition": "0x00000001",
+            "create_options": "0x00200020",
+            "create_result": "opened",
+            "delete_on_close": false,
+            "disposition_family": "open",
+            "file_attributes": "0x00000000",
+            "schema": "scf-v2",
+            "share_access": "0x00000007",
+            "target_type": "unknown"
+          },
+          {
+            "command": "SET_INFO",
+            "delete_pending": "",
+            "disposition_flags": "",
+            "file_info_class": "FileRenameInformation",
+            "info_type": "0x00000001",
+            "rename_target_present": true,
+            "schema": "scf-v2"
+          }
+        ],
+        "frames": [
+          1651,
+          1665
+        ],
+        "path": "rdc4fad1\\fs000004",
+        "rule_id": "powershell_rename_or_move_file_basic",
+        "run_id": "powershell_submission_scale50",
+        "target_path": "rdc4fad1\\ft000004",
+        "timestamp": 1783603916.1829493
+      },
+      {
+        "action": "upload file",
+        "commands": [
+          "CREATE",
+          "WRITE"
+        ],
+        "event": "upload_file",
+        "features": [
+          {
+            "access_intents": [
+              "delete",
+              "metadata",
+              "read",
+              "write"
+            ],
+            "access_mask": "0x0017019f",
+            "command": "CREATE",
+            "create_action": "0x00000002",
+            "create_disposition": "0x00000005",
+            "create_options": "0x00000044",
+            "create_result": "created",
+            "delete_on_close": false,
+            "disposition_family": "overwrite_if",
+            "file_attributes": "0x00000020",
+            "schema": "scf-v2",
+            "share_access": "0x00000000",
+            "target_type": "file"
+          },
+          {
+            "command": "WRITE",
+            "io": "write",
+            "io_size_class": "tiny",
+            "length_class": "nonzero",
+            "schema": "scf-v2"
+          }
+        ],
+        "frames": [
+          1639,
+          1643
+        ],
+        "path": "rdc4fad1\\fs000004",
+        "rule_id": "powershell_upload_file_write",
+        "run_id": "powershell_submission_scale50",
+        "target_path": null,
+        "timestamp": 1783603916.166347
+      }
+    ]
+  },
+  {
+    "error_type": "FN",
+    "expected_event": "append_file",
+    "ground_truth": {
+      "client": "powershell",
+      "command": "Add-Content -Path 'Z:\\rdc4fad1\\ap000004' -Value '24ef'",
+      "end_time": "2026-07-09T13:31:56.2925603Z",
+      "event": "append_file",
+      "op_id": 50,
+      "path": "rdc4fad1/ap000004",
+      "run_id": "powershell_submission_scale50",
+      "start_time": "2026-07-09T13:31:56.2617012Z",
+      "target_path": ""
+    },
+    "nearest_predictions": [
+      {
+        "action": "directory listing",
+        "commands": [
+          "CREATE",
+          "QUERY_DIRECTORY"
+        ],
+        "event": "directory_listing",
+        "features": [
+          {
+            "access_intents": [
+              "metadata",
+              "read"
+            ],
+            "access_mask": "0x00100081",
+            "command": "CREATE",
+            "create_action": "0x00000001",
+            "create_disposition": "0x00000001",
+            "create_options": "0x00004021",
+            "create_result": "opened",
+            "delete_on_close": false,
+            "disposition_family": "open",
+            "file_attributes": "0x00000080",
+            "schema": "scf-v2",
+            "share_access": "0x00000007",
+            "target_type": "directory"
+          },
+          {
+            "command": "QUERY_DIRECTORY",
+            "file_info_class": "FileIdBothDirectoryInformation",
+            "pattern_class": "wildcard",
+            "query_flags": "0x00000000",
+            "schema": "scf-v2"
+          }
+        ],
+        "frames": [
+          1699,
+          1703
+        ],
+        "path": "rdc4fad1\\fmv",
+        "rule_id": "powershell_get_child_item_directory",
+        "run_id": "powershell_submission_scale50",
+        "target_path": null,
+        "timestamp": 1783603916.2337344
+      },
+      {
+        "action": "rename or move of file",
+        "commands": [
+          "CREATE",
+          "SET_INFO"
+        ],
+        "event": "rename_file",
+        "features": [
+          {
+            "access_intents": [
+              "delete",
+              "metadata"
+            ],
+            "access_mask": "0x00110080",
+            "command": "CREATE",
+            "create_action": "0x00000001",
+            "create_disposition": "0x00000001",
+            "create_options": "0x00200020",
+            "create_result": "opened",
+            "delete_on_close": false,
+            "disposition_family": "open",
+            "file_attributes": "0x00000000",
+            "schema": "scf-v2",
+            "share_access": "0x00000007",
+            "target_type": "unknown"
+          },
+          {
+            "command": "SET_INFO",
+            "delete_pending": "",
+            "disposition_flags": "",
+            "file_info_class": "FileRenameInformation",
+            "info_type": "0x00000001",
+            "rename_target_present": true,
+            "schema": "scf-v2"
+          }
+        ],
+        "frames": [
+          1697,
+          1713
+        ],
+        "path": "rdc4fad1\\ms000004",
+        "rule_id": "powershell_rename_or_move_file_basic",
+        "run_id": "powershell_submission_scale50",
+        "target_path": "rdc4fad1\\fmv\\mt000004",
+        "timestamp": 1783603916.2327094
+      },
+      {
+        "action": "upload file",
+        "commands": [
+          "CREATE",
+          "WRITE"
+        ],
+        "event": "upload_file",
+        "features": [
+          {
+            "access_intents": [
+              "delete",
+              "metadata",
+              "read",
+              "write"
+            ],
+            "access_mask": "0x0017019f",
+            "command": "CREATE",
+            "create_action": "0x00000002",
+            "create_disposition": "0x00000005",
+            "create_options": "0x00000044",
+            "create_result": "created",
+            "delete_on_close": false,
+            "disposition_family": "overwrite_if",
+            "file_attributes": "0x00000020",
+            "schema": "scf-v2",
+            "share_access": "0x00000000",
+            "target_type": "file"
+          },
+          {
+            "command": "WRITE",
+            "io": "write",
+            "io_size_class": "tiny",
+            "length_class": "nonzero",
+            "schema": "scf-v2"
+          }
+        ],
+        "frames": [
+          1683,
+          1687
+        ],
+        "path": "rdc4fad1\\ms000004",
+        "rule_id": "powershell_upload_file_write",
+        "run_id": "powershell_submission_scale50",
+        "target_path": null,
+        "timestamp": 1783603916.2119331
+      },
+      {
+        "action": "rename or move of file",
+        "commands": [
+          "CREATE",
+          "SET_INFO"
+        ],
+        "event": "rename_file",
+        "features": [
+          {
+            "access_intents": [
+              "delete",
+              "metadata"
+            ],
+            "access_mask": "0x00110080",
+            "command": "CREATE",
+            "create_action": "0x00000001",
+            "create_disposition": "0x00000001",
+            "create_options": "0x00200020",
+            "create_result": "opened",
+            "delete_on_close": false,
+            "disposition_family": "open",
+            "file_attributes": "0x00000000",
+            "schema": "scf-v2",
+            "share_access": "0x00000007",
+            "target_type": "unknown"
+          },
+          {
+            "command": "SET_INFO",
+            "delete_pending": "",
+            "disposition_flags": "",
+            "file_info_class": "FileRenameInformation",
+            "info_type": "0x00000001",
+            "rename_target_present": true,
+            "schema": "scf-v2"
+          }
+        ],
+        "frames": [
+          1651,
+          1665
+        ],
+        "path": "rdc4fad1\\fs000004",
+        "rule_id": "powershell_rename_or_move_file_basic",
+        "run_id": "powershell_submission_scale50",
+        "target_path": "rdc4fad1\\ft000004",
+        "timestamp": 1783603916.1829493
+      },
+      {
+        "action": "upload file",
+        "commands": [
+          "CREATE",
+          "WRITE"
+        ],
+        "event": "upload_file",
+        "features": [
+          {
+            "access_intents": [
+              "delete",
+              "metadata",
+              "read",
+              "write"
+            ],
+            "access_mask": "0x0017019f",
+            "command": "CREATE",
+            "create_action": "0x00000002",
+            "create_disposition": "0x00000005",
+            "create_options": "0x00000044",
+            "create_result": "created",
+            "delete_on_close": false,
+            "disposition_family": "overwrite_if",
+            "file_attributes": "0x00000020",
+            "schema": "scf-v2",
+            "share_access": "0x00000000",
+            "target_type": "file"
+          },
+          {
+            "command": "WRITE",
+            "io": "write",
+            "io_size_class": "tiny",
+            "length_class": "nonzero",
+            "schema": "scf-v2"
+          }
+        ],
+        "frames": [
+          1639,
+          1643
+        ],
+        "path": "rdc4fad1\\fs000004",
+        "rule_id": "powershell_upload_file_write",
+        "run_id": "powershell_submission_scale50",
+        "target_path": null,
+        "timestamp": 1783603916.166347
+      }
+    ]
+  },
+  {
+    "error_type": "FN",
+    "expected_event": "create_directory",
+    "ground_truth": {
+      "client": "powershell",
+      "command": "New-Item -ItemType Directory -Path 'Z:\\rdc4fad1\\xd000004' -Force | Out-Null",
+      "end_time": "2026-07-09T13:31:56.3144742Z",
+      "event": "create_directory",
+      "op_id": 900000054,
+      "path": "rdc4fad1/xd000004",
+      "run_id": "powershell_submission_scale50",
+      "start_time": "2026-07-09T13:31:56.2925603Z",
+      "target_path": ""
+    },
+    "nearest_predictions": [
+      {
+        "action": "directory listing",
+        "commands": [
+          "CREATE",
+          "QUERY_DIRECTORY"
+        ],
+        "event": "directory_listing",
+        "features": [
+          {
+            "access_intents": [
+              "metadata",
+              "read"
+            ],
+            "access_mask": "0x00100081",
+            "command": "CREATE",
+            "create_action": "0x00000001",
+            "create_disposition": "0x00000001",
+            "create_options": "0x00004021",
+            "create_result": "opened",
+            "delete_on_close": false,
+            "disposition_family": "open",
+            "file_attributes": "0x00000080",
+            "schema": "scf-v2",
+            "share_access": "0x00000007",
+            "target_type": "directory"
+          },
+          {
+            "command": "QUERY_DIRECTORY",
+            "file_info_class": "FileIdBothDirectoryInformation",
+            "pattern_class": "wildcard",
+            "query_flags": "0x00000000",
+            "schema": "scf-v2"
+          }
+        ],
+        "frames": [
+          1699,
+          1703
+        ],
+        "path": "rdc4fad1\\fmv",
+        "rule_id": "powershell_get_child_item_directory",
+        "run_id": "powershell_submission_scale50",
+        "target_path": null,
+        "timestamp": 1783603916.2337344
+      },
+      {
+        "action": "rename or move of file",
+        "commands": [
+          "CREATE",
+          "SET_INFO"
+        ],
+        "event": "rename_file",
+        "features": [
+          {
+            "access_intents": [
+              "delete",
+              "metadata"
+            ],
+            "access_mask": "0x00110080",
+            "command": "CREATE",
+            "create_action": "0x00000001",
+            "create_disposition": "0x00000001",
+            "create_options": "0x00200020",
+            "create_result": "opened",
+            "delete_on_close": false,
+            "disposition_family": "open",
+            "file_attributes": "0x00000000",
+            "schema": "scf-v2",
+            "share_access": "0x00000007",
+            "target_type": "unknown"
+          },
+          {
+            "command": "SET_INFO",
+            "delete_pending": "",
+            "disposition_flags": "",
+            "file_info_class": "FileRenameInformation",
+            "info_type": "0x00000001",
+            "rename_target_present": true,
+            "schema": "scf-v2"
+          }
+        ],
+        "frames": [
+          1697,
+          1713
+        ],
+        "path": "rdc4fad1\\ms000004",
+        "rule_id": "powershell_rename_or_move_file_basic",
+        "run_id": "powershell_submission_scale50",
+        "target_path": "rdc4fad1\\fmv\\mt000004",
+        "timestamp": 1783603916.2327094
+      },
+      {
+        "action": "upload file",
+        "commands": [
+          "CREATE",
+          "WRITE"
+        ],
+        "event": "upload_file",
+        "features": [
+          {
+            "access_intents": [
+              "delete",
+              "metadata",
+              "read",
+              "write"
+            ],
+            "access_mask": "0x0017019f",
+            "command": "CREATE",
+            "create_action": "0x00000002",
+            "create_disposition": "0x00000005",
+            "create_options": "0x00000044",
+            "create_result": "created",
+            "delete_on_close": false,
+            "disposition_family": "overwrite_if",
+            "file_attributes": "0x00000020",
+            "schema": "scf-v2",
+            "share_access": "0x00000000",
+            "target_type": "file"
+          },
+          {
+            "command": "WRITE",
+            "io": "write",
+            "io_size_class": "tiny",
+            "length_class": "nonzero",
+            "schema": "scf-v2"
+          }
+        ],
+        "frames": [
+          1683,
+          1687
+        ],
+        "path": "rdc4fad1\\ms000004",
+        "rule_id": "powershell_upload_file_write",
+        "run_id": "powershell_submission_scale50",
+        "target_path": null,
+        "timestamp": 1783603916.2119331
+      },
+      {
+        "action": "rename or move of file",
+        "commands": [
+          "CREATE",
+          "SET_INFO"
+        ],
+        "event": "rename_file",
+        "features": [
+          {
+            "access_intents": [
+              "delete",
+              "metadata"
+            ],
+            "access_mask": "0x00110080",
+            "command": "CREATE",
+            "create_action": "0x00000001",
+            "create_disposition": "0x00000001",
+            "create_options": "0x00200020",
+            "create_result": "opened",
+            "delete_on_close": false,
+            "disposition_family": "open",
+            "file_attributes": "0x00000000",
+            "schema": "scf-v2",
+            "share_access": "0x00000007",
+            "target_type": "unknown"
+          },
+          {
+            "command": "SET_INFO",
+            "delete_pending": "",
+            "disposition_flags": "",
+            "file_info_class": "FileRenameInformation",
+            "info_type": "0x00000001",
+            "rename_target_present": true,
+            "schema": "scf-v2"
+          }
+        ],
+        "frames": [
+          1651,
+          1665
+        ],
+        "path": "rdc4fad1\\fs000004",
+        "rule_id": "powershell_rename_or_move_file_basic",
+        "run_id": "powershell_submission_scale50",
+        "target_path": "rdc4fad1\\ft000004",
+        "timestamp": 1783603916.1829493
+      },
+      {
+        "action": "upload file",
+        "commands": [
+          "CREATE",
+          "WRITE"
+        ],
+        "event": "upload_file",
+        "features": [
+          {
+            "access_intents": [
+              "delete",
+              "metadata",
+              "read",
+              "write"
+            ],
+            "access_mask": "0x0017019f",
+            "command": "CREATE",
+            "create_action": "0x00000002",
+            "create_disposition": "0x00000005",
+            "create_options": "0x00000044",
+            "create_result": "created",
+            "delete_on_close": false,
+            "disposition_family": "overwrite_if",
+            "file_attributes": "0x00000020",
+            "schema": "scf-v2",
+            "share_access": "0x00000000",
+            "target_type": "file"
+          },
+          {
+            "command": "WRITE",
+            "io": "write",
+            "io_size_class": "tiny",
+            "length_class": "nonzero",
+            "schema": "scf-v2"
+          }
+        ],
+        "frames": [
+          1639,
+          1643
+        ],
+        "path": "rdc4fad1\\fs000004",
+        "rule_id": "powershell_upload_file_write",
+        "run_id": "powershell_submission_scale50",
+        "target_path": null,
+        "timestamp": 1783603916.166347
+      }
+    ]
+  },
+  {
+    "error_type": "FN",
+    "expected_event": "delete_directory",
+    "ground_truth": {
+      "client": "powershell",
+      "command": "Remove-Item -Path 'Z:\\rdc4fad1\\xd000004' -Force",
+      "end_time": "2026-07-09T13:31:56.3369553Z",
+      "event": "delete_directory",
+      "op_id": 51,
+      "path": "rdc4fad1/xd000004",
+      "run_id": "powershell_submission_scale50",
+      "start_time": "2026-07-09T13:31:56.3144742Z",
+      "target_path": ""
+    },
+    "nearest_predictions": [
+      {
+        "action": "directory listing",
+        "commands": [
+          "CREATE",
+          "QUERY_DIRECTORY"
+        ],
+        "event": "directory_listing",
+        "features": [
+          {
+            "access_intents": [
+              "metadata",
+              "read"
+            ],
+            "access_mask": "0x00100081",
+            "command": "CREATE",
+            "create_action": "0x00000001",
+            "create_disposition": "0x00000001",
+            "create_options": "0x00004021",
+            "create_result": "opened",
+            "delete_on_close": false,
+            "disposition_family": "open",
+            "file_attributes": "0x00000080",
+            "schema": "scf-v2",
+            "share_access": "0x00000007",
+            "target_type": "directory"
+          },
+          {
+            "command": "QUERY_DIRECTORY",
+            "file_info_class": "FileIdBothDirectoryInformation",
+            "pattern_class": "wildcard",
+            "query_flags": "0x00000000",
+            "schema": "scf-v2"
+          }
+        ],
+        "frames": [
+          1699,
+          1703
+        ],
+        "path": "rdc4fad1\\fmv",
+        "rule_id": "powershell_get_child_item_directory",
+        "run_id": "powershell_submission_scale50",
+        "target_path": null,
+        "timestamp": 1783603916.2337344
+      },
+      {
+        "action": "rename or move of file",
+        "commands": [
+          "CREATE",
+          "SET_INFO"
+        ],
+        "event": "rename_file",
+        "features": [
+          {
+            "access_intents": [
+              "delete",
+              "metadata"
+            ],
+            "access_mask": "0x00110080",
+            "command": "CREATE",
+            "create_action": "0x00000001",
+            "create_disposition": "0x00000001",
+            "create_options": "0x00200020",
+            "create_result": "opened",
+            "delete_on_close": false,
+            "disposition_family": "open",
+            "file_attributes": "0x00000000",
+            "schema": "scf-v2",
+            "share_access": "0x00000007",
+            "target_type": "unknown"
+          },
+          {
+            "command": "SET_INFO",
+            "delete_pending": "",
+            "disposition_flags": "",
+            "file_info_class": "FileRenameInformation",
+            "info_type": "0x00000001",
+            "rename_target_present": true,
+            "schema": "scf-v2"
+          }
+        ],
+        "frames": [
+          1697,
+          1713
+        ],
+        "path": "rdc4fad1\\ms000004",
+        "rule_id": "powershell_rename_or_move_file_basic",
+        "run_id": "powershell_submission_scale50",
+        "target_path": "rdc4fad1\\fmv\\mt000004",
+        "timestamp": 1783603916.2327094
+      },
+      {
+        "action": "upload file",
+        "commands": [
+          "CREATE",
+          "WRITE"
+        ],
+        "event": "upload_file",
+        "features": [
+          {
+            "access_intents": [
+              "delete",
+              "metadata",
+              "read",
+              "write"
+            ],
+            "access_mask": "0x0017019f",
+            "command": "CREATE",
+            "create_action": "0x00000002",
+            "create_disposition": "0x00000005",
+            "create_options": "0x00000044",
+            "create_result": "created",
+            "delete_on_close": false,
+            "disposition_family": "overwrite_if",
+            "file_attributes": "0x00000020",
+            "schema": "scf-v2",
+            "share_access": "0x00000000",
+            "target_type": "file"
+          },
+          {
+            "command": "WRITE",
+            "io": "write",
+            "io_size_class": "tiny",
+            "length_class": "nonzero",
+            "schema": "scf-v2"
+          }
+        ],
+        "frames": [
+          1683,
+          1687
+        ],
+        "path": "rdc4fad1\\ms000004",
+        "rule_id": "powershell_upload_file_write",
+        "run_id": "powershell_submission_scale50",
+        "target_path": null,
+        "timestamp": 1783603916.2119331
+      },
+      {
+        "action": "rename or move of file",
+        "commands": [
+          "CREATE",
+          "SET_INFO"
+        ],
+        "event": "rename_file",
+        "features": [
+          {
+            "access_intents": [
+              "delete",
+              "metadata"
+            ],
+            "access_mask": "0x00110080",
+            "command": "CREATE",
+            "create_action": "0x00000001",
+            "create_disposition": "0x00000001",
+            "create_options": "0x00200020",
+            "create_result": "opened",
+            "delete_on_close": false,
+            "disposition_family": "open",
+            "file_attributes": "0x00000000",
+            "schema": "scf-v2",
+            "share_access": "0x00000007",
+            "target_type": "unknown"
+          },
+          {
+            "command": "SET_INFO",
+            "delete_pending": "",
+            "disposition_flags": "",
+            "file_info_class": "FileRenameInformation",
+            "info_type": "0x00000001",
+            "rename_target_present": true,
+            "schema": "scf-v2"
+          }
+        ],
+        "frames": [
+          1651,
+          1665
+        ],
+        "path": "rdc4fad1\\fs000004",
+        "rule_id": "powershell_rename_or_move_file_basic",
+        "run_id": "powershell_submission_scale50",
+        "target_path": "rdc4fad1\\ft000004",
+        "timestamp": 1783603916.1829493
+      },
+      {
+        "action": "upload file",
+        "commands": [
+          "CREATE",
+          "WRITE"
+        ],
+        "event": "upload_file",
+        "features": [
+          {
+            "access_intents": [
+              "delete",
+              "metadata",
+              "read",
+              "write"
+            ],
+            "access_mask": "0x0017019f",
+            "command": "CREATE",
+            "create_action": "0x00000002",
+            "create_disposition": "0x00000005",
+            "create_options": "0x00000044",
+            "create_result": "created",
+            "delete_on_close": false,
+            "disposition_family": "overwrite_if",
+            "file_attributes": "0x00000020",
+            "schema": "scf-v2",
+            "share_access": "0x00000000",
+            "target_type": "file"
+          },
+          {
+            "command": "WRITE",
+            "io": "write",
+            "io_size_class": "tiny",
+            "length_class": "nonzero",
+            "schema": "scf-v2"
+          }
+        ],
+        "frames": [
+          1639,
+          1643
+        ],
+        "path": "rdc4fad1\\fs000004",
+        "rule_id": "powershell_upload_file_write",
+        "run_id": "powershell_submission_scale50",
+        "target_path": null,
+        "timestamp": 1783603916.166347
+      }
+    ]
+  },
+  {
+    "error_type": "FN",
+    "expected_event": "upload_file",
+    "ground_truth": {
+      "client": "powershell",
+      "command": "Copy-Item -Path 'data\\eval\\generated\\workloads\\powershell\\local\\powershell_submission_scale50\\u' -Destination 'Z:\\rdc4fad1\\xf000004' -Force",
+      "end_time": "2026-07-09T13:31:56.3606106Z",
+      "event": "upload_file",
+      "op_id": 900000055,
+      "path": "rdc4fad1/xf000004",
+      "run_id": "powershell_submission_scale50",
+      "start_time": "2026-07-09T13:31:56.3399819Z",
+      "target_path": ""
+    },
+    "nearest_predictions": [
+      {
+        "action": "directory listing",
+        "commands": [
+          "CREATE",
+          "QUERY_DIRECTORY"
+        ],
+        "event": "directory_listing",
+        "features": [
+          {
+            "access_intents": [
+              "metadata",
+              "read"
+            ],
+            "access_mask": "0x00100081",
+            "command": "CREATE",
+            "create_action": "0x00000001",
+            "create_disposition": "0x00000001",
+            "create_options": "0x00004021",
+            "create_result": "opened",
+            "delete_on_close": false,
+            "disposition_family": "open",
+            "file_attributes": "0x00000080",
+            "schema": "scf-v2",
+            "share_access": "0x00000007",
+            "target_type": "directory"
+          },
+          {
+            "command": "QUERY_DIRECTORY",
+            "file_info_class": "FileIdBothDirectoryInformation",
+            "pattern_class": "wildcard",
+            "query_flags": "0x00000000",
+            "schema": "scf-v2"
+          }
+        ],
+        "frames": [
+          1699,
+          1703
+        ],
+        "path": "rdc4fad1\\fmv",
+        "rule_id": "powershell_get_child_item_directory",
+        "run_id": "powershell_submission_scale50",
+        "target_path": null,
+        "timestamp": 1783603916.2337344
+      },
+      {
+        "action": "rename or move of file",
+        "commands": [
+          "CREATE",
+          "SET_INFO"
+        ],
+        "event": "rename_file",
+        "features": [
+          {
+            "access_intents": [
+              "delete",
+              "metadata"
+            ],
+            "access_mask": "0x00110080",
+            "command": "CREATE",
+            "create_action": "0x00000001",
+            "create_disposition": "0x00000001",
+            "create_options": "0x00200020",
+            "create_result": "opened",
+            "delete_on_close": false,
+            "disposition_family": "open",
+            "file_attributes": "0x00000000",
+            "schema": "scf-v2",
+            "share_access": "0x00000007",
+            "target_type": "unknown"
+          },
+          {
+            "command": "SET_INFO",
+            "delete_pending": "",
+            "disposition_flags": "",
+            "file_info_class": "FileRenameInformation",
+            "info_type": "0x00000001",
+            "rename_target_present": true,
+            "schema": "scf-v2"
+          }
+        ],
+        "frames": [
+          1697,
+          1713
+        ],
+        "path": "rdc4fad1\\ms000004",
+        "rule_id": "powershell_rename_or_move_file_basic",
+        "run_id": "powershell_submission_scale50",
+        "target_path": "rdc4fad1\\fmv\\mt000004",
+        "timestamp": 1783603916.2327094
+      },
+      {
+        "action": "upload file",
+        "commands": [
+          "CREATE",
+          "WRITE"
+        ],
+        "event": "upload_file",
+        "features": [
+          {
+            "access_intents": [
+              "delete",
+              "metadata",
+              "read",
+              "write"
+            ],
+            "access_mask": "0x0017019f",
+            "command": "CREATE",
+            "create_action": "0x00000002",
+            "create_disposition": "0x00000005",
+            "create_options": "0x00000044",
+            "create_result": "created",
+            "delete_on_close": false,
+            "disposition_family": "overwrite_if",
+            "file_attributes": "0x00000020",
+            "schema": "scf-v2",
+            "share_access": "0x00000000",
+            "target_type": "file"
+          },
+          {
+            "command": "WRITE",
+            "io": "write",
+            "io_size_class": "tiny",
+            "length_class": "nonzero",
+            "schema": "scf-v2"
+          }
+        ],
+        "frames": [
+          1683,
+          1687
+        ],
+        "path": "rdc4fad1\\ms000004",
+        "rule_id": "powershell_upload_file_write",
+        "run_id": "powershell_submission_scale50",
+        "target_path": null,
+        "timestamp": 1783603916.2119331
+      },
+      {
+        "action": "rename or move of file",
+        "commands": [
+          "CREATE",
+          "SET_INFO"
+        ],
+        "event": "rename_file",
+        "features": [
+          {
+            "access_intents": [
+              "delete",
+              "metadata"
+            ],
+            "access_mask": "0x00110080",
+            "command": "CREATE",
+            "create_action": "0x00000001",
+            "create_disposition": "0x00000001",
+            "create_options": "0x00200020",
+            "create_result": "opened",
+            "delete_on_close": false,
+            "disposition_family": "open",
+            "file_attributes": "0x00000000",
+            "schema": "scf-v2",
+            "share_access": "0x00000007",
+            "target_type": "unknown"
+          },
+          {
+            "command": "SET_INFO",
+            "delete_pending": "",
+            "disposition_flags": "",
+            "file_info_class": "FileRenameInformation",
+            "info_type": "0x00000001",
+            "rename_target_present": true,
+            "schema": "scf-v2"
+          }
+        ],
+        "frames": [
+          1651,
+          1665
+        ],
+        "path": "rdc4fad1\\fs000004",
+        "rule_id": "powershell_rename_or_move_file_basic",
+        "run_id": "powershell_submission_scale50",
+        "target_path": "rdc4fad1\\ft000004",
+        "timestamp": 1783603916.1829493
+      },
+      {
+        "action": "upload file",
+        "commands": [
+          "CREATE",
+          "WRITE"
+        ],
+        "event": "upload_file",
+        "features": [
+          {
+            "access_intents": [
+              "delete",
+              "metadata",
+              "read",
+              "write"
+            ],
+            "access_mask": "0x0017019f",
+            "command": "CREATE",
+            "create_action": "0x00000002",
+            "create_disposition": "0x00000005",
+            "create_options": "0x00000044",
+            "create_result": "created",
+            "delete_on_close": false,
+            "disposition_family": "overwrite_if",
+            "file_attributes": "0x00000020",
+            "schema": "scf-v2",
+            "share_access": "0x00000000",
+            "target_type": "file"
+          },
+          {
+            "command": "WRITE",
+            "io": "write",
+            "io_size_class": "tiny",
+            "length_class": "nonzero",
+            "schema": "scf-v2"
+          }
+        ],
+        "frames": [
+          1639,
+          1643
+        ],
+        "path": "rdc4fad1\\fs000004",
+        "rule_id": "powershell_upload_file_write",
+        "run_id": "powershell_submission_scale50",
+        "target_path": null,
+        "timestamp": 1783603916.166347
+      }
+    ]
+  },
+  {
+    "error_type": "FN",
+    "expected_event": "delete_file",
+    "ground_truth": {
+      "client": "powershell",
+      "command": "Remove-Item -Path 'Z:\\rdc4fad1\\xf000004' -Force",
+      "end_time": "2026-07-09T13:31:56.3769789Z",
+      "event": "delete_file",
+      "op_id": 52,
+      "path": "rdc4fad1/xf000004",
+      "run_id": "powershell_submission_scale50",
+      "start_time": "2026-07-09T13:31:56.3611680Z",
+      "target_path": ""
+    },
+    "nearest_predictions": [
+      {
+        "action": "directory listing",
+        "commands": [
+          "CREATE",
+          "QUERY_DIRECTORY"
+        ],
+        "event": "directory_listing",
+        "features": [
+          {
+            "access_intents": [
+              "metadata",
+              "read"
+            ],
+            "access_mask": "0x00100081",
+            "command": "CREATE",
+            "create_action": "0x00000001",
+            "create_disposition": "0x00000001",
+            "create_options": "0x00004021",
+            "create_result": "opened",
+            "delete_on_close": false,
+            "disposition_family": "open",
+            "file_attributes": "0x00000080",
+            "schema": "scf-v2",
+            "share_access": "0x00000007",
+            "target_type": "directory"
+          },
+          {
+            "command": "QUERY_DIRECTORY",
+            "file_info_class": "FileIdBothDirectoryInformation",
+            "pattern_class": "wildcard",
+            "query_flags": "0x00000000",
+            "schema": "scf-v2"
+          }
+        ],
+        "frames": [
+          1699,
+          1703
+        ],
+        "path": "rdc4fad1\\fmv",
+        "rule_id": "powershell_get_child_item_directory",
+        "run_id": "powershell_submission_scale50",
+        "target_path": null,
+        "timestamp": 1783603916.2337344
+      },
+      {
+        "action": "rename or move of file",
+        "commands": [
+          "CREATE",
+          "SET_INFO"
+        ],
+        "event": "rename_file",
+        "features": [
+          {
+            "access_intents": [
+              "delete",
+              "metadata"
+            ],
+            "access_mask": "0x00110080",
+            "command": "CREATE",
+            "create_action": "0x00000001",
+            "create_disposition": "0x00000001",
+            "create_options": "0x00200020",
+            "create_result": "opened",
+            "delete_on_close": false,
+            "disposition_family": "open",
+            "file_attributes": "0x00000000",
+            "schema": "scf-v2",
+            "share_access": "0x00000007",
+            "target_type": "unknown"
+          },
+          {
+            "command": "SET_INFO",
+            "delete_pending": "",
+            "disposition_flags": "",
+            "file_info_class": "FileRenameInformation",
+            "info_type": "0x00000001",
+            "rename_target_present": true,
+            "schema": "scf-v2"
+          }
+        ],
+        "frames": [
+          1697,
+          1713
+        ],
+        "path": "rdc4fad1\\ms000004",
+        "rule_id": "powershell_rename_or_move_file_basic",
+        "run_id": "powershell_submission_scale50",
+        "target_path": "rdc4fad1\\fmv\\mt000004",
+        "timestamp": 1783603916.2327094
+      },
+      {
+        "action": "upload file",
+        "commands": [
+          "CREATE",
+          "WRITE"
+        ],
+        "event": "upload_file",
+        "features": [
+          {
+            "access_intents": [
+              "delete",
+              "metadata",
+              "read",
+              "write"
+            ],
+            "access_mask": "0x0017019f",
+            "command": "CREATE",
+            "create_action": "0x00000002",
+            "create_disposition": "0x00000005",
+            "create_options": "0x00000044",
+            "create_result": "created",
+            "delete_on_close": false,
+            "disposition_family": "overwrite_if",
+            "file_attributes": "0x00000020",
+            "schema": "scf-v2",
+            "share_access": "0x00000000",
+            "target_type": "file"
+          },
+          {
+            "command": "WRITE",
+            "io": "write",
+            "io_size_class": "tiny",
+            "length_class": "nonzero",
+            "schema": "scf-v2"
+          }
+        ],
+        "frames": [
+          1683,
+          1687
+        ],
+        "path": "rdc4fad1\\ms000004",
+        "rule_id": "powershell_upload_file_write",
+        "run_id": "powershell_submission_scale50",
+        "target_path": null,
+        "timestamp": 1783603916.2119331
+      },
+      {
+        "action": "rename or move of file",
+        "commands": [
+          "CREATE",
+          "SET_INFO"
+        ],
+        "event": "rename_file",
+        "features": [
+          {
+            "access_intents": [
+              "delete",
+              "metadata"
+            ],
+            "access_mask": "0x00110080",
+            "command": "CREATE",
+            "create_action": "0x00000001",
+            "create_disposition": "0x00000001",
+            "create_options": "0x00200020",
+            "create_result": "opened",
+            "delete_on_close": false,
+            "disposition_family": "open",
+            "file_attributes": "0x00000000",
+            "schema": "scf-v2",
+            "share_access": "0x00000007",
+            "target_type": "unknown"
+          },
+          {
+            "command": "SET_INFO",
+            "delete_pending": "",
+            "disposition_flags": "",
+            "file_info_class": "FileRenameInformation",
+            "info_type": "0x00000001",
+            "rename_target_present": true,
+            "schema": "scf-v2"
+          }
+        ],
+        "frames": [
+          1651,
+          1665
+        ],
+        "path": "rdc4fad1\\fs000004",
+        "rule_id": "powershell_rename_or_move_file_basic",
+        "run_id": "powershell_submission_scale50",
+        "target_path": "rdc4fad1\\ft000004",
+        "timestamp": 1783603916.1829493
+      },
+      {
+        "action": "upload file",
+        "commands": [
+          "CREATE",
+          "WRITE"
+        ],
+        "event": "upload_file",
+        "features": [
+          {
+            "access_intents": [
+              "delete",
+              "metadata",
+              "read",
+              "write"
+            ],
+            "access_mask": "0x0017019f",
+            "command": "CREATE",
+            "create_action": "0x00000002",
+            "create_disposition": "0x00000005",
+            "create_options": "0x00000044",
+            "create_result": "created",
+            "delete_on_close": false,
+            "disposition_family": "overwrite_if",
+            "file_attributes": "0x00000020",
+            "schema": "scf-v2",
+            "share_access": "0x00000000",
+            "target_type": "file"
+          },
+          {
+            "command": "WRITE",
+            "io": "write",
+            "io_size_class": "tiny",
+            "length_class": "nonzero",
+            "schema": "scf-v2"
+          }
+        ],
+        "frames": [
+          1639,
+          1643
+        ],
+        "path": "rdc4fad1\\fs000004",
+        "rule_id": "powershell_upload_file_write",
+        "run_id": "powershell_submission_scale50",
+        "target_path": null,
+        "timestamp": 1783603916.166347
+      }
+    ]
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        300,
+        304
+      ],
+      "path": "rdc4fad1\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_submission_scale50",
+      "target_path": null,
+      "timestamp": 1783603914.4061143
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        687,
+        691
+      ],
+      "path": "rdc4fad1\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_submission_scale50",
+      "target_path": null,
+      "timestamp": 1783603914.9780421
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        1267,
+        1271
+      ],
+      "path": "rdc4fad1\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_submission_scale50",
+      "target_path": null,
+      "timestamp": 1783603915.7688317
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        1699,
+        1703
+      ],
+      "path": "rdc4fad1\\fmv",
+      "rule_id": "powershell_get_child_item_directory",
+      "run_id": "powershell_submission_scale50",
+      "target_path": null,
+      "timestamp": 1783603916.2337344
+    }
+  }
+]

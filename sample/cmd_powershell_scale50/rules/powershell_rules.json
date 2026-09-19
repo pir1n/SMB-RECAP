@@ -1,0 +1,575 @@
+{
+  "application": "powershell",
+  "source": "powershell semantic SCF v2 rules + operation coverage",
+  "format": "smb-recap-semantic-scf-v2",
+  "rules": [
+    {
+      "id": "powershell_new_item_directory",
+      "action": "creation of directory",
+      "description": "PowerShell New-Item -ItemType Directory: CREATE directory whose response says created.",
+      "pattern": [
+        {
+          "command": "CREATE",
+          "features": {
+            "target_type": "directory",
+            "create_result": "created"
+          }
+        }
+      ],
+      "require_success": true,
+      "confidence": 0.98,
+      "application": "powershell",
+      "source": "powershell semantic SCF v2 rules + operation coverage",
+      "command_family": "New-Item -ItemType Directory",
+      "operation_aliases": [
+        "Create Directory"
+      ]
+    },
+    {
+      "id": "powershell_new_item_file",
+      "action": "creation of file",
+      "description": "PowerShell New-Item -ItemType File: CREATE file whose response says created.",
+      "pattern": [
+        {
+          "command": "CREATE",
+          "features": {
+            "target_type": "file",
+            "create_result": "created"
+          }
+        }
+      ],
+      "require_success": true,
+      "confidence": 0.98,
+      "application": "powershell",
+      "source": "powershell semantic SCF v2 rules + operation coverage",
+      "command_family": "New-Item -ItemType File",
+      "operation_aliases": [
+        "Create File"
+      ]
+    },
+    {
+      "id": "powershell_set_content_create",
+      "action": "creation of file",
+      "description": "PowerShell New-Item -ItemType File: CREATE destination with New-Item-style options.",
+      "pattern": [
+        {
+          "command": "CREATE",
+          "features": {
+            "target_type": "file",
+            "access_mask": "0x00120196",
+            "file_attributes": "0x00000000",
+            "share_access": "0x00000000",
+            "create_disposition": "0x00000005",
+            "create_options": "0x00400060"
+          },
+          "contains": {
+            "access_intents": [
+              "write"
+            ]
+          }
+        }
+      ],
+      "require_success": true,
+      "confidence": 0.96,
+      "application": "powershell",
+      "source": "powershell semantic SCF v2 rules + operation coverage",
+      "command_family": "New-Item -ItemType File",
+      "operation_aliases": [
+        "Create File"
+      ]
+    },
+    {
+      "id": "powershell_set_content_overwrite",
+      "action": "overwrite of file",
+      "description": "PowerShell Set-Content on existing file: CREATE file for write whose response says overwritten.",
+      "pattern": [
+        {
+          "command": "CREATE",
+          "features": {
+            "target_type": "file",
+            "create_result": "overwritten"
+          },
+          "contains": {
+            "access_intents": [
+              "write"
+            ]
+          }
+        }
+      ],
+      "require_success": true,
+      "confidence": 0.96,
+      "application": "powershell",
+      "source": "powershell semantic SCF v2 rules + operation coverage",
+      "command_family": "Set-Content upload",
+      "operation_aliases": [
+        "Overwrite File"
+      ]
+    },
+    {
+      "id": "powershell_upload_file_write",
+      "action": "upload file",
+      "description": "PowerShell Copy-Item local-to-server: CREATE destination using copy-style access/options, then WRITE payload.",
+      "pattern": [
+        {
+          "command": "CREATE",
+          "features": {
+            "target_type": "file",
+            "access_mask": "0x0017019f",
+            "file_attributes": "0x00000020",
+            "share_access": "0x00000000",
+            "create_disposition": "0x00000005",
+            "create_options": "0x00000044"
+          },
+          "any_features": {
+            "create_result": [
+              "created",
+              "overwritten"
+            ]
+          },
+          "contains": {
+            "access_intents": [
+              "read",
+              "write"
+            ]
+          }
+        },
+        {
+          "command": "WRITE",
+          "features": {
+            "length_class": "nonzero"
+          }
+        }
+      ],
+      "max_gap": 24,
+      "require_success": true,
+      "confidence": 0.92,
+      "application": "powershell",
+      "source": "powershell semantic SCF v2 rules + operation coverage",
+      "command_family": "Copy-Item upload",
+      "operation_aliases": [
+        "Upload file"
+      ]
+    },
+    {
+      "id": "powershell_add_content_append",
+      "action": "append to file",
+      "description": "PowerShell Add-Content: open file for write followed by WRITE. Append-content operation.",
+      "pattern": [
+        {
+          "command": "CREATE",
+          "features": {
+            "target_type": "file",
+            "create_result": "opened"
+          },
+          "contains": {
+            "access_intents": [
+              "write"
+            ]
+          }
+        },
+        {
+          "command": "WRITE",
+          "features": {
+            "length_class": "nonzero"
+          }
+        }
+      ],
+      "require_success": true,
+      "confidence": 0.94,
+      "application": "powershell",
+      "source": "powershell semantic SCF v2 rules + operation coverage",
+      "command_family": "Add-Content",
+      "max_gap": 16,
+      "operation_aliases": [
+        "Append to File"
+      ]
+    },
+    {
+      "id": "powershell_get_content_read",
+      "action": "read of file",
+      "description": "PowerShell Get-Content read/view: CREATE source with Get-Content-style options, then READ.",
+      "pattern": [
+        {
+          "command": "CREATE",
+          "features": {
+            "target_type": "file",
+            "access_mask": "0x00120089",
+            "file_attributes": "0x00000000",
+            "share_access": "0x00000003",
+            "create_disposition": "0x00000001",
+            "create_options": "0x00400060"
+          },
+          "contains": {
+            "access_intents": [
+              "read"
+            ]
+          }
+        },
+        {
+          "command": "READ",
+          "features": {
+            "length_class": "nonzero"
+          }
+        }
+      ],
+      "require_success": true,
+      "confidence": 0.94,
+      "application": "powershell",
+      "source": "powershell semantic SCF v2 rules + operation coverage",
+      "command_family": "Get-Content",
+      "max_gap": 20,
+      "operation_aliases": [
+        "View File"
+      ]
+    },
+    {
+      "id": "powershell_copy_item_download",
+      "action": "download file",
+      "description": "PowerShell Copy-Item server-to-local: CREATE source with copy-from-server options 0x00200044/share 0x5, then READ.",
+      "pattern": [
+        {
+          "command": "CREATE",
+          "features": {
+            "target_type": "file",
+            "access_mask": "0x00120089",
+            "file_attributes": "0x00000000",
+            "share_access": "0x00000005",
+            "create_disposition": "0x00000001",
+            "create_options": "0x00200044"
+          },
+          "contains": {
+            "access_intents": [
+              "read"
+            ]
+          }
+        },
+        {
+          "command": "READ",
+          "features": {
+            "length_class": "nonzero"
+          }
+        }
+      ],
+      "require_success": true,
+      "confidence": 0.93,
+      "application": "powershell",
+      "source": "powershell semantic SCF v2 rules + operation coverage",
+      "command_family": "Copy-Item download",
+      "max_gap": 20,
+      "operation_aliases": [
+        "Download file"
+      ]
+    },
+    {
+      "id": "powershell_remove_item_file_delete_on_close",
+      "action": "deletion of file",
+      "description": "PowerShell Remove-Item file variant: CREATE file with delete-on-close.",
+      "pattern": [
+        {
+          "command": "CREATE",
+          "features": {
+            "target_type": "file",
+            "delete_on_close": true
+          },
+          "contains": {
+            "access_intents": [
+              "delete"
+            ]
+          }
+        }
+      ],
+      "require_success": true,
+      "confidence": 0.97,
+      "application": "powershell",
+      "source": "powershell semantic SCF v2 rules + operation coverage",
+      "command_family": "Remove-Item",
+      "operation_aliases": [
+        "Remove File"
+      ]
+    },
+    {
+      "id": "powershell_remove_item_file_set_info",
+      "action": "deletion of file",
+      "description": "PowerShell Remove-Item file variant: CREATE file delete access followed by SET_INFO disposition.",
+      "pattern": [
+        {
+          "command": "CREATE",
+          "features": {
+            "target_type": "file"
+          },
+          "contains": {
+            "access_intents": [
+              "delete"
+            ]
+          }
+        },
+        {
+          "command": "SET_INFO",
+          "features": {
+            "file_info_class": "FileDispositionInformation",
+            "delete_pending": "1"
+          }
+        }
+      ],
+      "require_success": true,
+      "confidence": 0.97,
+      "application": "powershell",
+      "source": "powershell semantic SCF v2 rules + operation coverage",
+      "command_family": "Remove-Item",
+      "max_gap": 10,
+      "operation_aliases": [
+        "Remove File"
+      ],
+      "same_file_id": false
+    },
+    {
+      "id": "powershell_remove_item_directory_set_info",
+      "action": "deletion of directory",
+      "description": "PowerShell Remove-Item directory: CREATE directory delete access followed by SET_INFO disposition.",
+      "pattern": [
+        {
+          "command": "CREATE",
+          "features": {
+            "target_type": "directory"
+          },
+          "contains": {
+            "access_intents": [
+              "delete"
+            ]
+          }
+        },
+        {
+          "command": "SET_INFO",
+          "features": {
+            "file_info_class": "FileDispositionInformation",
+            "delete_pending": "1"
+          }
+        }
+      ],
+      "require_success": true,
+      "confidence": 0.97,
+      "application": "powershell",
+      "source": "powershell semantic SCF v2 rules + operation coverage",
+      "command_family": "Remove-Item",
+      "max_gap": 12,
+      "operation_aliases": [
+        "Remove Directory"
+      ],
+      "same_file_id": false
+    },
+    {
+      "id": "powershell_rename_or_move_file_basic",
+      "action": "rename or move of file",
+      "description": "powershell rename/move file: open file handle then SET_INFO FileRenameInformation with target present.",
+      "pattern": [
+        {
+          "command": "CREATE",
+          "features": {
+            "create_result": "opened"
+          },
+          "any_features": {
+            "target_type": [
+              "file",
+              "unknown"
+            ]
+          },
+          "contains": {
+            "access_intents": [
+              "delete"
+            ]
+          }
+        },
+        {
+          "command": "SET_INFO",
+          "features": {
+            "file_info_class": "FileRenameInformation",
+            "rename_target_present": true
+          }
+        }
+      ],
+      "max_gap": 16,
+      "require_success": true,
+      "confidence": 0.96,
+      "application": "powershell",
+      "source": "powershell semantic SCF v2 rules + operation coverage",
+      "command_family": "Rename-Item/Move-Item",
+      "operation_aliases": [
+        "Rename File",
+        "Move file",
+        "rename File",
+        "Move file"
+      ],
+      "same_file_id": false
+    },
+    {
+      "id": "powershell_rename_or_move_file_ex",
+      "action": "rename or move of file",
+      "description": "powershell rename/move file: open file handle then SET_INFO FileRenameInformationEx with target present.",
+      "pattern": [
+        {
+          "command": "CREATE",
+          "features": {
+            "create_result": "opened"
+          },
+          "any_features": {
+            "target_type": [
+              "file",
+              "unknown"
+            ]
+          },
+          "contains": {
+            "access_intents": [
+              "delete"
+            ]
+          }
+        },
+        {
+          "command": "SET_INFO",
+          "features": {
+            "file_info_class": "FileRenameInformationEx",
+            "rename_target_present": true
+          }
+        }
+      ],
+      "max_gap": 16,
+      "require_success": true,
+      "confidence": 0.96,
+      "application": "powershell",
+      "source": "powershell semantic SCF v2 rules + operation coverage",
+      "command_family": "Rename-Item/Move-Item",
+      "operation_aliases": [
+        "Rename File",
+        "Move file",
+        "rename File",
+        "Move file"
+      ],
+      "same_file_id": false
+    },
+    {
+      "id": "powershell_rename_or_move_directory_basic",
+      "action": "rename or move of directory",
+      "description": "powershell rename/move directory: open directory handle then SET_INFO FileRenameInformation with target present.",
+      "pattern": [
+        {
+          "command": "CREATE",
+          "features": {
+            "create_result": "opened"
+          },
+          "any_features": {
+            "target_type": [
+              "directory",
+              "unknown"
+            ]
+          },
+          "contains": {
+            "access_intents": [
+              "delete"
+            ]
+          }
+        },
+        {
+          "command": "SET_INFO",
+          "features": {
+            "file_info_class": "FileRenameInformation",
+            "rename_target_present": true
+          }
+        }
+      ],
+      "max_gap": 16,
+      "require_success": true,
+      "confidence": 0.96,
+      "application": "powershell",
+      "source": "powershell semantic SCF v2 rules + operation coverage",
+      "command_family": "Rename-Item/Move-Item",
+      "operation_aliases": [
+        "Rename Directory",
+        "Move Directory"
+      ],
+      "same_file_id": false
+    },
+    {
+      "id": "powershell_rename_or_move_directory_ex",
+      "action": "rename or move of directory",
+      "description": "powershell rename/move directory: open directory handle then SET_INFO FileRenameInformationEx with target present.",
+      "pattern": [
+        {
+          "command": "CREATE",
+          "features": {
+            "create_result": "opened"
+          },
+          "any_features": {
+            "target_type": [
+              "directory",
+              "unknown"
+            ]
+          },
+          "contains": {
+            "access_intents": [
+              "delete"
+            ]
+          }
+        },
+        {
+          "command": "SET_INFO",
+          "features": {
+            "file_info_class": "FileRenameInformationEx",
+            "rename_target_present": true
+          }
+        }
+      ],
+      "max_gap": 16,
+      "require_success": true,
+      "confidence": 0.96,
+      "application": "powershell",
+      "source": "powershell semantic SCF v2 rules + operation coverage",
+      "command_family": "Rename-Item/Move-Item",
+      "operation_aliases": [
+        "Rename Directory",
+        "Move Directory"
+      ],
+      "same_file_id": false
+    },
+    {
+      "id": "powershell_get_child_item_directory",
+      "action": "directory listing",
+      "description": "PowerShell Get-ChildItem: open directory then QUERY_DIRECTORY.",
+      "pattern": [
+        {
+          "command": "CREATE",
+          "features": {
+            "target_type": "directory",
+            "create_result": "opened"
+          },
+          "contains": {
+            "access_intents": [
+              "read"
+            ]
+          }
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "features": {
+            "pattern_class": "wildcard",
+            "file_info_class": "FileIdBothDirectoryInformation"
+          }
+        }
+      ],
+      "require_success": true,
+      "require_path": true,
+      "confidence": 0.93,
+      "application": "powershell",
+      "source": "powershell semantic SCF v2 rules + operation coverage",
+      "command_family": "Get-ChildItem",
+      "max_gap": 16,
+      "operation_aliases": [
+        "List Directory"
+      ],
+      "same_file_id": false
+    }
+  ],
+  "removed_broad_rules": [
+    "powershell_rename_item",
+    "powershell_rename_item_ex"
+  ],
+  "operation_event_note": "Author-semantics workload: upload/download are transfer operations. CMD and PowerShell transfer rules use copy-style SMB CREATE access/options, not file-size buckets; read/view rules use more/Get-Content-style CREATE options."
+}

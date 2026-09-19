@@ -1,0 +1,145 @@
+{
+  "inputs": {
+    "case_sensitive": false,
+    "ground_truth": [
+      "data\\eval\\generated\\ground_truth\\cmd_submission_scale50.jsonl"
+    ],
+    "time_after": 3.0,
+    "time_before": 1.0,
+    "timeline": [
+      "outputs\\exp_2026_07_submission_scale50\\timelines\\cmd_submission_scale50_timeline.json"
+    ]
+  },
+  "overall": {
+    "f1": 0.9528301886792454,
+    "fn": 6,
+    "fp": 4,
+    "macro_f1": 0.7641275370262194,
+    "precision": 0.9619047619047619,
+    "recall": 0.9439252336448598,
+    "tp": 101,
+    "weighted_f1": 0.9571784911728097
+  },
+  "per_class": {
+    "append_file": {
+      "f1": 0.8571428571428571,
+      "fn": 1,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 0.75,
+      "support": 4,
+      "tp": 3
+    },
+    "create_directory": {
+      "f1": 0.9777777777777777,
+      "fn": 1,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 0.9565217391304348,
+      "support": 23,
+      "tp": 22
+    },
+    "create_file": {
+      "f1": 1.0,
+      "fn": 0,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "support": 4,
+      "tp": 4
+    },
+    "delete_directory": {
+      "f1": 0.8571428571428571,
+      "fn": 1,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 0.75,
+      "support": 4,
+      "tp": 3
+    },
+    "delete_file": {
+      "f1": 0.8571428571428571,
+      "fn": 1,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 0.75,
+      "support": 4,
+      "tp": 3
+    },
+    "directory_listing": {
+      "f1": 0.6666666666666666,
+      "fn": 0,
+      "fp": 4,
+      "precision": 0.5,
+      "recall": 1.0,
+      "support": 4,
+      "tp": 4
+    },
+    "download_file": {
+      "f1": 1.0,
+      "fn": 0,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "support": 8,
+      "tp": 8
+    },
+    "overwrite_file": {
+      "f1": 0.0,
+      "fn": 0,
+      "fp": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 0,
+      "tp": 0
+    },
+    "read_file": {
+      "f1": 1.0,
+      "fn": 0,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "support": 4,
+      "tp": 4
+    },
+    "rename_file": {
+      "f1": 0.967741935483871,
+      "fn": 1,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 0.9375,
+      "support": 16,
+      "tp": 15
+    },
+    "upload_file": {
+      "f1": 0.9859154929577464,
+      "fn": 1,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 0.9722222222222222,
+      "support": 36,
+      "tp": 35
+    },
+    "write_file": {
+      "f1": 0.0,
+      "fn": 0,
+      "fp": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 0,
+      "tp": 0
+    }
+  },
+  "per_client": {
+    "cmd": {
+      "f1": 0.9528301886792454,
+      "fn": 6,
+      "fp": 4,
+      "macro_f1": 0.7641275370262194,
+      "precision": 0.9619047619047619,
+      "recall": 0.9439252336448598,
+      "tp": 101,
+      "weighted_f1": 0.9571784911728097
+    }
+  }
+}

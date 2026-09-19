@@ -1,0 +1,41 @@
+{
+  "__extra__": {
+    "directory_listing": 4
+  },
+  "append_file": {
+    "__missing__": 1,
+    "append_file": 3
+  },
+  "create_directory": {
+    "__missing__": 1,
+    "create_directory": 22
+  },
+  "create_file": {
+    "create_file": 4
+  },
+  "delete_directory": {
+    "__missing__": 1,
+    "delete_directory": 3
+  },
+  "delete_file": {
+    "__missing__": 1,
+    "delete_file": 3
+  },
+  "directory_listing": {
+    "directory_listing": 4
+  },
+  "download_file": {
+    "download_file": 8
+  },
+  "read_file": {
+    "read_file": 4
+  },
+  "rename_file": {
+    "__missing__": 1,
+    "rename_file": 15
+  },
+  "upload_file": {
+    "__missing__": 2,
+    "upload_file": 34
+  }
+}

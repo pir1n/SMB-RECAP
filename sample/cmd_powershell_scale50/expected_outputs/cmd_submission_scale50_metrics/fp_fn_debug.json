@@ -1,0 +1,1650 @@
+[
+  {
+    "error_type": "FN",
+    "expected_event": "rename_file",
+    "ground_truth": {
+      "client": "cmd",
+      "command": "move /Y \"Z:\\re37685f\\ds000001\" \"Z:\\re37685f\\dmv\\dt000001\" > nul",
+      "end_time": "2026-07-09T13:31:36.8528243Z",
+      "event": "rename_file",
+      "op_id": 8,
+      "path": "re37685f/ds000001",
+      "run_id": "cmd_submission_scale50",
+      "start_time": "2026-07-09T13:31:36.8098317Z",
+      "target_path": "re37685f/dmv/dt000001"
+    },
+    "nearest_predictions": [
+      {
+        "action": "creation of directory",
+        "commands": [
+          "CREATE"
+        ],
+        "event": "create_directory",
+        "features": [
+          {
+            "access_intents": [
+              "metadata",
+              "read"
+            ],
+            "access_mask": "0x00100081",
+            "command": "CREATE",
+            "create_action": "0x00000002",
+            "create_disposition": "0x00000002",
+            "create_options": "0x00200021",
+            "create_result": "created",
+            "delete_on_close": false,
+            "disposition_family": "create",
+            "file_attributes": "0x00000080",
+            "schema": "scf-v2",
+            "share_access": "0x00000003",
+            "target_type": "directory"
+          }
+        ],
+        "frames": [
+          231
+        ],
+        "path": "re37685f\\dmv",
+        "rule_id": "cmd_mkdir_directory_created",
+        "run_id": "cmd_submission_scale50",
+        "target_path": null,
+        "timestamp": 1783603896.8064172
+      },
+      {
+        "action": "directory listing",
+        "commands": [
+          "CREATE",
+          "QUERY_DIRECTORY"
+        ],
+        "event": "directory_listing",
+        "features": [
+          {
+            "access_intents": [
+              "metadata",
+              "read"
+            ],
+            "access_mask": "0x00100081",
+            "command": "CREATE",
+            "create_action": "0x00000001",
+            "create_disposition": "0x00000001",
+            "create_options": "0x00000021",
+            "create_result": "opened",
+            "delete_on_close": false,
+            "disposition_family": "open",
+            "file_attributes": "0x00000000",
+            "schema": "scf-v2",
+            "share_access": "0x00000007",
+            "target_type": "directory"
+          },
+          {
+            "command": "QUERY_DIRECTORY",
+            "file_info_class": "FileIdBothDirectoryInformation",
+            "pattern_class": "wildcard",
+            "query_flags": "0x00000000",
+            "schema": "scf-v2"
+          }
+        ],
+        "frames": [
+          245,
+          245
+        ],
+        "path": "re37685f\\ds000001",
+        "rule_id": "cmd_dir_directory_listing",
+        "run_id": "cmd_submission_scale50",
+        "target_path": null,
+        "timestamp": 1783603896.836904
+      },
+      {
+        "action": "creation of directory",
+        "commands": [
+          "CREATE"
+        ],
+        "event": "create_directory",
+        "features": [
+          {
+            "access_intents": [
+              "metadata",
+              "read"
+            ],
+            "access_mask": "0x00100081",
+            "command": "CREATE",
+            "create_action": "0x00000002",
+            "create_disposition": "0x00000002",
+            "create_options": "0x00200021",
+            "create_result": "created",
+            "delete_on_close": false,
+            "disposition_family": "create",
+            "file_attributes": "0x00000080",
+            "schema": "scf-v2",
+            "share_access": "0x00000003",
+            "target_type": "directory"
+          }
+        ],
+        "frames": [
+          229
+        ],
+        "path": "re37685f\\ds000001",
+        "rule_id": "cmd_mkdir_directory_created",
+        "run_id": "cmd_submission_scale50",
+        "target_path": null,
+        "timestamp": 1783603896.7765706
+      },
+      {
+        "action": "directory listing",
+        "commands": [
+          "CREATE",
+          "QUERY_DIRECTORY"
+        ],
+        "event": "directory_listing",
+        "features": [
+          {
+            "access_intents": [
+              "metadata",
+              "read"
+            ],
+            "access_mask": "0x00100081",
+            "command": "CREATE",
+            "create_action": "0x00000001",
+            "create_disposition": "0x00000001",
+            "create_options": "0x00004021",
+            "create_result": "opened",
+            "delete_on_close": false,
+            "disposition_family": "open",
+            "file_attributes": "0x00000080",
+            "schema": "scf-v2",
+            "share_access": "0x00000007",
+            "target_type": "directory"
+          },
+          {
+            "command": "QUERY_DIRECTORY",
+            "file_info_class": "FileIdBothDirectoryInformation",
+            "pattern_class": "wildcard",
+            "query_flags": "0x00000000",
+            "schema": "scf-v2"
+          }
+        ],
+        "frames": [
+          214,
+          239
+        ],
+        "path": null,
+        "rule_id": "cmd_dir_directory_listing",
+        "run_id": "cmd_submission_scale50",
+        "target_path": null,
+        "timestamp": 1783603896.7417874
+      },
+      {
+        "action": "upload file",
+        "commands": [
+          "CREATE",
+          "WRITE"
+        ],
+        "event": "upload_file",
+        "features": [
+          {
+            "access_intents": [
+              "delete",
+              "metadata",
+              "read",
+              "write"
+            ],
+            "access_mask": "0x0017019f",
+            "command": "CREATE",
+            "create_action": "0x00000002",
+            "create_disposition": "0x00000005",
+            "create_options": "0x00000044",
+            "create_result": "created",
+            "delete_on_close": false,
+            "disposition_family": "overwrite_if",
+            "file_attributes": "0x00000020",
+            "schema": "scf-v2",
+            "share_access": "0x00000000",
+            "target_type": "file"
+          },
+          {
+            "command": "WRITE",
+            "io": "write",
+            "io_size_class": "tiny",
+            "length_class": "nonzero",
+            "schema": "scf-v2"
+          }
+        ],
+        "frames": [
+          303,
+          307
+        ],
+        "path": "re37685f\\fs000001",
+        "rule_id": "cmd_upload_file_write",
+        "run_id": "cmd_submission_scale50",
+        "target_path": null,
+        "timestamp": 1783603896.8810303
+      }
+    ]
+  },
+  {
+    "error_type": "FN",
+    "expected_event": "append_file",
+    "ground_truth": {
+      "client": "cmd",
+      "command": ">> \"Z:\\re37685f\\ap000004\" echo eebc",
+      "end_time": "2026-07-09T13:31:39.9593235Z",
+      "event": "append_file",
+      "op_id": 50,
+      "path": "re37685f/ap000004",
+      "run_id": "cmd_submission_scale50",
+      "start_time": "2026-07-09T13:31:39.9206908Z",
+      "target_path": ""
+    },
+    "nearest_predictions": [
+      {
+        "action": "upload file",
+        "commands": [
+          "CREATE",
+          "WRITE"
+        ],
+        "event": "upload_file",
+        "features": [
+          {
+            "access_intents": [
+              "delete",
+              "metadata",
+              "read",
+              "write"
+            ],
+            "access_mask": "0x0017019f",
+            "command": "CREATE",
+            "create_action": "0x00000002",
+            "create_disposition": "0x00000005",
+            "create_options": "0x00000044",
+            "create_result": "created",
+            "delete_on_close": false,
+            "disposition_family": "overwrite_if",
+            "file_attributes": "0x00000020",
+            "schema": "scf-v2",
+            "share_access": "0x00000000",
+            "target_type": "file"
+          },
+          {
+            "command": "WRITE",
+            "io": "write",
+            "io_size_class": "tiny",
+            "length_class": "nonzero",
+            "schema": "scf-v2"
+          }
+        ],
+        "frames": [
+          2255,
+          2259
+        ],
+        "path": "re37685f\\ap000004",
+        "rule_id": "cmd_upload_file_write",
+        "run_id": "cmd_submission_scale50",
+        "target_path": null,
+        "timestamp": 1783603899.9107568
+      },
+      {
+        "action": "rename or move of file",
+        "commands": [
+          "CREATE",
+          "SET_INFO"
+        ],
+        "event": "rename_file",
+        "features": [
+          {
+            "access_intents": [
+              "delete",
+              "metadata"
+            ],
+            "access_mask": "0x00110080",
+            "command": "CREATE",
+            "create_action": "0x00000001",
+            "create_disposition": "0x00000001",
+            "create_options": "0x00200020",
+            "create_result": "opened",
+            "delete_on_close": false,
+            "disposition_family": "open",
+            "file_attributes": "0x00000000",
+            "schema": "scf-v2",
+            "share_access": "0x00000007",
+            "target_type": "unknown"
+          },
+          {
+            "command": "SET_INFO",
+            "delete_pending": "",
+            "disposition_flags": "",
+            "file_info_class": "FileRenameInformation",
+            "info_type": "0x00000001",
+            "rename_target_present": true,
+            "schema": "scf-v2"
+          }
+        ],
+        "frames": [
+          2208,
+          2220
+        ],
+        "path": "re37685f\\ms000004",
+        "rule_id": "cmd_rename_or_move_file_basic",
+        "run_id": "cmd_submission_scale50",
+        "target_path": "re37685f\\fmv\\mt000004",
+        "timestamp": 1783603899.871962
+      },
+      {
+        "action": "upload file",
+        "commands": [
+          "CREATE",
+          "WRITE"
+        ],
+        "event": "upload_file",
+        "features": [
+          {
+            "access_intents": [
+              "delete",
+              "metadata",
+              "read",
+              "write"
+            ],
+            "access_mask": "0x0017019f",
+            "command": "CREATE",
+            "create_action": "0x00000002",
+            "create_disposition": "0x00000005",
+            "create_options": "0x00000044",
+            "create_result": "created",
+            "delete_on_close": false,
+            "disposition_family": "overwrite_if",
+            "file_attributes": "0x00000020",
+            "schema": "scf-v2",
+            "share_access": "0x00000000",
+            "target_type": "file"
+          },
+          {
+            "command": "WRITE",
+            "io": "write",
+            "io_size_class": "tiny",
+            "length_class": "nonzero",
+            "schema": "scf-v2"
+          }
+        ],
+        "frames": [
+          2170,
+          2180
+        ],
+        "path": "re37685f\\ms000004",
+        "rule_id": "cmd_upload_file_write",
+        "run_id": "cmd_submission_scale50",
+        "target_path": null,
+        "timestamp": 1783603899.8302345
+      },
+      {
+        "action": "rename or move of file",
+        "commands": [
+          "CREATE",
+          "SET_INFO"
+        ],
+        "event": "rename_file",
+        "features": [
+          {
+            "access_intents": [
+              "delete",
+              "metadata"
+            ],
+            "access_mask": "0x00110080",
+            "command": "CREATE",
+            "create_action": "0x00000001",
+            "create_disposition": "0x00000001",
+            "create_options": "0x00200020",
+            "create_result": "opened",
+            "delete_on_close": false,
+            "disposition_family": "open",
+            "file_attributes": "0x00000000",
+            "schema": "scf-v2",
+            "share_access": "0x00000007",
+            "target_type": "unknown"
+          },
+          {
+            "command": "SET_INFO",
+            "delete_pending": "",
+            "disposition_flags": "",
+            "file_info_class": "FileRenameInformation",
+            "info_type": "0x00000001",
+            "rename_target_present": true,
+            "schema": "scf-v2"
+          }
+        ],
+        "frames": [
+          2130,
+          2146
+        ],
+        "path": "re37685f\\fs000004",
+        "rule_id": "cmd_rename_or_move_file_basic",
+        "run_id": "cmd_submission_scale50",
+        "target_path": "re37685f\\ft000004",
+        "timestamp": 1783603899.7896392
+      },
+      {
+        "action": "upload file",
+        "commands": [
+          "CREATE",
+          "WRITE"
+        ],
+        "event": "upload_file",
+        "features": [
+          {
+            "access_intents": [
+              "delete",
+              "metadata",
+              "read",
+              "write"
+            ],
+            "access_mask": "0x0017019f",
+            "command": "CREATE",
+            "create_action": "0x00000002",
+            "create_disposition": "0x00000005",
+            "create_options": "0x00000044",
+            "create_result": "created",
+            "delete_on_close": false,
+            "disposition_family": "overwrite_if",
+            "file_attributes": "0x00000020",
+            "schema": "scf-v2",
+            "share_access": "0x00000000",
+            "target_type": "file"
+          },
+          {
+            "command": "WRITE",
+            "io": "write",
+            "io_size_class": "tiny",
+            "length_class": "nonzero",
+            "schema": "scf-v2"
+          }
+        ],
+        "frames": [
+          2104,
+          2108
+        ],
+        "path": "re37685f\\fs000004",
+        "rule_id": "cmd_upload_file_write",
+        "run_id": "cmd_submission_scale50",
+        "target_path": null,
+        "timestamp": 1783603899.7524095
+      }
+    ]
+  },
+  {
+    "error_type": "FN",
+    "expected_event": "create_directory",
+    "ground_truth": {
+      "client": "cmd",
+      "command": "mkdir \"Z:\\re37685f\\xd000004\"",
+      "end_time": "2026-07-09T13:31:39.9864830Z",
+      "event": "create_directory",
+      "op_id": 900000054,
+      "path": "re37685f/xd000004",
+      "run_id": "cmd_submission_scale50",
+      "start_time": "2026-07-09T13:31:39.9593235Z",
+      "target_path": ""
+    },
+    "nearest_predictions": [
+      {
+        "action": "upload file",
+        "commands": [
+          "CREATE",
+          "WRITE"
+        ],
+        "event": "upload_file",
+        "features": [
+          {
+            "access_intents": [
+              "delete",
+              "metadata",
+              "read",
+              "write"
+            ],
+            "access_mask": "0x0017019f",
+            "command": "CREATE",
+            "create_action": "0x00000002",
+            "create_disposition": "0x00000005",
+            "create_options": "0x00000044",
+            "create_result": "created",
+            "delete_on_close": false,
+            "disposition_family": "overwrite_if",
+            "file_attributes": "0x00000020",
+            "schema": "scf-v2",
+            "share_access": "0x00000000",
+            "target_type": "file"
+          },
+          {
+            "command": "WRITE",
+            "io": "write",
+            "io_size_class": "tiny",
+            "length_class": "nonzero",
+            "schema": "scf-v2"
+          }
+        ],
+        "frames": [
+          2255,
+          2259
+        ],
+        "path": "re37685f\\ap000004",
+        "rule_id": "cmd_upload_file_write",
+        "run_id": "cmd_submission_scale50",
+        "target_path": null,
+        "timestamp": 1783603899.9107568
+      },
+      {
+        "action": "rename or move of file",
+        "commands": [
+          "CREATE",
+          "SET_INFO"
+        ],
+        "event": "rename_file",
+        "features": [
+          {
+            "access_intents": [
+              "delete",
+              "metadata"
+            ],
+            "access_mask": "0x00110080",
+            "command": "CREATE",
+            "create_action": "0x00000001",
+            "create_disposition": "0x00000001",
+            "create_options": "0x00200020",
+            "create_result": "opened",
+            "delete_on_close": false,
+            "disposition_family": "open",
+            "file_attributes": "0x00000000",
+            "schema": "scf-v2",
+            "share_access": "0x00000007",
+            "target_type": "unknown"
+          },
+          {
+            "command": "SET_INFO",
+            "delete_pending": "",
+            "disposition_flags": "",
+            "file_info_class": "FileRenameInformation",
+            "info_type": "0x00000001",
+            "rename_target_present": true,
+            "schema": "scf-v2"
+          }
+        ],
+        "frames": [
+          2208,
+          2220
+        ],
+        "path": "re37685f\\ms000004",
+        "rule_id": "cmd_rename_or_move_file_basic",
+        "run_id": "cmd_submission_scale50",
+        "target_path": "re37685f\\fmv\\mt000004",
+        "timestamp": 1783603899.871962
+      },
+      {
+        "action": "upload file",
+        "commands": [
+          "CREATE",
+          "WRITE"
+        ],
+        "event": "upload_file",
+        "features": [
+          {
+            "access_intents": [
+              "delete",
+              "metadata",
+              "read",
+              "write"
+            ],
+            "access_mask": "0x0017019f",
+            "command": "CREATE",
+            "create_action": "0x00000002",
+            "create_disposition": "0x00000005",
+            "create_options": "0x00000044",
+            "create_result": "created",
+            "delete_on_close": false,
+            "disposition_family": "overwrite_if",
+            "file_attributes": "0x00000020",
+            "schema": "scf-v2",
+            "share_access": "0x00000000",
+            "target_type": "file"
+          },
+          {
+            "command": "WRITE",
+            "io": "write",
+            "io_size_class": "tiny",
+            "length_class": "nonzero",
+            "schema": "scf-v2"
+          }
+        ],
+        "frames": [
+          2170,
+          2180
+        ],
+        "path": "re37685f\\ms000004",
+        "rule_id": "cmd_upload_file_write",
+        "run_id": "cmd_submission_scale50",
+        "target_path": null,
+        "timestamp": 1783603899.8302345
+      },
+      {
+        "action": "rename or move of file",
+        "commands": [
+          "CREATE",
+          "SET_INFO"
+        ],
+        "event": "rename_file",
+        "features": [
+          {
+            "access_intents": [
+              "delete",
+              "metadata"
+            ],
+            "access_mask": "0x00110080",
+            "command": "CREATE",
+            "create_action": "0x00000001",
+            "create_disposition": "0x00000001",
+            "create_options": "0x00200020",
+            "create_result": "opened",
+            "delete_on_close": false,
+            "disposition_family": "open",
+            "file_attributes": "0x00000000",
+            "schema": "scf-v2",
+            "share_access": "0x00000007",
+            "target_type": "unknown"
+          },
+          {
+            "command": "SET_INFO",
+            "delete_pending": "",
+            "disposition_flags": "",
+            "file_info_class": "FileRenameInformation",
+            "info_type": "0x00000001",
+            "rename_target_present": true,
+            "schema": "scf-v2"
+          }
+        ],
+        "frames": [
+          2130,
+          2146
+        ],
+        "path": "re37685f\\fs000004",
+        "rule_id": "cmd_rename_or_move_file_basic",
+        "run_id": "cmd_submission_scale50",
+        "target_path": "re37685f\\ft000004",
+        "timestamp": 1783603899.7896392
+      },
+      {
+        "action": "upload file",
+        "commands": [
+          "CREATE",
+          "WRITE"
+        ],
+        "event": "upload_file",
+        "features": [
+          {
+            "access_intents": [
+              "delete",
+              "metadata",
+              "read",
+              "write"
+            ],
+            "access_mask": "0x0017019f",
+            "command": "CREATE",
+            "create_action": "0x00000002",
+            "create_disposition": "0x00000005",
+            "create_options": "0x00000044",
+            "create_result": "created",
+            "delete_on_close": false,
+            "disposition_family": "overwrite_if",
+            "file_attributes": "0x00000020",
+            "schema": "scf-v2",
+            "share_access": "0x00000000",
+            "target_type": "file"
+          },
+          {
+            "command": "WRITE",
+            "io": "write",
+            "io_size_class": "tiny",
+            "length_class": "nonzero",
+            "schema": "scf-v2"
+          }
+        ],
+        "frames": [
+          2104,
+          2108
+        ],
+        "path": "re37685f\\fs000004",
+        "rule_id": "cmd_upload_file_write",
+        "run_id": "cmd_submission_scale50",
+        "target_path": null,
+        "timestamp": 1783603899.7524095
+      }
+    ]
+  },
+  {
+    "error_type": "FN",
+    "expected_event": "delete_directory",
+    "ground_truth": {
+      "client": "cmd",
+      "command": "rmdir \"Z:\\re37685f\\xd000004\"",
+      "end_time": "2026-07-09T13:31:40.0197202Z",
+      "event": "delete_directory",
+      "op_id": 51,
+      "path": "re37685f/xd000004",
+      "run_id": "cmd_submission_scale50",
+      "start_time": "2026-07-09T13:31:39.9874830Z",
+      "target_path": ""
+    },
+    "nearest_predictions": [
+      {
+        "action": "upload file",
+        "commands": [
+          "CREATE",
+          "WRITE"
+        ],
+        "event": "upload_file",
+        "features": [
+          {
+            "access_intents": [
+              "delete",
+              "metadata",
+              "read",
+              "write"
+            ],
+            "access_mask": "0x0017019f",
+            "command": "CREATE",
+            "create_action": "0x00000002",
+            "create_disposition": "0x00000005",
+            "create_options": "0x00000044",
+            "create_result": "created",
+            "delete_on_close": false,
+            "disposition_family": "overwrite_if",
+            "file_attributes": "0x00000020",
+            "schema": "scf-v2",
+            "share_access": "0x00000000",
+            "target_type": "file"
+          },
+          {
+            "command": "WRITE",
+            "io": "write",
+            "io_size_class": "tiny",
+            "length_class": "nonzero",
+            "schema": "scf-v2"
+          }
+        ],
+        "frames": [
+          2255,
+          2259
+        ],
+        "path": "re37685f\\ap000004",
+        "rule_id": "cmd_upload_file_write",
+        "run_id": "cmd_submission_scale50",
+        "target_path": null,
+        "timestamp": 1783603899.9107568
+      },
+      {
+        "action": "rename or move of file",
+        "commands": [
+          "CREATE",
+          "SET_INFO"
+        ],
+        "event": "rename_file",
+        "features": [
+          {
+            "access_intents": [
+              "delete",
+              "metadata"
+            ],
+            "access_mask": "0x00110080",
+            "command": "CREATE",
+            "create_action": "0x00000001",
+            "create_disposition": "0x00000001",
+            "create_options": "0x00200020",
+            "create_result": "opened",
+            "delete_on_close": false,
+            "disposition_family": "open",
+            "file_attributes": "0x00000000",
+            "schema": "scf-v2",
+            "share_access": "0x00000007",
+            "target_type": "unknown"
+          },
+          {
+            "command": "SET_INFO",
+            "delete_pending": "",
+            "disposition_flags": "",
+            "file_info_class": "FileRenameInformation",
+            "info_type": "0x00000001",
+            "rename_target_present": true,
+            "schema": "scf-v2"
+          }
+        ],
+        "frames": [
+          2208,
+          2220
+        ],
+        "path": "re37685f\\ms000004",
+        "rule_id": "cmd_rename_or_move_file_basic",
+        "run_id": "cmd_submission_scale50",
+        "target_path": "re37685f\\fmv\\mt000004",
+        "timestamp": 1783603899.871962
+      },
+      {
+        "action": "upload file",
+        "commands": [
+          "CREATE",
+          "WRITE"
+        ],
+        "event": "upload_file",
+        "features": [
+          {
+            "access_intents": [
+              "delete",
+              "metadata",
+              "read",
+              "write"
+            ],
+            "access_mask": "0x0017019f",
+            "command": "CREATE",
+            "create_action": "0x00000002",
+            "create_disposition": "0x00000005",
+            "create_options": "0x00000044",
+            "create_result": "created",
+            "delete_on_close": false,
+            "disposition_family": "overwrite_if",
+            "file_attributes": "0x00000020",
+            "schema": "scf-v2",
+            "share_access": "0x00000000",
+            "target_type": "file"
+          },
+          {
+            "command": "WRITE",
+            "io": "write",
+            "io_size_class": "tiny",
+            "length_class": "nonzero",
+            "schema": "scf-v2"
+          }
+        ],
+        "frames": [
+          2170,
+          2180
+        ],
+        "path": "re37685f\\ms000004",
+        "rule_id": "cmd_upload_file_write",
+        "run_id": "cmd_submission_scale50",
+        "target_path": null,
+        "timestamp": 1783603899.8302345
+      },
+      {
+        "action": "rename or move of file",
+        "commands": [
+          "CREATE",
+          "SET_INFO"
+        ],
+        "event": "rename_file",
+        "features": [
+          {
+            "access_intents": [
+              "delete",
+              "metadata"
+            ],
+            "access_mask": "0x00110080",
+            "command": "CREATE",
+            "create_action": "0x00000001",
+            "create_disposition": "0x00000001",
+            "create_options": "0x00200020",
+            "create_result": "opened",
+            "delete_on_close": false,
+            "disposition_family": "open",
+            "file_attributes": "0x00000000",
+            "schema": "scf-v2",
+            "share_access": "0x00000007",
+            "target_type": "unknown"
+          },
+          {
+            "command": "SET_INFO",
+            "delete_pending": "",
+            "disposition_flags": "",
+            "file_info_class": "FileRenameInformation",
+            "info_type": "0x00000001",
+            "rename_target_present": true,
+            "schema": "scf-v2"
+          }
+        ],
+        "frames": [
+          2130,
+          2146
+        ],
+        "path": "re37685f\\fs000004",
+        "rule_id": "cmd_rename_or_move_file_basic",
+        "run_id": "cmd_submission_scale50",
+        "target_path": "re37685f\\ft000004",
+        "timestamp": 1783603899.7896392
+      },
+      {
+        "action": "upload file",
+        "commands": [
+          "CREATE",
+          "WRITE"
+        ],
+        "event": "upload_file",
+        "features": [
+          {
+            "access_intents": [
+              "delete",
+              "metadata",
+              "read",
+              "write"
+            ],
+            "access_mask": "0x0017019f",
+            "command": "CREATE",
+            "create_action": "0x00000002",
+            "create_disposition": "0x00000005",
+            "create_options": "0x00000044",
+            "create_result": "created",
+            "delete_on_close": false,
+            "disposition_family": "overwrite_if",
+            "file_attributes": "0x00000020",
+            "schema": "scf-v2",
+            "share_access": "0x00000000",
+            "target_type": "file"
+          },
+          {
+            "command": "WRITE",
+            "io": "write",
+            "io_size_class": "tiny",
+            "length_class": "nonzero",
+            "schema": "scf-v2"
+          }
+        ],
+        "frames": [
+          2104,
+          2108
+        ],
+        "path": "re37685f\\fs000004",
+        "rule_id": "cmd_upload_file_write",
+        "run_id": "cmd_submission_scale50",
+        "target_path": null,
+        "timestamp": 1783603899.7524095
+      }
+    ]
+  },
+  {
+    "error_type": "FN",
+    "expected_event": "upload_file",
+    "ground_truth": {
+      "client": "cmd",
+      "command": "copy /Y /B \"data\\eval\\generated\\workloads\\cmd\\local\\cmd_submission_scale50\\u\" \"Z:\\re37685f\\xf000004\" > nul",
+      "end_time": "2026-07-09T13:31:40.0580956Z",
+      "event": "upload_file",
+      "op_id": 900000055,
+      "path": "re37685f/xf000004",
+      "run_id": "cmd_submission_scale50",
+      "start_time": "2026-07-09T13:31:40.0217936Z",
+      "target_path": ""
+    },
+    "nearest_predictions": [
+      {
+        "action": "upload file",
+        "commands": [
+          "CREATE",
+          "WRITE"
+        ],
+        "event": "upload_file",
+        "features": [
+          {
+            "access_intents": [
+              "delete",
+              "metadata",
+              "read",
+              "write"
+            ],
+            "access_mask": "0x0017019f",
+            "command": "CREATE",
+            "create_action": "0x00000002",
+            "create_disposition": "0x00000005",
+            "create_options": "0x00000044",
+            "create_result": "created",
+            "delete_on_close": false,
+            "disposition_family": "overwrite_if",
+            "file_attributes": "0x00000020",
+            "schema": "scf-v2",
+            "share_access": "0x00000000",
+            "target_type": "file"
+          },
+          {
+            "command": "WRITE",
+            "io": "write",
+            "io_size_class": "tiny",
+            "length_class": "nonzero",
+            "schema": "scf-v2"
+          }
+        ],
+        "frames": [
+          2255,
+          2259
+        ],
+        "path": "re37685f\\ap000004",
+        "rule_id": "cmd_upload_file_write",
+        "run_id": "cmd_submission_scale50",
+        "target_path": null,
+        "timestamp": 1783603899.9107568
+      },
+      {
+        "action": "rename or move of file",
+        "commands": [
+          "CREATE",
+          "SET_INFO"
+        ],
+        "event": "rename_file",
+        "features": [
+          {
+            "access_intents": [
+              "delete",
+              "metadata"
+            ],
+            "access_mask": "0x00110080",
+            "command": "CREATE",
+            "create_action": "0x00000001",
+            "create_disposition": "0x00000001",
+            "create_options": "0x00200020",
+            "create_result": "opened",
+            "delete_on_close": false,
+            "disposition_family": "open",
+            "file_attributes": "0x00000000",
+            "schema": "scf-v2",
+            "share_access": "0x00000007",
+            "target_type": "unknown"
+          },
+          {
+            "command": "SET_INFO",
+            "delete_pending": "",
+            "disposition_flags": "",
+            "file_info_class": "FileRenameInformation",
+            "info_type": "0x00000001",
+            "rename_target_present": true,
+            "schema": "scf-v2"
+          }
+        ],
+        "frames": [
+          2208,
+          2220
+        ],
+        "path": "re37685f\\ms000004",
+        "rule_id": "cmd_rename_or_move_file_basic",
+        "run_id": "cmd_submission_scale50",
+        "target_path": "re37685f\\fmv\\mt000004",
+        "timestamp": 1783603899.871962
+      },
+      {
+        "action": "upload file",
+        "commands": [
+          "CREATE",
+          "WRITE"
+        ],
+        "event": "upload_file",
+        "features": [
+          {
+            "access_intents": [
+              "delete",
+              "metadata",
+              "read",
+              "write"
+            ],
+            "access_mask": "0x0017019f",
+            "command": "CREATE",
+            "create_action": "0x00000002",
+            "create_disposition": "0x00000005",
+            "create_options": "0x00000044",
+            "create_result": "created",
+            "delete_on_close": false,
+            "disposition_family": "overwrite_if",
+            "file_attributes": "0x00000020",
+            "schema": "scf-v2",
+            "share_access": "0x00000000",
+            "target_type": "file"
+          },
+          {
+            "command": "WRITE",
+            "io": "write",
+            "io_size_class": "tiny",
+            "length_class": "nonzero",
+            "schema": "scf-v2"
+          }
+        ],
+        "frames": [
+          2170,
+          2180
+        ],
+        "path": "re37685f\\ms000004",
+        "rule_id": "cmd_upload_file_write",
+        "run_id": "cmd_submission_scale50",
+        "target_path": null,
+        "timestamp": 1783603899.8302345
+      },
+      {
+        "action": "rename or move of file",
+        "commands": [
+          "CREATE",
+          "SET_INFO"
+        ],
+        "event": "rename_file",
+        "features": [
+          {
+            "access_intents": [
+              "delete",
+              "metadata"
+            ],
+            "access_mask": "0x00110080",
+            "command": "CREATE",
+            "create_action": "0x00000001",
+            "create_disposition": "0x00000001",
+            "create_options": "0x00200020",
+            "create_result": "opened",
+            "delete_on_close": false,
+            "disposition_family": "open",
+            "file_attributes": "0x00000000",
+            "schema": "scf-v2",
+            "share_access": "0x00000007",
+            "target_type": "unknown"
+          },
+          {
+            "command": "SET_INFO",
+            "delete_pending": "",
+            "disposition_flags": "",
+            "file_info_class": "FileRenameInformation",
+            "info_type": "0x00000001",
+            "rename_target_present": true,
+            "schema": "scf-v2"
+          }
+        ],
+        "frames": [
+          2130,
+          2146
+        ],
+        "path": "re37685f\\fs000004",
+        "rule_id": "cmd_rename_or_move_file_basic",
+        "run_id": "cmd_submission_scale50",
+        "target_path": "re37685f\\ft000004",
+        "timestamp": 1783603899.7896392
+      },
+      {
+        "action": "upload file",
+        "commands": [
+          "CREATE",
+          "WRITE"
+        ],
+        "event": "upload_file",
+        "features": [
+          {
+            "access_intents": [
+              "delete",
+              "metadata",
+              "read",
+              "write"
+            ],
+            "access_mask": "0x0017019f",
+            "command": "CREATE",
+            "create_action": "0x00000002",
+            "create_disposition": "0x00000005",
+            "create_options": "0x00000044",
+            "create_result": "created",
+            "delete_on_close": false,
+            "disposition_family": "overwrite_if",
+            "file_attributes": "0x00000020",
+            "schema": "scf-v2",
+            "share_access": "0x00000000",
+            "target_type": "file"
+          },
+          {
+            "command": "WRITE",
+            "io": "write",
+            "io_size_class": "tiny",
+            "length_class": "nonzero",
+            "schema": "scf-v2"
+          }
+        ],
+        "frames": [
+          2104,
+          2108
+        ],
+        "path": "re37685f\\fs000004",
+        "rule_id": "cmd_upload_file_write",
+        "run_id": "cmd_submission_scale50",
+        "target_path": null,
+        "timestamp": 1783603899.7524095
+      }
+    ]
+  },
+  {
+    "error_type": "FN",
+    "expected_event": "delete_file",
+    "ground_truth": {
+      "client": "cmd",
+      "command": "del /f /q \"Z:\\re37685f\\xf000004\"",
+      "end_time": "2026-07-09T13:31:40.0924365Z",
+      "event": "delete_file",
+      "op_id": 52,
+      "path": "re37685f/xf000004",
+      "run_id": "cmd_submission_scale50",
+      "start_time": "2026-07-09T13:31:40.0590948Z",
+      "target_path": ""
+    },
+    "nearest_predictions": [
+      {
+        "action": "upload file",
+        "commands": [
+          "CREATE",
+          "WRITE"
+        ],
+        "event": "upload_file",
+        "features": [
+          {
+            "access_intents": [
+              "delete",
+              "metadata",
+              "read",
+              "write"
+            ],
+            "access_mask": "0x0017019f",
+            "command": "CREATE",
+            "create_action": "0x00000002",
+            "create_disposition": "0x00000005",
+            "create_options": "0x00000044",
+            "create_result": "created",
+            "delete_on_close": false,
+            "disposition_family": "overwrite_if",
+            "file_attributes": "0x00000020",
+            "schema": "scf-v2",
+            "share_access": "0x00000000",
+            "target_type": "file"
+          },
+          {
+            "command": "WRITE",
+            "io": "write",
+            "io_size_class": "tiny",
+            "length_class": "nonzero",
+            "schema": "scf-v2"
+          }
+        ],
+        "frames": [
+          2255,
+          2259
+        ],
+        "path": "re37685f\\ap000004",
+        "rule_id": "cmd_upload_file_write",
+        "run_id": "cmd_submission_scale50",
+        "target_path": null,
+        "timestamp": 1783603899.9107568
+      },
+      {
+        "action": "rename or move of file",
+        "commands": [
+          "CREATE",
+          "SET_INFO"
+        ],
+        "event": "rename_file",
+        "features": [
+          {
+            "access_intents": [
+              "delete",
+              "metadata"
+            ],
+            "access_mask": "0x00110080",
+            "command": "CREATE",
+            "create_action": "0x00000001",
+            "create_disposition": "0x00000001",
+            "create_options": "0x00200020",
+            "create_result": "opened",
+            "delete_on_close": false,
+            "disposition_family": "open",
+            "file_attributes": "0x00000000",
+            "schema": "scf-v2",
+            "share_access": "0x00000007",
+            "target_type": "unknown"
+          },
+          {
+            "command": "SET_INFO",
+            "delete_pending": "",
+            "disposition_flags": "",
+            "file_info_class": "FileRenameInformation",
+            "info_type": "0x00000001",
+            "rename_target_present": true,
+            "schema": "scf-v2"
+          }
+        ],
+        "frames": [
+          2208,
+          2220
+        ],
+        "path": "re37685f\\ms000004",
+        "rule_id": "cmd_rename_or_move_file_basic",
+        "run_id": "cmd_submission_scale50",
+        "target_path": "re37685f\\fmv\\mt000004",
+        "timestamp": 1783603899.871962
+      },
+      {
+        "action": "upload file",
+        "commands": [
+          "CREATE",
+          "WRITE"
+        ],
+        "event": "upload_file",
+        "features": [
+          {
+            "access_intents": [
+              "delete",
+              "metadata",
+              "read",
+              "write"
+            ],
+            "access_mask": "0x0017019f",
+            "command": "CREATE",
+            "create_action": "0x00000002",
+            "create_disposition": "0x00000005",
+            "create_options": "0x00000044",
+            "create_result": "created",
+            "delete_on_close": false,
+            "disposition_family": "overwrite_if",
+            "file_attributes": "0x00000020",
+            "schema": "scf-v2",
+            "share_access": "0x00000000",
+            "target_type": "file"
+          },
+          {
+            "command": "WRITE",
+            "io": "write",
+            "io_size_class": "tiny",
+            "length_class": "nonzero",
+            "schema": "scf-v2"
+          }
+        ],
+        "frames": [
+          2170,
+          2180
+        ],
+        "path": "re37685f\\ms000004",
+        "rule_id": "cmd_upload_file_write",
+        "run_id": "cmd_submission_scale50",
+        "target_path": null,
+        "timestamp": 1783603899.8302345
+      },
+      {
+        "action": "rename or move of file",
+        "commands": [
+          "CREATE",
+          "SET_INFO"
+        ],
+        "event": "rename_file",
+        "features": [
+          {
+            "access_intents": [
+              "delete",
+              "metadata"
+            ],
+            "access_mask": "0x00110080",
+            "command": "CREATE",
+            "create_action": "0x00000001",
+            "create_disposition": "0x00000001",
+            "create_options": "0x00200020",
+            "create_result": "opened",
+            "delete_on_close": false,
+            "disposition_family": "open",
+            "file_attributes": "0x00000000",
+            "schema": "scf-v2",
+            "share_access": "0x00000007",
+            "target_type": "unknown"
+          },
+          {
+            "command": "SET_INFO",
+            "delete_pending": "",
+            "disposition_flags": "",
+            "file_info_class": "FileRenameInformation",
+            "info_type": "0x00000001",
+            "rename_target_present": true,
+            "schema": "scf-v2"
+          }
+        ],
+        "frames": [
+          2130,
+          2146
+        ],
+        "path": "re37685f\\fs000004",
+        "rule_id": "cmd_rename_or_move_file_basic",
+        "run_id": "cmd_submission_scale50",
+        "target_path": "re37685f\\ft000004",
+        "timestamp": 1783603899.7896392
+      },
+      {
+        "action": "upload file",
+        "commands": [
+          "CREATE",
+          "WRITE"
+        ],
+        "event": "upload_file",
+        "features": [
+          {
+            "access_intents": [
+              "delete",
+              "metadata",
+              "read",
+              "write"
+            ],
+            "access_mask": "0x0017019f",
+            "command": "CREATE",
+            "create_action": "0x00000002",
+            "create_disposition": "0x00000005",
+            "create_options": "0x00000044",
+            "create_result": "created",
+            "delete_on_close": false,
+            "disposition_family": "overwrite_if",
+            "file_attributes": "0x00000020",
+            "schema": "scf-v2",
+            "share_access": "0x00000000",
+            "target_type": "file"
+          },
+          {
+            "command": "WRITE",
+            "io": "write",
+            "io_size_class": "tiny",
+            "length_class": "nonzero",
+            "schema": "scf-v2"
+          }
+        ],
+        "frames": [
+          2104,
+          2108
+        ],
+        "path": "re37685f\\fs000004",
+        "rule_id": "cmd_upload_file_write",
+        "run_id": "cmd_submission_scale50",
+        "target_path": null,
+        "timestamp": 1783603899.7524095
+      }
+    ]
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        214,
+        239
+      ],
+      "path": null,
+      "rule_id": "cmd_dir_directory_listing",
+      "run_id": "cmd_submission_scale50",
+      "target_path": null,
+      "timestamp": 1783603896.7417874
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00000021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000000",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        245,
+        245
+      ],
+      "path": "re37685f\\ds000001",
+      "rule_id": "cmd_dir_directory_listing",
+      "run_id": "cmd_submission_scale50",
+      "target_path": null,
+      "timestamp": 1783603896.836904
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        786,
+        814
+      ],
+      "path": null,
+      "rule_id": "cmd_dir_directory_listing",
+      "run_id": "cmd_submission_scale50",
+      "target_path": null,
+      "timestamp": 1783603897.7632074
+    }
+  },
+  {
+    "error_type": "FP",
+    "predicted_event": "directory_listing",
+    "prediction": {
+      "action": "directory listing",
+      "commands": [
+        "CREATE",
+        "QUERY_DIRECTORY"
+      ],
+      "event": "directory_listing",
+      "features": [
+        {
+          "access_intents": [
+            "metadata",
+            "read"
+          ],
+          "access_mask": "0x00100081",
+          "command": "CREATE",
+          "create_action": "0x00000001",
+          "create_disposition": "0x00000001",
+          "create_options": "0x00004021",
+          "create_result": "opened",
+          "delete_on_close": false,
+          "disposition_family": "open",
+          "file_attributes": "0x00000080",
+          "schema": "scf-v2",
+          "share_access": "0x00000007",
+          "target_type": "directory"
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "file_info_class": "FileIdBothDirectoryInformation",
+          "pattern_class": "wildcard",
+          "query_flags": "0x00000000",
+          "schema": "scf-v2"
+        }
+      ],
+      "frames": [
+        2016,
+        2039
+      ],
+      "path": null,
+      "rule_id": "cmd_dir_directory_listing",
+      "run_id": "cmd_submission_scale50",
+      "target_path": null,
+      "timestamp": 1783603899.6344304
+    }
+  }
+]

@@ -15,14 +15,14 @@ smb_recap/
 
 smbmount/
   cli.py                         Backward-compatible implementation namespace
-  parser/                        PCAP/SMB parsing and TCP stream handling
-  reconstruct/                   File metadata, content, hierarchy, versioning
-  output/
+  shared/parser/                 PCAP/SMB parsing and TCP stream handling
+  pcapfs/reconstruct/            File metadata, content, hierarchy, versioning
+  pcapfs/output/
     fs_export.py                 JSON reconstruction export
     fuse_mount.py                Read-only FUSE view of reconstructed files
     snapshot_export.py           Snapshot view at a selected timestamp
   scf/                           Semantic SCF normalization and rule detector
-  benchmark_parsepcap/           parse-pcap/FUSE benchmark helpers
+  pcapfs/benchmark/              parse-pcap/FUSE benchmark helpers
 
 rules/
   cmd_rules.json
@@ -30,26 +30,13 @@ rules/
   smbclient_rules.json
   scf_builtin_rules.json
 
-scripts/
-  eval/                          SCF workload, renderer, scoring, ablation
-  eval_parsepcap/                parse-pcap/FUSE workload and benchmark scripts
+scripts_evaluation/
+  scf/                           SCF workload, renderer, scoring, ablation
+  pcapfs/                        parse-pcap/FUSE workload and benchmark scripts
 
 sample/
   fuse_module_sample/            Small parse-pcap/FUSE reproducibility sample
   cmd_powershell_scale50/        SCF scale-50 reproducibility sample
-
-paper/
-  main.tex                       Self-contained Elsevier LaTeX manuscript
-```
-
-## Manuscript
-
-The submission manuscript is maintained as a single self-contained LaTeX
-source file. Internal Markdown drafts and generated PDFs are intentionally not
-tracked.
-
-```bash
-tectonic paper/main.tex
 ```
 
 ## Environment

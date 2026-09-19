@@ -1,4 +1,4 @@
-from smbmount.shared.core.file_table import FileTable
+from smbmount.pcapfs.core.file_table import FileTable
 from smbmount.pcapfs.reconstruct.timestamps import TimestampResolver
 
 def status_success(pkt):

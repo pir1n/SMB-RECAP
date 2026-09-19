@@ -17,7 +17,7 @@ from smbmount.pcapfs.output.snapshot_export import (
     metadata_for_version,
     infer_object_type,
 )
-from smbmount.output.fs_export import version_export_sort_key, version_reconstruction_state
+from smbmount.pcapfs.output.fs_export import version_export_sort_key, version_reconstruction_state
 
 
 @dataclass

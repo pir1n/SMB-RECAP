@@ -254,7 +254,7 @@ def mount_pcap_cmd(
     console.print("[yellow]FUSE is running. Press Ctrl+C to unmount/stop.[/yellow]")
 
     try:
-        from smbmount.benchmark_parsepcap.runtime import run_smbmount_fuse_foreground
+        from smbmount.pcapfs.benchmark.runtime import run_smbmount_fuse_foreground
 
         run_smbmount_fuse_foreground(
             input_pcap,

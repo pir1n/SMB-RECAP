@@ -10,8 +10,8 @@ import time
 from datetime import datetime
 from pathlib import Path
 
-from smbmount.benchmark_parsepcap.metrics import score_versions
-from smbmount.benchmark_parsepcap.normalize_pcapfs import (
+from smbmount.pcapfs.benchmark.metrics import score_versions
+from smbmount.pcapfs.benchmark.normalize_pcapfs import (
     is_noise_file,
     norm_path,
     parse_versioned_name,
@@ -112,14 +112,14 @@ def parse_and_reconstruct_for_mount(input_pcap, timestamp_mode="hybrid", reader=
     It mirrors parse_pcap_to_json up to FileTable creation, but deliberately
     excludes JSON export, hash generation, snapshot export, and FUSE execution.
     """
-    from smbmount.parser.pcap_reader import (
+    from smbmount.pcapfs.parser.pcap_reader import (
         enrich_with_file_metadata_mapping,
         enrich_with_query_info_timestamps,
         enrich_with_request_mapping,
         read_pcap_basic,
     )
-    from smbmount.parser.streaming_pcap_reader import read_pcap_reconstruction_streaming
-    from smbmount.reconstruct.content import process_packets
+    from smbmount.pcapfs.parser.streaming_pcap_reader import read_pcap_reconstruction_streaming
+    from smbmount.pcapfs.reconstruct.content import process_packets
 
     timings = {}
 
@@ -160,7 +160,7 @@ def run_smbmount_fuse_foreground(
     debug=False,
     profile_json=None,
 ):
-    from smbmount.output.fuse_mount import SMBMountFuseFS, build_fuse_entries
+    from smbmount.pcapfs.output.fuse_mount import SMBMountFuseFS, build_fuse_entries
     import mfusepy as fuse
 
     file_table, timings = parse_and_reconstruct_for_mount(

@@ -365,7 +365,7 @@ run_tool() {
   mkdir -p "$mountpoint"
 
   local args=(
-    "$PYTHON_BIN" -m smbmount.benchmark_parsepcap.runtime "run-$tool"
+    "$PYTHON_BIN" -m smbmount.pcapfs.benchmark.runtime "run-$tool"
     --pcap "$pcap"
     --ground-truth "$ground_truth"
     --mountpoint "$mountpoint"
@@ -501,7 +501,7 @@ run_case() {
 
     if [[ "$TOOL_MODE" == "both" && "$smb_ok" -eq 0 && "$pcapfs_ok" -eq 0 ]]; then
       echo "    [compare] comparable speedups"
-      "$PYTHON_BIN" -m smbmount.benchmark_parsepcap.runtime compare \
+      "$PYTHON_BIN" -m smbmount.pcapfs.benchmark.runtime compare \
         --smbmount-runtime "$run_dir/smbmount/runtime.json" \
         --pcapfs-runtime "$run_dir/pcapfs/runtime.json" \
         --out "$run_dir/comparison" \

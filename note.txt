@@ -1,1 +1,0 @@
-Write Command in pyshark don't have data is that hollow file following paper ?

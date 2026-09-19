@@ -1,0 +1,184 @@
+started_at	ended_at	duration_seconds	shell	exit_code	cwd_before	cwd_after	command
+2026-08-29T14:04:39.424+07:00	2026-08-29T14:04:39.429+07:00	0.004759	cmd	0	C:\Users\scfuser\Desktop\groundtruth_capture	Z:\	Z:
+2026-08-29T14:04:48.019+07:00	2026-08-29T14:04:48.026+07:00	0.007353	cmd	0	Z:\	Z:\	dir
+2026-08-29T14:04:50.616+07:00	2026-08-29T14:04:50.620+07:00	0.003953	cmd	0	Z:\	Z:\project	cd project
+2026-08-29T14:04:52.594+07:00	2026-08-29T14:04:52.602+07:00	0.008391	cmd	0	Z:\project	Z:\project	dir
+2026-08-29T14:04:56.187+07:00	2026-08-29T14:04:56.191+07:00	0.004683	cmd	0	Z:\project	Z:\project\basic_malware	cd basic_malware
+2026-08-29T14:04:57.905+07:00	2026-08-29T14:04:57.912+07:00	0.007037	cmd	0	Z:\project\basic_malware	Z:\project\basic_malware	dir
+2026-08-29T14:05:04.886+07:00	2026-08-29T14:05:04.916+07:00	0.029591	cmd	0	Z:\project\basic_malware	Z:\project\basic_malware	more test.py
+2026-08-29T14:05:15.986+07:00	2026-08-29T14:05:15.994+07:00	0.007699	cmd	0	Z:\project\basic_malware	Z:\project\basic_malware	echo import sys > test.py
+2026-08-29T14:05:18.274+07:00	2026-08-29T14:05:18.298+07:00	0.023463	cmd	0	Z:\project\basic_malware	Z:\project\basic_malware	more test.py
+2026-08-29T14:05:29.494+07:00	2026-08-29T14:05:29.510+07:00	0.016231	cmd	0	Z:\project\basic_malware	Z:\project\basic_malware	echo from pathlib import Path >> test.py
+2026-08-29T14:05:33.184+07:00	2026-08-29T14:05:33.199+07:00	0.015222	cmd	1	Z:\project\basic_malware	Z:\project\basic_malware	more test.opy
+2026-08-29T14:05:38.096+07:00	2026-08-29T14:05:38.129+07:00	0.032834	cmd	0	Z:\project\basic_malware	Z:\project\basic_malware	more test.py
+2026-08-29T14:06:00.694+07:00	2026-08-29T14:06:00.715+07:00	0.020960	cmd	0	Z:\project\basic_malware	Z:\project\basic_malware	echo path = Path^(sys.argv[1]^) >> test.py
+2026-08-29T14:06:58.983+07:00	2026-08-29T14:06:59.024+07:00	0.040453	cmd	0	Z:\project\basic_malware	Z:\project\basic_malware	echo with path.open^("a", encoding="utf-8"^) as file: >> test.py
+2026-08-29T14:07:56.854+07:00	2026-08-29T14:07:56.904+07:00	0.049855	cmd	0	Z:\project\basic_malware	Z:\project\basic_malware	echo \tfile.write^("Noi dung duoc them tu Python\n"^) >> test.py
+2026-08-29T14:08:11.920+07:00	2026-08-29T14:08:11.950+07:00	0.029225	cmd	0	Z:\project\basic_malware	Z:\project\basic_malware	echo print^("updated:" path^) >> test.py
+2026-08-29T14:08:18.738+07:00	2026-08-29T14:08:18.765+07:00	0.027470	cmd	0	Z:\project\basic_malware	Z:\project\basic_malware	more test.py
+2026-08-29T14:09:17.363+07:00	2026-08-29T14:09:17.379+07:00	0.016406	cmd	0	Z:\project\basic_malware	Z:\project\basic_malware	copy test.py C:\Users\scfuser\Desktop\DEV\project
+2026-08-29T14:12:31.754+07:00	2026-08-29T14:12:31.754+07:00	0.010719	cmd	0	Z:\project\basic_malware	Z:\project\basic_malware	dir
+2026-08-29T14:12:34.770+07:00	2026-08-29T14:12:34.770+07:00	0.005659	cmd	0	Z:\project\basic_malware	Z:\project\basic_malware	del test.py
+2026-08-29T14:12:36.223+07:00	2026-08-29T14:12:36.223+07:00	0.006915	cmd	0	Z:\project\basic_malware	Z:\project\basic_malware	dir
+2026-08-29T14:13:07.254+07:00	2026-08-29T14:13:07.269+07:00	0.012741	cmd	0	Z:\project\basic_malware	Z:\project\basic_malware	echo import sys > newcode.py
+2026-08-29T14:13:27.082+07:00	2026-08-29T14:13:27.097+07:00	0.015251	cmd	0	Z:\project\basic_malware	Z:\project\basic_malware	echo from pathlib import Path >> newcode.py
+2026-08-29T14:13:49.176+07:00	2026-08-29T14:13:49.191+07:00	0.007874	cmd	0	Z:\project\basic_malware	Z:\project\basic_malware	path = Path^(sys.argv[1]^) >> newcode.py
+2026-08-29T14:13:57.238+07:00	2026-08-29T14:13:57.254+07:00	0.005932	cmd	9009	Z:\project\basic_malware	Z:\project\basic_malware	more newcode.py
+2026-08-29T14:14:05.520+07:00	2026-08-29T14:14:05.520+07:00	0.004603	cmd	9009	Z:\project\basic_malware	Z:\project\basic_malware	more newcode.py
+2026-08-29T14:14:10.035+07:00	2026-08-29T14:14:10.035+07:00	0.007058	cmd	0	Z:\project\basic_malware	Z:\project\basic_malware	type newcode.py
+2026-08-29T14:14:39.519+07:00	2026-08-29T14:14:39.535+07:00	0.011925	cmd	0	Z:\project\basic_malware	Z:\project\basic_malware	echo path = Path^(sys.argv[1]^) >> newcode.py
+2026-08-29T14:14:43.957+07:00	2026-08-29T14:14:43.957+07:00	0.004713	cmd	9009	Z:\project\basic_malware	Z:\project\basic_malware	more newcode.py
+2026-08-29T14:14:55.738+07:00	2026-08-29T14:14:55.754+07:00	0.005773	cmd	0	Z:\project\basic_malware	Z:\project\basic_malware	type newcode.py
+2026-08-29T14:15:26.582+07:00	2026-08-29T14:15:26.598+07:00	0.011078	cmd	0	Z:\project\basic_malware	Z:\project\basic_malware	echo with path.open^("a", encoding="utf-8"^) as file: >> newcode.py
+2026-08-29T14:15:30.207+07:00	2026-08-29T14:15:30.223+07:00	0.012815	cmd	0	Z:\project\basic_malware	Z:\project\basic_malware	type newcode.py
+2026-08-29T14:15:57.567+07:00	2026-08-29T14:15:57.582+07:00	0.022686	cmd	0	Z:\project\basic_malware	Z:\project\basic_malware	echo \tfile.write^("Noi dung duoc them tu python\n"^) >> newcode.py
+2026-08-29T14:16:20.535+07:00	2026-08-29T14:16:20.566+07:00	0.033090	cmd	0	Z:\project\basic_malware	Z:\project\basic_malware	echo print^("Updated:", path^) >> newcode.py
+2026-08-29T14:16:24.270+07:00	2026-08-29T14:16:24.285+07:00	0.018607	cmd	0	Z:\project\basic_malware	Z:\project\basic_malware	type newcode.py
+2026-08-29T14:16:51.629+07:00	2026-08-29T14:16:51.629+07:00	0.013324	cmd	0	Z:\project\basic_malware	Z:\project\basic_malware	move newcode.py C:\Users\scfuser\Desktop\DEV\project
+2026-08-29T14:16:53.300+07:00	2026-08-29T14:16:53.317+07:00	0.007879	cmd	0	Z:\project\basic_malware	Z:\project\basic_malware	dir
+2026-08-29T14:21:19.848+07:00	2026-08-29T14:21:19.848+07:00	0.008349	cmd	1	Z:\project\basic_malware	Z:\project\basic_malware	type null > rc4.py
+2026-08-29T14:21:21.816+07:00	2026-08-29T14:21:21.832+07:00	0.008454	cmd	0	Z:\project\basic_malware	Z:\project\basic_malware	dir
+2026-08-29T14:21:42.723+07:00	2026-08-29T14:21:42.738+07:00	0.016923	cmd	0	Z:\project\basic_malware	Z:\project\basic_malware	echo import argparse > rc4.py
+2026-08-29T14:21:46.004+07:00	2026-08-29T14:21:46.004+07:00	0.003532	cmd	9009	Z:\project\basic_malware	Z:\project\basic_malware	more rc4.py
+2026-08-29T14:21:51.396+07:00	2026-08-29T14:21:51.417+07:00	0.020314	cmd	0	Z:\project\basic_malware	Z:\project\basic_malware	type rc4.py
+2026-08-29T14:22:04.678+07:00	2026-08-29T14:22:04.698+07:00	0.019543	cmd	0	Z:\project\basic_malware	Z:\project\basic_malware	echo import getpass >> rc4.py
+2026-08-29T14:22:21.711+07:00	2026-08-29T14:22:21.737+07:00	0.027074	cmd	0	Z:\project\basic_malware	Z:\project\basic_malware	echo import hashlib >> rc4.py
+2026-08-29T14:25:00.186+07:00	2026-08-29T14:25:00.219+07:00	0.032821	cmd	0	Z:\project\basic_malware	Z:\project\basic_malware	copy rc4.py C:\Users\scfuser\Desktop\DEV\project
+2026-08-29T14:25:37.436+07:00	2026-08-29T14:25:37.456+07:00	0.018837	cmd	0	Z:\project\basic_malware	Z:\project\basic_malware	echo heheh >> rc4.py
+2026-08-29T14:25:59.194+07:00	2026-08-29T14:26:08.229+07:00	9.034754	cmd	130	Z:\project\basic_malware		copy C:\Users\scfuser\Desktop\DEV\project\rc4.py Z:\project\basic_malware
+2026-08-29T14:26:09.979+07:00	2026-08-29T14:26:11.200+07:00	1.220875	cmd	130	Z:\project\basic_malware		dir
+2026-08-29T14:27:03.131+07:00	2026-08-29T14:27:03.136+07:00	0.004599	cmd	0	C:\Users\scfuser\Desktop\groundtruth_capture	Z:\	Z:
+2026-08-29T14:27:06.348+07:00	2026-08-29T14:27:06.354+07:00	0.005533	cmd	0	Z:\	Z:\project	cd project
+2026-08-29T14:27:12.191+07:00	2026-08-29T14:27:12.196+07:00	0.005038	cmd	0	Z:\project	Z:\project\basic_malware	cd basic_malware
+2026-08-29T14:27:21.663+07:00	2026-08-29T14:27:21.668+07:00	0.004443	cmd	1	Z:\project\basic_malware	Z:\project\basic_malware	cd C:\Users\scfuser\Desktop\DEV\project\rc4.py .
+2026-08-29T14:27:34.556+07:00	2026-08-29T14:27:34.559+07:00	0.003292	cmd	0	Z:\project\basic_malware	Z:\project\basic_malware	cd C:\Users\scfuser\Desktop\DEV\project
+2026-08-29T14:27:58.233+07:00	2026-08-29T14:27:58.236+07:00	0.002966	cmd	0	C:\Users\scfuser\Desktop\groundtruth_capture	C:\Users\scfuser\Desktop\DEV\project	cd C:\Users\scfuser\Desktop\DEV\project
+2026-08-29T14:28:00.356+07:00	2026-08-29T14:28:00.363+07:00	0.007124	cmd	0	C:\Users\scfuser\Desktop\DEV\project	C:\Users\scfuser\Desktop\DEV\project	dir
+2026-08-29T14:28:22.045+07:00	2026-08-29T14:28:36.096+07:00	14.050339	cmd	130	C:\Users\scfuser\Desktop\DEV\project		copy rc4.py Z:\project\basic_malware
+2026-08-29T14:29:17.426+07:00	2026-08-29T14:29:17.429+07:00	0.003543	cmd	0	C:\Users\scfuser\Desktop\groundtruth_capture	Z:\	Z:
+2026-08-29T14:29:22.015+07:00	2026-08-29T14:29:22.018+07:00	0.002911	cmd	0	Z:\	Z:\project	cd project
+2026-08-29T14:29:25.983+07:00	2026-08-29T14:29:25.987+07:00	0.003520	cmd	0	Z:\project	Z:\project\basic_malware	cd basic_malware
+2026-08-29T14:29:26.853+07:00	2026-08-29T14:29:26.859+07:00	0.006044	cmd	0	Z:\project\basic_malware	Z:\project\basic_malware	dir
+2026-08-29T14:29:32.643+07:00	2026-08-29T14:29:32.650+07:00	0.007529	cmd	0	Z:\project\basic_malware	Z:\project\basic_malware	type rc4.py
+2026-08-29T14:30:16.788+07:00	2026-08-29T14:30:16.792+07:00	0.004490	cmd	0	Z:\project\basic_malware	Z:\project\basic_malware	cd C:\Users\scfuser\Desktop\DEV\project
+2026-08-29T14:30:19.277+07:00	2026-08-29T14:30:19.282+07:00	0.004179	cmd	0	Z:\project\basic_malware	C:\Users\scfuser\Desktop\DEV\project	cd /d C:\Users\scfuser\Desktop\DEV\project
+2026-08-29T14:30:23.770+07:00	2026-08-29T14:30:23.777+07:00	0.007712	cmd	0	C:\Users\scfuser\Desktop\DEV\project	C:\Users\scfuser\Desktop\DEV\project	dir
+2026-08-29T14:30:40.292+07:00	2026-08-29T14:30:40.327+07:00	0.034319	cmd	0	C:\Users\scfuser\Desktop\DEV\project	C:\Users\scfuser\Desktop\DEV\project	copy /Y rc4.py Z:\project\basic_malware\rc4.py
+2026-08-29T14:30:44.035+07:00	2026-08-29T14:30:44.040+07:00	0.004653	cmd	0	C:\Users\scfuser\Desktop\DEV\project	C:\Users\scfuser\Desktop\DEV\project	cd Z:
+2026-08-29T14:30:49.360+07:00	2026-08-29T14:30:49.365+07:00	0.004696	cmd	0	C:\Users\scfuser\Desktop\DEV\project	Z:\	cd /d Z:\
+2026-08-29T14:30:50.260+07:00	2026-08-29T14:30:50.266+07:00	0.006159	cmd	0	Z:\	Z:\	dir
+2026-08-29T14:30:52.360+07:00	2026-08-29T14:30:52.363+07:00	0.003841	cmd	0	Z:\	Z:\project	cd project
+2026-08-29T14:31:05.687+07:00	2026-08-29T14:31:05.696+07:00	0.008466	cmd	0	Z:\project	Z:\project	dir
+2026-08-29T14:31:09.362+07:00	2026-08-29T14:31:09.366+07:00	0.004007	cmd	0	Z:\project	Z:\project\basic_malware	cd basic_malware
+2026-08-29T14:31:10.940+07:00	2026-08-29T14:31:10.947+07:00	0.006663	cmd	0	Z:\project\basic_malware	Z:\project\basic_malware	dir
+2026-08-29T14:31:20.492+07:00	2026-08-29T14:31:20.497+07:00	0.005174	cmd	0	Z:\project\basic_malware	Z:\project	cd ..
+2026-08-29T14:31:22.000+07:00	2026-08-29T14:31:22.007+07:00	0.006850	cmd	0	Z:\project	Z:\project	dir
+2026-08-29T14:31:26.349+07:00	2026-08-29T14:31:26.359+07:00	0.009177	cmd	0	Z:\project	Z:\project	mkdir picture 
+2026-08-29T14:32:04.750+07:00	2026-08-29T14:32:04.758+07:00	0.007609	cmd	0	Z:\project	Z:\project\picture	cd picture
+2026-08-29T14:32:28.607+07:00	2026-08-29T14:32:28.671+07:00	0.063870	cmd	0	Z:\project\picture	Z:\project\picture	copy /Y C:\Users\scfuser\Desktop\DEV\project\rossi.jpg Z:\project\picture\rossi.jpg
+2026-08-29T14:32:30.505+07:00	2026-08-29T14:32:30.512+07:00	0.008246	cmd	0	Z:\project\picture	Z:\project\picture	dir
+2026-08-29T14:32:36.294+07:00	2026-08-29T14:32:37.173+07:00	0.878799	cmd	0	Z:\project\picture	Z:\project\picture	type rossi.jpg
+2026-08-29T14:32:45.436+07:00	2026-08-29T14:32:45.454+07:00	0.017512	cmd	0	Z:\project\picture	Z:\project\picture	dir
+2026-08-29T14:32:48.781+07:00	2026-08-29T14:32:48.787+07:00	0.006319	cmd	0	Z:\project\picture	Z:\project	cd ..
+2026-08-29T14:32:52.022+07:00	2026-08-29T14:32:52.026+07:00	0.003246	cmd	0	Z:\project	Z:\	cd ..
+2026-08-29T14:34:43.411+07:00	2026-08-29T14:34:43.434+07:00	0.021506	cmd	0	Z:\	Z:\project	cd project
+2026-08-29T14:34:47.723+07:00	2026-08-29T14:34:48.017+07:00	0.293992	cmd	0	Z:\project	Z:\project\basic_malware	cd basic_malware
+2026-08-29T14:34:49.291+07:00	2026-08-29T14:34:49.392+07:00	0.100268	cmd	0	Z:\project\basic_malware	Z:\project\basic_malware	dir
+2026-08-29T14:35:32.596+07:00	2026-08-29T14:35:32.638+07:00	0.041933	cmd	0	Z:\project\basic_malware	Z:\project\basic_malware	ren encrypt.py rc4_Version2.py
+2026-08-29T14:35:34.483+07:00	2026-08-29T14:35:34.492+07:00	0.008480	cmd	0	Z:\project\basic_malware	Z:\project\basic_malware	dir
+2026-08-29T14:35:35.671+07:00	2026-08-29T14:35:35.797+07:00	0.125366	cmd	0	Z:\project\basic_malware	Z:\project	cd ..
+2026-08-29T14:35:47.273+07:00	2026-08-29T14:35:47.305+07:00	0.031573	cmd	0	Z:\project	Z:\project\basic_malware	cd basic_malware
+2026-08-29T14:35:58.968+07:00	2026-08-29T14:35:59.109+07:00	0.141216	cmd	0	Z:\project\basic_malware	Z:\project\basic_malware	copy rc4_Version2.py C:\Users\scfuser\Desktop\DEV\project
+2026-08-29T14:38:14.256+07:00	2026-08-29T14:38:14.361+07:00	0.104517	cmd	0	Z:\project\basic_malware	Z:\project\basic_malware	dir
+2026-08-29T14:39:09.644+07:00	2026-08-29T14:39:09.989+07:00	0.344321	cmd	0	Z:\project\basic_malware	Z:\project\basic_malware	copy /Y C:\Users\scfuser\Desktop\DEV\project\rc4_Version2.py Z:\project\basic_malware\rc4.Version2.py
+2026-08-29T14:39:11.234+07:00	2026-08-29T14:39:11.467+07:00	0.232667	cmd	0	Z:\project\basic_malware	Z:\project\basic_malware	dir
+2026-08-29T14:39:30.996+07:00	2026-08-29T14:39:31.275+07:00	0.278913	cmd	0	Z:\project\basic_malware	Z:\project\basic_malware	del rc4_Version2.py
+2026-08-29T14:39:32.536+07:00	2026-08-29T14:39:32.543+07:00	0.005452	cmd	0	Z:\project\basic_malware	Z:\project\basic_malware	dir
+2026-08-29T14:39:33.824+07:00	2026-08-29T14:39:33.925+07:00	0.101439	cmd	0	Z:\project\basic_malware	Z:\project	cd ..
+2026-08-29T14:39:39.989+07:00	2026-08-29T14:39:39.993+07:00	0.004336	cmd	0	Z:\project	Z:\project	mkdir mydocuments
+2026-08-29T14:39:42.442+07:00	2026-08-29T14:39:42.520+07:00	0.077631	cmd	0	Z:\project	Z:\project\mydocuments	cd mydocuments
+2026-08-29T14:40:14.161+07:00	2026-08-29T14:40:14.168+07:00	0.006666	cmd	0	Z:\project\mydocuments	Z:\project	cd ..
+2026-08-29T14:40:15.873+07:00	2026-08-29T14:40:15.877+07:00	0.003455	cmd	0	Z:\project	Z:\project	mkdir tools
+2026-08-29T14:40:17.308+07:00	2026-08-29T14:40:17.317+07:00	0.008202	cmd	1	Z:\project	Z:\project	cd toosl
+2026-08-29T14:40:19.880+07:00	2026-08-29T14:40:19.884+07:00	0.003425	cmd	0	Z:\project	Z:\project\tools	cd tools
+2026-08-29T14:41:12.234+07:00	2026-08-29T14:41:12.241+07:00	0.006521	cmd	1	Z:\project\tools	Z:\project\tools	cd C:\Users\scfuser\Downloads\python-3.12.3-amd64.exe Z:\project\tools\python_installer.exe
+2026-08-29T14:41:24.726+07:00	2026-08-29T14:41:26.402+07:00	1.676116	cmd	0	Z:\project\tools	Z:\project\tools	copy /Y C:\Users\scfuser\Downloads\python-3.12.3-amd64.exe Z:\project\tools\python_installer.exe
+2026-08-29T14:41:28.146+07:00	2026-08-29T14:41:28.155+07:00	0.009182	cmd	0	Z:\project\tools	Z:\project\tools	dir
+2026-08-29T14:41:33.710+07:00	2026-08-29T14:41:33.724+07:00	0.013225	cmd	0	Z:\project\tools	Z:\project	cd ..
+2026-08-29T14:41:35.310+07:00	2026-08-29T14:41:35.409+07:00	0.098845	cmd	0	Z:\project	Z:\project	dir
+2026-08-29T14:41:40.873+07:00	2026-08-29T14:41:40.908+07:00	0.034988	cmd	0	Z:\project	Z:\project\mydocuments	cd mydocuments
+2026-08-29T14:43:59.352+07:00	2026-08-29T14:43:59.356+07:00	0.003970	cmd	0	C:\Users\scfuser\Desktop\groundtruth_capture	C:\Users\scfuser\Desktop\groundtruth_capture	cd Z:
+2026-08-29T14:44:02.848+07:00	2026-08-29T14:44:02.851+07:00	0.003317	cmd	0	C:\Users\scfuser\Desktop\groundtruth_capture	Z:\	cd /d Z:\
+2026-08-29T14:44:04.213+07:00	2026-08-29T14:44:04.217+07:00	0.005716	cmd	0	Z:\	Z:\	dir
+2026-08-29T14:44:06.049+07:00	2026-08-29T14:44:06.054+07:00	0.003758	cmd	0	Z:\	Z:\project	cd project
+2026-08-29T14:44:08.878+07:00	2026-08-29T14:44:08.882+07:00	0.004412	cmd	0	Z:\project	Z:\project	dir
+2026-08-29T14:44:11.968+07:00	2026-08-29T14:44:11.974+07:00	0.005632	cmd	0	Z:\project	Z:\project\mydocuments	cd mydocuments
+2026-08-29T14:44:12.582+07:00	2026-08-29T14:44:12.591+07:00	0.008041	cmd	0	Z:\project\mydocuments	Z:\project\mydocuments	dir
+2026-08-29T14:45:10.939+07:00	2026-08-29T14:45:10.982+07:00	0.041186	cmd	0	Z:\project\mydocuments	Z:\project\mydocuments	copy /Y C:\Users\scfuser\Downloads\Phan-Binh-Nhan-TopCV.vn-260826.181409.pdf Z:\project\mydocuments\my_CV.pdf
+2026-08-29T14:45:11.989+07:00	2026-08-29T14:45:11.999+07:00	0.008377	cmd	0	Z:\project\mydocuments	Z:\project\mydocuments	dir
+2026-08-29T14:45:13.070+07:00	2026-08-29T14:45:13.073+07:00	0.004224	cmd	0	Z:\project\mydocuments	Z:\project	cd ..
+2026-08-29T14:45:14.165+07:00	2026-08-29T14:45:14.173+07:00	0.008388	cmd	0	Z:\project	Z:\project	dir
+2026-08-29T14:45:46.250+07:00	2026-08-29T14:45:46.257+07:00	0.007589	cmd	0	Z:\project	Z:\project\basic_malware	cd basic_malware
+2026-08-29T14:45:46.909+07:00	2026-08-29T14:45:46.918+07:00	0.009005	cmd	0	Z:\project\basic_malware	Z:\project\basic_malware	dir
+2026-08-29T14:45:49.294+07:00	2026-08-29T14:45:49.346+07:00	0.052372	cmd	0	Z:\project\basic_malware	Z:\project\basic_malware	more rc4.py
+2026-08-29T14:45:51.574+07:00	2026-08-29T14:45:51.580+07:00	0.005816	cmd	9009	Z:\project\basic_malware	Z:\project\basic_malware	dc ..
+2026-08-29T14:45:52.572+07:00	2026-08-29T14:45:52.576+07:00	0.004083	cmd	0	Z:\project\basic_malware	Z:\project	cd ..
+2026-08-29T14:45:57.312+07:00	2026-08-29T14:45:57.321+07:00	0.008865	cmd	0	Z:\project	Z:\project	dir
+2026-08-29T14:46:02.997+07:00	2026-08-29T14:46:03.001+07:00	0.004244	cmd	0	Z:\project	Z:\project\tools	cd tools
+2026-08-29T14:46:11.622+07:00	2026-08-29T14:46:11.630+07:00	0.008189	cmd	0	Z:\project\tools	Z:\project\tools	dir
+2026-08-29T14:46:54.424+07:00	2026-08-29T14:46:54.573+07:00	0.149073	cmd	0	Z:\project\tools	Z:\project\tools	copy C:\Users\scfuser\Downloads\ProcessMonitor.zip Z:\project\tools\ProcmOn.zip
+2026-08-29T14:46:55.812+07:00	2026-08-29T14:46:55.822+07:00	0.009496	cmd	0	Z:\project\tools	Z:\project\tools	dir
+2026-08-29T14:46:56.809+07:00	2026-08-29T14:46:56.814+07:00	0.005841	cmd	0	Z:\project\tools	Z:\project	cd ..
+2026-08-29T14:47:19.039+07:00	2026-08-29T14:47:19.043+07:00	0.003276	cmd	0	Z:\project	Z:\project	cd C:\Users\scfuser\Desktop
+2026-08-29T14:47:29.299+07:00	2026-08-29T14:47:29.303+07:00	0.003485	cmd	0	Z:\project	C:\Users\scfuser\Desktop	cd /d C:\Users\scfuser\Desktop
+2026-08-29T14:47:31.579+07:00	2026-08-29T14:47:31.588+07:00	0.008168	cmd	0	C:\Users\scfuser\Desktop	C:\Users\scfuser\Desktop	dir
+2026-08-29T14:48:33.214+07:00	2026-08-29T14:48:33.683+07:00	0.468304	cmd	0	C:\Users\scfuser\Desktop	C:\Users\scfuser\Desktop	copy /y EasyPass.exe Z:\FreeCrackPasswordTools.exe
+2026-08-29T14:48:36.855+07:00	2026-08-29T14:48:36.855+07:00	0.002822	cmd	0	C:\Users\scfuser\Desktop	C:\Users\scfuser\Desktop	cd Z:\
+2026-08-29T14:48:41.199+07:00	2026-08-29T14:48:41.199+07:00	0.003793	cmd	0	C:\Users\scfuser\Desktop	Z:\	cd /d Z:\
+2026-08-29T14:48:41.730+07:00	2026-08-29T14:48:41.730+07:00	0.006856	cmd	0	Z:\	Z:\	dir
+2026-08-29T14:50:18.902+07:00	2026-08-29T14:50:18.917+07:00	0.012593	cmd	0	Z:\	Z:\	mkdir Work
+2026-08-29T14:50:20.683+07:00	2026-08-29T14:50:20.683+07:00	0.004689	cmd	0	Z:\	Z:\Work	cd Work
+2026-08-29T14:50:25.761+07:00	2026-08-29T14:50:25.761+07:00	0.003874	cmd	0	Z:\Work	Z:\Work	mkdir Company_Y
+2026-08-29T14:50:30.323+07:00	2026-08-29T14:50:30.323+07:00	0.005711	cmd	0	Z:\Work	Z:\Work\Company_Y	cd Company_Y
+2026-08-29T14:50:41.495+07:00	2026-08-29T14:50:41.495+07:00	0.004559	cmd	0	Z:\Work\Company_Y	Z:\Work\Company_Y	mkdir report 
+2026-08-29T14:50:47.730+07:00	2026-08-29T14:50:47.745+07:00	0.008793	cmd	0	Z:\Work\Company_Y	Z:\Work\Company_Y	dir
+2026-08-29T14:50:51.824+07:00	2026-08-29T14:50:51.839+07:00	0.005235	cmd	0	Z:\Work\Company_Y	Z:\Work\Company_Y	rmdir report
+2026-08-29T15:27:58.277+07:00	2026-08-29T15:27:58.292+07:00	0.013680	cmd	0	Z:\Work\Company_Y	Z:\Work\Company_Y	dir
+2026-08-29T15:28:05.495+07:00	2026-08-29T15:28:05.511+07:00	0.010972	cmd	0	Z:\Work\Company_Y	Z:\Work\Company_Y	mkdir reports
+2026-08-29T15:28:07.527+07:00	2026-08-29T15:28:07.542+07:00	0.009436	cmd	0	Z:\Work\Company_Y	Z:\Work\Company_Y\reports	cd reports
+2026-08-29T15:29:28.219+07:00	2026-08-29T15:29:28.268+07:00	0.048541	cmd	0	Z:\Work\Company_Y\reports	Z:\Work\Company_Y\reports	copy /Y C:\Users\scfuser\Desktop\Document.docx Z:\Work\Company_Y\reports\Reports.docx
+2026-08-29T15:29:29.876+07:00	2026-08-29T15:29:29.883+07:00	0.007376	cmd	9009	Z:\Work\Company_Y\reports	Z:\Work\Company_Y\reports	dor
+2026-08-29T15:29:31.188+07:00	2026-08-29T15:29:31.195+07:00	0.007874	cmd	0	Z:\Work\Company_Y\reports	Z:\Work\Company_Y\reports	dir
+2026-08-29T15:29:33.093+07:00	2026-08-29T15:29:33.099+07:00	0.005760	cmd	0	Z:\Work\Company_Y\reports	Z:\Work\Company_Y	cd ..
+2026-08-29T15:29:33.663+07:00	2026-08-29T15:29:33.668+07:00	0.006048	cmd	9009	Z:\Work\Company_Y	Z:\Work\Company_Y	ls
+2026-08-29T15:29:35.156+07:00	2026-08-29T15:29:35.163+07:00	0.007280	cmd	0	Z:\Work\Company_Y	Z:\Work\Company_Y	dir
+2026-08-29T15:29:36.662+07:00	2026-08-29T15:29:36.666+07:00	0.003570	cmd	0	Z:\Work\Company_Y	Z:\Work	cd ..
+2026-08-29T15:29:38.283+07:00	2026-08-29T15:29:38.291+07:00	0.007872	cmd	0	Z:\Work	Z:\Work	dir
+2026-08-29T15:30:02.170+07:00	2026-08-29T15:30:02.174+07:00	0.004773	cmd	0	Z:\Work	Z:\Work	mkdir tools
+2026-08-29T15:30:03.355+07:00	2026-08-29T15:30:03.361+07:00	0.006029	cmd	0	Z:\Work	Z:\Work\tools	cd tools
+2026-08-29T15:30:48.978+07:00	2026-08-29T15:30:49.079+07:00	0.101374	cmd	0	Z:\Work\tools	Z:\Work\tools	copy /Y C:\Users\scfuser\Desktop\DEV\crawl_whatsapp.py Z:\Work\tools\whatsapp.py 
+2026-08-29T15:30:50.027+07:00	2026-08-29T15:30:50.036+07:00	0.008349	cmd	0	Z:\Work\tools	Z:\Work\tools	dir
+2026-08-29T15:31:21.678+07:00	2026-08-29T15:31:21.685+07:00	0.006790	cmd	0	Z:\Work\tools	Z:\Work	cd ..
+2026-08-29T15:31:22.750+07:00	2026-08-29T15:31:22.758+07:00	0.008160	cmd	0	Z:\Work	Z:\Work	dir
+2026-08-29T15:31:23.845+07:00	2026-08-29T15:31:23.848+07:00	0.003070	cmd	0	Z:\Work	Z:\	cd ..
+2026-08-29T15:31:24.737+07:00	2026-08-29T15:31:24.745+07:00	0.007598	cmd	0	Z:\	Z:\	dir
+2026-08-29T15:32:33.737+07:00	2026-08-29T15:32:33.770+07:00	0.032384	cmd	0	Z:\	Z:\	copy /Y C:\Users\scfuser\Desktop\DEV\script_test\data\DEV_smoke_test_005\download\op_3_28876789.bin Z:\data.bin
+2026-08-29T15:32:34.787+07:00	2026-08-29T15:32:34.797+07:00	0.009663	cmd	0	Z:\	Z:\	dir
+2026-08-29T15:32:41.079+07:00	2026-08-29T15:32:41.104+07:00	0.024016	cmd	0	Z:\	Z:\	more data.bin
+2026-08-29T15:32:47.882+07:00	2026-08-29T15:32:47.890+07:00	0.007742	cmd	0	Z:\	Z:\	del data.bin
+2026-08-29T15:33:16.840+07:00	2026-08-29T15:33:16.849+07:00	0.009694	cmd	0	Z:\	Z:\	dir
+2026-08-29T15:33:27.265+07:00	2026-08-29T15:33:27.270+07:00	0.004648	cmd	0	Z:\	Z:\	mkdir hehehe
+2026-08-29T15:33:32.364+07:00	2026-08-29T15:33:32.369+07:00	0.005248	cmd	0	Z:\	Z:\	rmdir hehehe
+2026-08-29T15:33:33.533+07:00	2026-08-29T15:33:33.542+07:00	0.008760	cmd	0	Z:\	Z:\	dir
+2026-08-29T15:34:26.027+07:00	2026-08-29T15:34:26.034+07:00	0.007274	cmd	0	Z:\	Z:\project	cd project
+2026-08-29T15:34:32.318+07:00	2026-08-29T15:34:32.329+07:00	0.009538	cmd	0	Z:\project	Z:\project	dir
+2026-08-29T15:34:35.672+07:00	2026-08-29T15:34:35.677+07:00	0.004173	cmd	0	Z:\project	Z:\project\basic_malware	cd basic_malware
+2026-08-29T15:34:39.308+07:00	2026-08-29T15:34:39.318+07:00	0.009102	cmd	0	Z:\project\basic_malware	Z:\project\basic_malware	dir
+2026-08-29T15:36:05.379+07:00	2026-08-29T15:36:05.507+07:00	0.128397	cmd	0	Z:\project\basic_malware	Z:\project\basic_malware	copy /Y C:\Users\scfuser\Desktop\DEV\antarctica.zip Z:\project\basic_malware
+2026-08-29T15:36:06.436+07:00	2026-08-29T15:36:06.445+07:00	0.009137	cmd	0	Z:\project\basic_malware	Z:\project\basic_malware	dir
+2026-08-29T15:36:23.610+07:00	2026-08-29T15:36:23.633+07:00	0.022297	cmd	0	Z:\project\basic_malware	Z:\project\basic_malware	tree /f
+2026-08-29T15:37:17.273+07:00	2026-08-29T15:37:17.284+07:00	0.011199	cmd	0	Z:\project\basic_malware	Z:\project\basic_malware	 dir
+2026-08-29T15:37:18.203+07:00	2026-08-29T15:37:18.208+07:00	0.005863	cmd	0	Z:\project\basic_malware	Z:\project	cd ..
+2026-08-29T15:37:20.565+07:00	2026-08-29T15:37:20.573+07:00	0.007438	cmd	0	Z:\project	Z:\project	dir 
+2026-08-29T15:37:21.337+07:00	2026-08-29T15:37:21.341+07:00	0.003015	cmd	0	Z:\project	Z:\	cd ..
+2026-08-29T15:37:22.140+07:00	2026-08-29T15:37:22.147+07:00	0.007262	cmd	0	Z:\	Z:\	dir

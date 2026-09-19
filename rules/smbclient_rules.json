@@ -1,0 +1,584 @@
+{
+  "application": "smbclient",
+  "source": "smbclient semantic SCF v2 rules + operation coverage",
+  "format": "smbmount-semantic-scf-v2",
+  "rules": [
+    {
+      "id": "smbclient_mkdir",
+      "action": "creation of directory",
+      "description": "smbclient mkdir: CREATE directory whose response says created.",
+      "pattern": [
+        {
+          "command": "CREATE",
+          "features": {
+            "target_type": "directory",
+            "create_result": "created"
+          }
+        }
+      ],
+      "require_success": true,
+      "confidence": 0.98,
+      "application": "smbclient",
+      "source": "smbclient semantic SCF v2 rules + operation coverage",
+      "command_family": "mkdir",
+      "operation_aliases": [
+        "Create Directory"
+      ]
+    },
+    {
+      "id": "smbclient_put_create",
+      "action": "creation of file",
+      "description": "smbclient create-file workload: put an empty/tiny local file to create the remote file.",
+      "pattern": [
+        {
+          "command": "CREATE",
+          "features": {
+            "target_type": "file",
+            "create_result": "created"
+          },
+          "contains": {
+            "access_intents": [
+              "write"
+            ]
+          }
+        }
+      ],
+      "require_success": true,
+      "confidence": 0.96,
+      "application": "smbclient",
+      "source": "smbclient semantic SCF v2 rules + operation coverage",
+      "command_family": "put upload",
+      "operation_aliases": [
+        "Create File"
+      ]
+    },
+    {
+      "id": "smbclient_put_overwrite",
+      "action": "append to file",
+      "description": "smbclient put existing file: CREATE file for write whose response says overwritten. In the current smbclient workload this represents append/update.",
+      "pattern": [
+        {
+          "command": "CREATE",
+          "features": {
+            "target_type": "file",
+            "create_result": "overwritten"
+          },
+          "contains": {
+            "access_intents": [
+              "write"
+            ]
+          }
+        }
+      ],
+      "require_success": true,
+      "confidence": 0.96,
+      "application": "smbclient",
+      "source": "smbclient semantic SCF v2 rules + operation coverage",
+      "command_family": "put upload",
+      "operation_aliases": [
+        "Append to File"
+      ]
+    },
+    {
+      "id": "smbclient_put_append_overwrite",
+      "action": "append to file",
+      "description": "smbclient append/update workload: put to an existing remote file, represented as overwritten CREATE followed by WRITE.",
+      "pattern": [
+        {
+          "command": "CREATE",
+          "features": {
+            "target_type": "file",
+            "create_result": "overwritten"
+          },
+          "contains": {
+            "access_intents": [
+              "write"
+            ]
+          }
+        },
+        {
+          "command": "WRITE",
+          "features": {
+            "length_class": "nonzero"
+          }
+        }
+      ],
+      "max_gap": 24,
+      "require_success": true,
+      "confidence": 0.93,
+      "application": "smbclient",
+      "source": "smbclient semantic SCF v2 rules + operation coverage",
+      "command_family": "put append",
+      "operation_aliases": [
+        "Append to File"
+      ]
+    },
+    {
+      "id": "smbclient_upload_file_write",
+      "action": "upload file",
+      "description": "smbclient put/upload: CREATE a new destination then WRITE file data.",
+      "pattern": [
+        {
+          "command": "CREATE",
+          "features": {
+            "target_type": "file",
+            "create_result": "created"
+          },
+          "contains": {
+            "access_intents": [
+              "write"
+            ]
+          }
+        },
+        {
+          "command": "WRITE",
+          "features": {
+            "length_class": "nonzero"
+          }
+        }
+      ],
+      "require_success": true,
+      "confidence": 0.92,
+      "application": "smbclient",
+      "source": "smbclient semantic SCF v2 rules + operation coverage",
+      "command_family": "put/upload",
+      "max_gap": 24,
+      "operation_aliases": [
+        "Upload file"
+      ]
+    },
+    {
+      "id": "smbclient_get_download",
+      "action": "download file",
+      "description": "smbclient get/download: open existing SMB file for read followed by READ.",
+      "pattern": [
+        {
+          "command": "CREATE",
+          "features": {
+            "target_type": "file",
+            "create_result": "opened"
+          },
+          "contains": {
+            "access_intents": [
+              "read"
+            ]
+          }
+        },
+        {
+          "command": "READ",
+          "features": {
+            "length_class": "nonzero"
+          }
+        }
+      ],
+      "require_success": true,
+      "confidence": 0.93,
+      "application": "smbclient",
+      "source": "smbclient semantic SCF v2 rules + operation coverage",
+      "command_family": "get download",
+      "max_gap": 20,
+      "operation_aliases": [
+        "Download file"
+      ]
+    },
+    {
+      "id": "smbclient_more_read",
+      "action": "read of file",
+      "description": "smbclient view/read fallback: open existing SMB file for read followed by READ.",
+      "pattern": [
+        {
+          "command": "CREATE",
+          "features": {
+            "target_type": "file",
+            "create_result": "opened"
+          },
+          "contains": {
+            "access_intents": [
+              "read"
+            ]
+          }
+        },
+        {
+          "command": "READ",
+          "features": {
+            "length_class": "nonzero"
+          }
+        }
+      ],
+      "require_success": true,
+      "confidence": 0.9,
+      "application": "smbclient",
+      "source": "smbclient semantic SCF v2 rules + operation coverage",
+      "command_family": "more",
+      "max_gap": 20,
+      "operation_aliases": [
+        "View File"
+      ]
+    },
+    {
+      "id": "smbclient_del_delete_on_close",
+      "action": "deletion of file",
+      "description": "smbclient del variant: CREATE file with delete-on-close.",
+      "pattern": [
+        {
+          "command": "CREATE",
+          "features": {
+            "delete_on_close": true
+          },
+          "any_features": {
+            "target_type": [
+              "file",
+              "unknown"
+            ]
+          },
+          "contains": {
+            "access_intents": [
+              "delete"
+            ]
+          }
+        }
+      ],
+      "require_success": true,
+      "confidence": 0.97,
+      "application": "smbclient",
+      "source": "smbclient semantic SCF v2 rules + operation coverage",
+      "command_family": "del",
+      "operation_aliases": [
+        "Remove File"
+      ]
+    },
+    {
+      "id": "smbclient_del_set_info",
+      "action": "deletion of file",
+      "description": "smbclient del variant: CREATE file delete access followed by SET_INFO disposition.",
+      "pattern": [
+        {
+          "command": "CREATE",
+          "any_features": {
+            "target_type": [
+              "file",
+              "unknown"
+            ]
+          },
+          "contains": {
+            "access_intents": [
+              "delete"
+            ]
+          }
+        },
+        {
+          "command": "SET_INFO",
+          "features": {
+            "file_info_class": "FileDispositionInformation",
+            "delete_pending": "1"
+          }
+        }
+      ],
+      "require_success": true,
+      "confidence": 0.97,
+      "application": "smbclient",
+      "source": "smbclient semantic SCF v2 rules + operation coverage",
+      "command_family": "del",
+      "max_gap": 10,
+      "operation_aliases": [
+        "Remove File"
+      ],
+      "same_file_id": false
+    },
+    {
+      "id": "smbclient_rmdir_set_info",
+      "action": "deletion of directory",
+      "description": "smbclient rmdir: CREATE directory delete access followed by SET_INFO disposition.",
+      "pattern": [
+        {
+          "command": "CREATE",
+          "features": {
+            "target_type": "directory"
+          },
+          "contains": {
+            "access_intents": [
+              "delete"
+            ]
+          }
+        },
+        {
+          "command": "SET_INFO",
+          "features": {
+            "file_info_class": "FileDispositionInformation",
+            "delete_pending": "1"
+          }
+        }
+      ],
+      "require_success": true,
+      "confidence": 0.97,
+      "application": "smbclient",
+      "source": "smbclient semantic SCF v2 rules + operation coverage",
+      "command_family": "rmdir",
+      "max_gap": 12,
+      "operation_aliases": [
+        "Remove Directory"
+      ],
+      "same_file_id": false
+    },
+    {
+      "id": "smbclient_rename_or_move_file_basic",
+      "action": "rename or move of file",
+      "description": "smbclient rename/move file: open file handle then SET_INFO FileRenameInformation with target present.",
+      "pattern": [
+        {
+          "command": "CREATE",
+          "features": {
+            "create_result": "opened"
+          },
+          "any_features": {
+            "target_type": [
+              "file",
+              "unknown"
+            ]
+          },
+          "contains": {
+            "access_intents": [
+              "delete"
+            ]
+          }
+        },
+        {
+          "command": "SET_INFO",
+          "features": {
+            "file_info_class": "FileRenameInformation",
+            "rename_target_present": true
+          }
+        }
+      ],
+      "max_gap": 16,
+      "require_success": true,
+      "confidence": 0.96,
+      "application": "smbclient",
+      "source": "smbclient semantic SCF v2 rules + operation coverage",
+      "command_family": "rename",
+      "operation_aliases": [
+        "Rename File",
+        "Move file",
+        "rename File",
+        "Move file"
+      ],
+      "same_file_id": false
+    },
+    {
+      "id": "smbclient_rename_or_move_file_ex",
+      "action": "rename or move of file",
+      "description": "smbclient rename/move file: open file handle then SET_INFO FileRenameInformationEx with target present.",
+      "pattern": [
+        {
+          "command": "CREATE",
+          "features": {
+            "create_result": "opened"
+          },
+          "any_features": {
+            "target_type": [
+              "file",
+              "unknown"
+            ]
+          },
+          "contains": {
+            "access_intents": [
+              "delete"
+            ]
+          }
+        },
+        {
+          "command": "SET_INFO",
+          "features": {
+            "file_info_class": "FileRenameInformationEx",
+            "rename_target_present": true
+          }
+        }
+      ],
+      "max_gap": 16,
+      "require_success": true,
+      "confidence": 0.96,
+      "application": "smbclient",
+      "source": "smbclient semantic SCF v2 rules + operation coverage",
+      "command_family": "rename",
+      "operation_aliases": [
+        "Rename File",
+        "Move file",
+        "rename File",
+        "Move file"
+      ],
+      "same_file_id": false
+    },
+    {
+      "id": "smbclient_rename_or_move_directory_basic",
+      "action": "rename or move of directory",
+      "description": "smbclient rename/move directory: open directory handle then SET_INFO FileRenameInformation with target present.",
+      "pattern": [
+        {
+          "command": "CREATE",
+          "features": {
+            "create_result": "opened"
+          },
+          "any_features": {
+            "target_type": [
+              "directory",
+              "unknown"
+            ]
+          },
+          "contains": {
+            "access_intents": [
+              "delete"
+            ]
+          }
+        },
+        {
+          "command": "SET_INFO",
+          "features": {
+            "file_info_class": "FileRenameInformation",
+            "rename_target_present": true
+          }
+        }
+      ],
+      "max_gap": 16,
+      "require_success": true,
+      "confidence": 0.96,
+      "application": "smbclient",
+      "source": "smbclient semantic SCF v2 rules + operation coverage",
+      "command_family": "rename",
+      "operation_aliases": [
+        "Rename Directory",
+        "Move Directory"
+      ],
+      "same_file_id": false
+    },
+    {
+      "id": "smbclient_rename_or_move_directory_ex",
+      "action": "rename or move of directory",
+      "description": "smbclient rename/move directory: open directory handle then SET_INFO FileRenameInformationEx with target present.",
+      "pattern": [
+        {
+          "command": "CREATE",
+          "features": {
+            "create_result": "opened"
+          },
+          "any_features": {
+            "target_type": [
+              "directory",
+              "unknown"
+            ]
+          },
+          "contains": {
+            "access_intents": [
+              "delete"
+            ]
+          }
+        },
+        {
+          "command": "SET_INFO",
+          "features": {
+            "file_info_class": "FileRenameInformationEx",
+            "rename_target_present": true
+          }
+        }
+      ],
+      "max_gap": 16,
+      "require_success": true,
+      "confidence": 0.96,
+      "application": "smbclient",
+      "source": "smbclient semantic SCF v2 rules + operation coverage",
+      "command_family": "rename",
+      "operation_aliases": [
+        "Rename Directory",
+        "Move Directory"
+      ],
+      "same_file_id": false
+    },
+    {
+      "id": "smbclient_ls_directory",
+      "action": "directory listing",
+      "description": "smbclient ls: open directory then QUERY_DIRECTORY.",
+      "pattern": [
+        {
+          "command": "CREATE",
+          "features": {
+            "target_type": "directory",
+            "create_result": "opened"
+          },
+          "contains": {
+            "access_intents": [
+              "read"
+            ]
+          }
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "features": {
+            "file_info_class": "FileIdBothDirectoryInformation"
+          },
+          "any_features": {
+            "pattern_class": [
+              "wildcard",
+              "literal"
+            ]
+          }
+        }
+      ],
+      "require_success": true,
+      "confidence": 0.93,
+      "application": "smbclient",
+      "source": "smbclient semantic SCF v2 rules + operation coverage",
+      "command_family": "ls",
+      "max_gap": 16,
+      "operation_aliases": [
+        "List Directory"
+      ],
+      "same_file_id": false
+    },
+    {
+      "id": "smbclient_ls_root",
+      "action": "directory listing",
+      "description": "smbclient ls root/share: metadata open followed by QUERY_DIRECTORY.",
+      "pattern": [
+        {
+          "command": "CREATE",
+          "contains": {
+            "access_intents": [
+              "metadata",
+              "read"
+            ]
+          },
+          "features": {
+            "target_type": "directory",
+            "create_result": "opened"
+          }
+        },
+        {
+          "command": "QUERY_DIRECTORY",
+          "features": {
+            "file_info_class": "FileIdBothDirectoryInformation"
+          },
+          "any_features": {
+            "pattern_class": [
+              "wildcard",
+              "literal"
+            ]
+          }
+        }
+      ],
+      "require_success": true,
+      "confidence": 0.86,
+      "application": "smbclient",
+      "source": "smbclient semantic SCF v2 rules + operation coverage",
+      "command_family": "ls",
+      "max_gap": 16,
+      "operation_aliases": [
+        "List Directory"
+      ],
+      "same_file_id": false
+    }
+  ],
+  "removed_broad_rules": [
+    "smbclient_rename",
+    "smbclient_rename_ex"
+  ],
+  "operation_event_note": "Author-semantics workload: upload/download are transfer operations. CMD and PowerShell transfer rules use copy-style SMB CREATE access/options, not file-size buckets; read/view rules use more/Get-Content-style CREATE options."
+}

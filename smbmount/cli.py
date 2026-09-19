@@ -1,8 +1,24 @@
 import click
 from rich.console import Console
+import os
 
-from smbmount.parser.pcap_reader import parse_pcap_to_json
+from smbmount.shared.parser.pcap_reader import parse_pcap_to_json
+from smbmount.shared.parser.pcap_reader import (
+    read_pcap_basic,
+    enrich_with_request_mapping,
+    enrich_with_file_metadata_mapping,
+    enrich_with_query_info_timestamps,
+    enrich_with_session_identity,
+)
+from smbmount.scf.loader import load_rules
+from smbmount.scf.detector import SCFDetector
+from smbmount.scf.timeline import build_timeline
+from smbmount.scf.renderer import render
+from smbmount.scf.fingerprint import fingerprint_packet
+from smbmount.scf.normalize import normalize_packet, packet_features
 
+
+from smbmount.shared.parser.pcap_reader import write_json
 
 console = Console()
 
@@ -18,17 +34,455 @@ def main():
 @main.command("parse-pcap")
 @click.argument("input_pcap", type=click.Path(exists=True))
 @click.argument("output_json", type=click.Path())
-def parse_pcap_cmd(input_pcap: str, output_json: str):
+@click.option(
+    "--timestamp-mode",
+    type=click.Choice(["network", "fs", "hybrid"]),
+    default="hybrid",
+    show_default=True,
+    help="Timestamp mode: network, fs, or hybrid.",
+)
+@click.option(
+    "--snapshot-at",
+    type=float,
+    default=None,
+    help="Export filesystem snapshot at this timestamp.",
+)
+@click.option(
+    "--snapshot-time-source",
+    type=click.Choice(["network", "fs"]),
+    default="network",
+    show_default=True,
+    help="Timestamp source used to decide snapshot membership.",
+)
+@click.option(
+    "--snapshot-include-deleted/--no-snapshot-include-deleted",
+    default=True,
+    show_default=True,
+    help="Include deleted files in snapshot output.",
+)
+@click.option(
+    "--fuse-mount",
+    type=click.Path(file_okay=False, dir_okay=True),
+    default=None,
+    help="Mount reconstructed filesystem at this mountpoint using FUSE. This keeps the process running.",
+)
+@click.option(
+    "--fuse-include-deleted/--no-fuse-include-deleted",
+    default=False,
+    show_default=True,
+    help="Include deleted files in FUSE view.",
+)
+@click.option(
+    "--fuse-allow-other/--no-fuse-allow-other",
+    default=False,
+    show_default=True,
+    help="Allow other users to access the FUSE mount. Requires system FUSE config.",
+)
+@click.option(
+    "--fuse-debug/--no-fuse-debug",
+    default=False,
+    show_default=True,
+    help="Enable FUSE debug output.",
+)
+@click.option(
+    "--reader",
+    type=click.Choice(["streaming", "legacy"]),
+    default="streaming",
+    show_default=True,
+    help="PCAP reader used by parse-pcap reconstruction.",
+)
+def parse_pcap_cmd(
+    input_pcap: str,
+    output_json: str,
+    timestamp_mode: str,
+    snapshot_at,
+    snapshot_time_source,
+    snapshot_include_deleted,
+    fuse_mount,
+    fuse_include_deleted,
+    fuse_allow_other,
+    fuse_debug,
+    reader,
+):
     """
     Đọc PCAP/PCAPNG và extract SMB2 packet metadata ra JSON.
     """
     console.print(f"[bold cyan]Reading PCAP:[/bold cyan] {input_pcap}")
     console.print(f"[bold cyan]Output JSON:[/bold cyan] {output_json}")
+    console.print(f"[bold cyan]Timestamp mode:[/bold cyan] {timestamp_mode}")
+    console.print(f"[bold cyan]Reader:[/bold cyan] {reader}")
+    if snapshot_at is not None:
+        console.print(f"[bold cyan]Snapshot at:[/bold cyan] {snapshot_at}")
+        console.print(f"[bold cyan]Snapshot time source:[/bold cyan] {snapshot_time_source}")
+    
+    file_table, result = parse_pcap_to_json(
+        input_pcap,
+        output_json,
+        timestamp_mode=timestamp_mode,
+        snapshot_at=snapshot_at,
+        snapshot_time_source=snapshot_time_source,
+        snapshot_include_deleted=snapshot_include_deleted,
+        reader=reader,
+    )
+    
+    if fuse_mount:
+        try:
+            from smbmount.pcapfs.output.fuse_mount import mount_reconstructed_fs
+        except ModuleNotFoundError as exc:
+            if exc.name == "mfusepy":
+                raise click.ClickException(
+                    "FUSE support requires mfusepy. Install dependencies from requirements.txt "
+                    "before using --fuse-mount."
+                ) from exc
+            raise
 
-    parse_pcap_to_json(input_pcap, output_json)
+        os.makedirs(fuse_mount, exist_ok=True)
+
+        console.print(f"[bold cyan]FUSE mount:[/bold cyan] {fuse_mount}")
+
+        if snapshot_at is not None:
+            console.print(
+                f"[bold cyan]FUSE view:[/bold cyan] snapshot at {snapshot_at} "
+                f"using {snapshot_time_source} time"
+            )
+        else:
+            console.print("[bold cyan]FUSE view:[/bold cyan] latest reconstructed state")
+
+        console.print("[yellow]FUSE is running. Press Ctrl+C to unmount/stop.[/yellow]")
+
+        try:
+            mount_reconstructed_fs(
+                file_table,
+                mountpoint=fuse_mount,
+                snapshot_at=snapshot_at,
+                snapshot_time_source=snapshot_time_source,
+                include_deleted=fuse_include_deleted,
+                foreground=True,
+                debug=fuse_debug,
+                allow_other=fuse_allow_other,
+            )
+        except KeyboardInterrupt:
+            console.print("\n[yellow]FUSE stopped.[/yellow]")
+            return
+        except RuntimeError as exc:
+            # mfusepy may return RuntimeError("7") when FUSE is interrupted by Ctrl+C.
+            if str(exc) == "7":
+                console.print("\n[yellow]FUSE stopped.[/yellow]")
+                return
+            raise
+        
 
     console.print("[bold green]Done.[/bold green]")
 
 
+@main.command("mount-pcap")
+@click.argument("input_pcap", type=click.Path(exists=True))
+@click.argument("mountpoint", type=click.Path(file_okay=False, dir_okay=True))
+@click.option(
+    "--timestamp-mode",
+    type=click.Choice(["network", "fs", "hybrid"]),
+    default="hybrid",
+    show_default=True,
+)
+@click.option(
+    "--snapshot-at",
+    type=float,
+    default=None,
+)
+@click.option(
+    "--snapshot-time-source",
+    type=click.Choice(["network", "fs"]),
+    default="network",
+    show_default=True,
+)
+@click.option(
+    "--fuse-include-deleted/--no-fuse-include-deleted",
+    default=False,
+    show_default=True,
+)
+@click.option(
+    "--fuse-allow-other/--no-fuse-allow-other",
+    default=False,
+    show_default=True,
+)
+@click.option(
+    "--fuse-debug/--no-fuse-debug",
+    default=False,
+    show_default=True,
+)
+@click.option(
+    "--fuse-complete-only/--no-fuse-complete-only",
+    default=False,
+    show_default=True,
+    help="Expose only complete reconstructed content versions in FUSE.",
+)
+@click.option(
+    "--reader",
+    type=click.Choice(["streaming", "legacy"]),
+    default="streaming",
+    show_default=True,
+)
+@click.option(
+    "--profile-json",
+    type=click.Path(dir_okay=False),
+    default=None,
+    help="Write SMBmount internal timing JSON before entering FUSE foreground.",
+)
+def mount_pcap_cmd(
+    input_pcap,
+    mountpoint,
+    timestamp_mode,
+    snapshot_at,
+    snapshot_time_source,
+    fuse_include_deleted,
+    fuse_allow_other,
+    fuse_debug,
+    fuse_complete_only,
+    reader,
+    profile_json,
+):
+    """
+    Benchmark-oriented mount path: parse -> reconstruct -> prepare FUSE -> mount.
+
+    This command intentionally does not write the parse-pcap JSON export before
+    mounting, so external runtime benchmarks can compare mount-ready milestones.
+    """
+    console.print(f"[bold cyan]Reading PCAP:[/bold cyan] {input_pcap}")
+    console.print(f"[bold cyan]FUSE mount:[/bold cyan] {mountpoint}")
+    console.print(f"[bold cyan]Timestamp mode:[/bold cyan] {timestamp_mode}")
+    console.print(f"[bold cyan]Reader:[/bold cyan] {reader}")
+    console.print("[yellow]FUSE is running. Press Ctrl+C to unmount/stop.[/yellow]")
+
+    try:
+        from smbmount.benchmark_parsepcap.runtime import run_smbmount_fuse_foreground
+
+        run_smbmount_fuse_foreground(
+            input_pcap,
+            mountpoint,
+            timestamp_mode=timestamp_mode,
+            reader=reader,
+            snapshot_at=snapshot_at,
+            snapshot_time_source=snapshot_time_source,
+            include_deleted=fuse_include_deleted,
+            complete_only=fuse_complete_only,
+            allow_other=fuse_allow_other,
+            debug=fuse_debug,
+            profile_json=profile_json,
+        )
+    except ModuleNotFoundError as exc:
+        if exc.name == "mfusepy":
+            raise click.ClickException(
+                "FUSE support requires mfusepy. Install dependencies from requirements.txt "
+                "before using mount-pcap."
+            ) from exc
+        raise
+    except KeyboardInterrupt:
+        console.print("\n[yellow]FUSE stopped.[/yellow]")
+    except RuntimeError as exc:
+        if str(exc) == "7":
+            console.print("\n[yellow]FUSE stopped.[/yellow]")
+            return
+        raise
+    
+@main.command("scf")
+@click.argument("input_pcap", type=click.Path(exists=True))
+@click.argument("rule_or_output", type=click.Path(), required=True)
+@click.argument("output_file", type=click.Path(), required=False)
+@click.option(
+    "--with-builtin-rules",
+    is_flag=True,
+    help="Load built-in semantic SCF rules in addition to the supplied rule file.",
+)
+@click.option(
+    "--print-table/--no-print-table",
+    default=False,
+    show_default=True,
+    help="Print the Rich activity table. Disable for faster large timeline generation.",
+)
+@click.option(
+    "--progress/--no-progress",
+    default=True,
+    show_default=True,
+    help="Print SCF detection progress every 10 percent.",
+)
+@click.option(
+    "--tree-id",
+    "tree_ids",
+    multiple=True,
+    help="Only detect requests in these SMB TreeIds. Repeat for multiple experiment shares.",
+)
+@click.option(
+    "--exclude-tree-id",
+    "exclude_tree_ids",
+    multiple=True,
+    help="Exclude background SMB TreeIds such as SYSVOL/NETLOGON trees.",
+)
+@click.option(
+    "--session-tree",
+    "session_trees",
+    multiple=True,
+    metavar="SESSION_ID:TREE_ID",
+    help="Only detect these SMB SessionId:TreeId scopes. Safer than TreeId when a capture has multiple sessions.",
+)
+@click.option(
+    "--exclude-session-tree",
+    "exclude_session_trees",
+    multiple=True,
+    metavar="SESSION_ID:TREE_ID",
+    help="Exclude specific background SMB SessionId:TreeId scopes.",
+)
+def scf_cmd(
+    input_pcap: str,
+    rule_or_output: str,
+    output_file: str,
+    with_builtin_rules: bool,
+    print_table: bool,
+    progress: bool,
+    tree_ids,
+    exclude_tree_ids,
+    session_trees,
+    exclude_session_trees,
+):
+    """
+    Detect SMB activities with SCF.
+
+    Forms:
+    python -m smbmount scf input.pcap rules.json output.json
+    python -m smbmount scf input.pcap output.json
+    """
+
+    console.print(f"[bold cyan]Reading PCAP:[/bold cyan] {input_pcap}")
+
+    if output_file is None:
+        rule_file = None
+        output_file = rule_or_output
+        include_builtin = True
+    else:
+        rule_file = rule_or_output
+        include_builtin = with_builtin_rules
+
+    #
+    # parse
+    #
+    packets = read_pcap_basic(input_pcap)
+
+    #
+    # enrich
+    #
+    packets = enrich_with_request_mapping(packets)
+
+    packets = enrich_with_file_metadata_mapping(
+        packets
+    )
+
+    packets = enrich_with_query_info_timestamps(
+        packets
+    )
+    packets = enrich_with_session_identity(packets)
+
+    #
+    # rules
+    #
+    rules = load_rules(rule_file, include_builtin=include_builtin)
+
+    #
+    # detect
+    #
+    def parse_session_trees(values):
+        parsed = []
+        for value in values:
+            if ":" not in value:
+                raise click.BadParameter(
+                    f"Expected SESSION_ID:TREE_ID, got {value!r}.",
+                    param_hint="--session-tree/--exclude-session-tree",
+                )
+            parsed.append(tuple(value.rsplit(":", 1)))
+        return parsed
+
+    detector = SCFDetector(
+        rules,
+        include_tree_ids=tree_ids,
+        exclude_tree_ids=exclude_tree_ids,
+        include_session_trees=parse_session_trees(session_trees),
+        exclude_session_trees=parse_session_trees(exclude_session_trees),
+    )
+
+    def print_progress(percent):
+        console.print(f"[cyan]SCF progress:[/cyan] {percent}%")
+
+    events = detector.detect(
+        packets,
+        progress_callback=print_progress if progress else None,
+    )
+
+    #
+    # timeline
+    #
+    timeline = build_timeline(events)
+
+    #
+    # render
+    #
+    if print_table:
+        render(timeline)
+
+    #
+    # export json
+    #
+    write_json(timeline, output_file)
+
+    console.print(
+        f"[bold green]SCF complete:[/bold green] {output_file}"
+    )
+    
+@main.command("scf-dump")
+@click.argument("input_pcap", type=click.Path(exists=True))
+@click.argument("output_file", type=click.Path())
+def scf_dump_cmd(input_pcap: str, output_file: str):
+    """
+    Dump normalized SMB request + packet SCF để tạo rule.
+    """
+    console.print(f"[bold cyan]Reading PCAP:[/bold cyan] {input_pcap}")
+
+    packets = read_pcap_basic(input_pcap)
+    packets = enrich_with_request_mapping(packets)
+    packets = enrich_with_file_metadata_mapping(packets)
+    packets = enrich_with_query_info_timestamps(packets)
+    packets = enrich_with_session_identity(packets)
+
+    rows = []
+
+    for pkt in packets:
+        if pkt.get("smb2_is_response") is not False:
+            continue
+
+        rows.append({
+            "frame_number": pkt.get("frame_number"),
+            "timestamp": float(pkt.get("timestamp")) if pkt.get("timestamp") is not None else None,
+            "src_ip": pkt.get("src_ip"),
+            "dst_ip": pkt.get("dst_ip"),
+            "src_port": pkt.get("src_port"),
+            "dst_port": pkt.get("dst_port"),
+            "session_id": pkt.get("smb2_session_id"),
+            "tree_id": pkt.get("smb2_tree_id"),
+            "user": pkt.get("smb2_user"),
+            "domain": pkt.get("smb2_domain"),
+            "workstation": pkt.get("smb2_workstation"),
+            "auth_protocol": pkt.get("smb2_auth_protocol"),
+            "message_id": pkt.get("smb2_message_id"),
+            "command": pkt.get("smb2_command_name"),
+            "path": pkt.get("smb2_filename"),
+            "target_path": pkt.get("smb2_rename_target"),
+            "normalized": normalize_packet(pkt),
+            "features": packet_features(pkt),
+            "scf": fingerprint_packet(pkt),
+        })
+
+    write_json(rows, output_file)
+
+    console.print(
+        f"[bold green]SCF dump complete:[/bold green] {output_file}"
+    )
+    
 if __name__ == "__main__":
     main()

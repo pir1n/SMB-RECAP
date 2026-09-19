@@ -1,0 +1,16 @@
+{
+  "application": "cross_application",
+  "format": "smbmount-semantic-scf-v2",
+  "source": "Nature_data multi-application semantic SMB behavior",
+  "rules": [
+    {"id":"cross_create_directory","action":"create_directory","pattern":[{"command":"CREATE","features":{"target_type":"directory","create_result":"created"}}],"require_success":true,"require_path":true,"confidence":0.90},
+    {"id":"cross_create_file","action":"create_file","pattern":[{"command":"CREATE","features":{"target_type":"file","create_result":"created"}}],"require_success":true,"require_path":true,"confidence":0.85},
+    {"id":"cross_read_file","action":"read_file","pattern":[{"command":"CREATE","features":{"target_type":"file"},"contains":{"access_intents":["read"]}},{"command":"READ","features":{"length_class":"nonzero"}}],"max_gap":24,"require_success":true,"require_path":true,"confidence":0.85},
+    {"id":"cross_change_file","action":"write_file","pattern":[{"command":"CREATE","features":{"target_type":"file"},"contains":{"access_intents":["write"]}},{"command":"WRITE","features":{"length_class":"nonzero"}}],"max_gap":24,"require_success":true,"require_path":true,"confidence":0.82},
+    {"id":"cross_delete_file_on_close","action":"delete_file","pattern":[{"command":"CREATE","features":{"target_type":"file","delete_on_close":true},"contains":{"access_intents":["delete"]}}],"require_success":true,"require_path":true,"confidence":0.95},
+    {"id":"cross_delete_file_set_info","action":"delete_file","pattern":[{"command":"CREATE","features":{"target_type":"file"},"contains":{"access_intents":["delete"]}},{"command":"SET_INFO","any_features":{"file_info_class":["FileDispositionInformation","FileDispositionInformationEx"]},"features":{"delete_pending":"1"}}],"max_gap":12,"require_success":true,"require_path":true,"confidence":0.95},
+    {"id":"cross_delete_directory","action":"delete_directory","pattern":[{"command":"CREATE","features":{"target_type":"directory"},"contains":{"access_intents":["delete"]}},{"command":"SET_INFO","any_features":{"file_info_class":["FileDispositionInformation","FileDispositionInformationEx"]},"features":{"delete_pending":"1"}}],"max_gap":12,"require_success":true,"require_path":true,"confidence":0.95},
+    {"id":"cross_rename_move","action":"rename_file","pattern":[{"command":"SET_INFO","any_features":{"file_info_class":["FileRenameInformation","FileRenameInformationEx"]},"features":{"rename_target_present":true}}],"require_success":true,"require_path":true,"confidence":0.93},
+    {"id":"cross_directory_listing","action":"directory_listing","pattern":[{"command":"CREATE","features":{"target_type":"directory"},"contains":{"access_intents":["read"]}},{"command":"QUERY_DIRECTORY"}],"max_gap":16,"require_success":true,"confidence":0.82}
+  ]
+}

@@ -2,7 +2,7 @@
 
 SMB-RECAP (SMB Reconstruction of Events and Content from Packet Captures) is a research prototype for reconstructing SMB activity from PCAP/PCAPNG network captures. The project has two main parts:
 
-- Filesystem reconstruction from SMB traffic: parse SMB2/SMB3 packets, rebuild directory/file metadata, recover observed content versions, export JSON, and optionally mount the reconstructed view with FUSE.
+- Filesystem reconstruction from SMB traffic: parse SMB2 packets, rebuild directory/file metadata, recover observed content versions, export JSON, and optionally mount the reconstructed view with FUSE.
 - Semantic Command Fingerprinting (SCF): normalize SMB command sequences into semantic features and infer high-level file operations such as create, delete, list, upload, download, read, append, rename, and move.
 
 The repository also contains a reproducible evaluation harness with workload generation, ground truth JSONL, scoring, confusion matrices, FP/FN debug output, and small sample packages for submission.

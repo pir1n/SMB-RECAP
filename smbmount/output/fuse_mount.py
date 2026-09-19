@@ -17,6 +17,7 @@ from smbmount.output.snapshot_export import (
     metadata_for_version,
     infer_object_type,
 )
+from smbmount.output.fs_export import version_export_sort_key, version_reconstruction_state
 
 
 @dataclass
@@ -133,7 +134,7 @@ def version_sort_time(version, metadata):
     )
 
 
-def final_versions_for_file_objs(file_objs):
+def final_versions_for_file_objs(file_objs, complete_only=False):
     """
     Match fs_export.py version grouping so FUSE @N files line up with JSON output.
     """
@@ -150,7 +151,14 @@ def final_versions_for_file_objs(file_objs):
                 continue
 
             metadata = metadata_for_version(file_obj, version)
+            if complete_only and version_reconstruction_state(version, metadata) != "complete":
+                continue
+
             all_versions.append((version, file_obj, metadata))
+
+    all_versions.sort(
+        key=lambda item: version_export_sort_key((item[0], item[1].file_id, item[2]))
+    )
 
     final_versions = []
 
@@ -181,7 +189,7 @@ def make_file_entry(fuse_path, file_obj, version, metadata, object_type):
     )
 
 
-def collect_latest_entries(file_table, include_deleted=False):
+def collect_latest_entries(file_table, include_deleted=False, complete_only=False):
     entries = {
         "/": FuseEntry(
             path="/",
@@ -226,9 +234,15 @@ def collect_latest_entries(file_table, include_deleted=False):
             )
             continue
 
-        final_versions = final_versions_for_file_objs(file_objs)
+        final_versions = final_versions_for_file_objs(
+            file_objs,
+            complete_only=complete_only,
+        )
 
         if not final_versions:
+            if complete_only:
+                continue
+
             entries[fuse_path] = FuseEntry(
                 path=fuse_path,
                 is_dir=False,
@@ -518,6 +532,7 @@ def build_fuse_entries(
     snapshot_at=None,
     snapshot_time_source="network",
     include_deleted=False,
+    complete_only=False,
 ):
     if snapshot_at is not None:
         return collect_snapshot_entries(
@@ -530,6 +545,7 @@ def build_fuse_entries(
     return collect_latest_entries(
         file_table,
         include_deleted=include_deleted,
+        complete_only=complete_only,
     )
 
 
@@ -539,6 +555,7 @@ def mount_reconstructed_fs(
     snapshot_at=None,
     snapshot_time_source="network",
     include_deleted=False,
+    complete_only=False,
     foreground=True,
     debug=False,
     allow_other=False,
@@ -548,6 +565,7 @@ def mount_reconstructed_fs(
         snapshot_at=snapshot_at,
         snapshot_time_source=snapshot_time_source,
         include_deleted=include_deleted,
+        complete_only=complete_only,
     )
 
     fs = SMBMountFuseFS(entries)

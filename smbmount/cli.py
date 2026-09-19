@@ -172,6 +172,116 @@ def parse_pcap_cmd(
         
 
     console.print("[bold green]Done.[/bold green]")
+
+
+@main.command("mount-pcap")
+@click.argument("input_pcap", type=click.Path(exists=True))
+@click.argument("mountpoint", type=click.Path(file_okay=False, dir_okay=True))
+@click.option(
+    "--timestamp-mode",
+    type=click.Choice(["network", "fs", "hybrid"]),
+    default="hybrid",
+    show_default=True,
+)
+@click.option(
+    "--snapshot-at",
+    type=float,
+    default=None,
+)
+@click.option(
+    "--snapshot-time-source",
+    type=click.Choice(["network", "fs"]),
+    default="network",
+    show_default=True,
+)
+@click.option(
+    "--fuse-include-deleted/--no-fuse-include-deleted",
+    default=False,
+    show_default=True,
+)
+@click.option(
+    "--fuse-allow-other/--no-fuse-allow-other",
+    default=False,
+    show_default=True,
+)
+@click.option(
+    "--fuse-debug/--no-fuse-debug",
+    default=False,
+    show_default=True,
+)
+@click.option(
+    "--fuse-complete-only/--no-fuse-complete-only",
+    default=False,
+    show_default=True,
+    help="Expose only complete reconstructed content versions in FUSE.",
+)
+@click.option(
+    "--reader",
+    type=click.Choice(["streaming", "legacy"]),
+    default="streaming",
+    show_default=True,
+)
+@click.option(
+    "--profile-json",
+    type=click.Path(dir_okay=False),
+    default=None,
+    help="Write SMBmount internal timing JSON before entering FUSE foreground.",
+)
+def mount_pcap_cmd(
+    input_pcap,
+    mountpoint,
+    timestamp_mode,
+    snapshot_at,
+    snapshot_time_source,
+    fuse_include_deleted,
+    fuse_allow_other,
+    fuse_debug,
+    fuse_complete_only,
+    reader,
+    profile_json,
+):
+    """
+    Benchmark-oriented mount path: parse -> reconstruct -> prepare FUSE -> mount.
+
+    This command intentionally does not write the parse-pcap JSON export before
+    mounting, so external runtime benchmarks can compare mount-ready milestones.
+    """
+    console.print(f"[bold cyan]Reading PCAP:[/bold cyan] {input_pcap}")
+    console.print(f"[bold cyan]FUSE mount:[/bold cyan] {mountpoint}")
+    console.print(f"[bold cyan]Timestamp mode:[/bold cyan] {timestamp_mode}")
+    console.print(f"[bold cyan]Reader:[/bold cyan] {reader}")
+    console.print("[yellow]FUSE is running. Press Ctrl+C to unmount/stop.[/yellow]")
+
+    try:
+        from smbmount.benchmark_parsepcap.runtime import run_smbmount_fuse_foreground
+
+        run_smbmount_fuse_foreground(
+            input_pcap,
+            mountpoint,
+            timestamp_mode=timestamp_mode,
+            reader=reader,
+            snapshot_at=snapshot_at,
+            snapshot_time_source=snapshot_time_source,
+            include_deleted=fuse_include_deleted,
+            complete_only=fuse_complete_only,
+            allow_other=fuse_allow_other,
+            debug=fuse_debug,
+            profile_json=profile_json,
+        )
+    except ModuleNotFoundError as exc:
+        if exc.name == "mfusepy":
+            raise click.ClickException(
+                "FUSE support requires mfusepy. Install dependencies from requirements.txt "
+                "before using mount-pcap."
+            ) from exc
+        raise
+    except KeyboardInterrupt:
+        console.print("\n[yellow]FUSE stopped.[/yellow]")
+    except RuntimeError as exc:
+        if str(exc) == "7":
+            console.print("\n[yellow]FUSE stopped.[/yellow]")
+            return
+        raise
     
 @main.command("scf")
 @click.argument("input_pcap", type=click.Path(exists=True))

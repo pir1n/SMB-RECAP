@@ -1,41 +1,252 @@
-# SMBmount
+# SMB-RECAP
 
-SMBmount là toolkit đọc PCAP/PCAPNG chứa SMB2/SMB3 traffic, trích xuất metadata, nhận diện hành vi bằng Semantic Command Fingerprint (SCF), dựng timeline hoạt động và đánh giá kết quả với ground truth.
+SMB-RECAP (SMB Reconstruction of Events and Content from Packet Captures) is a research prototype for reconstructing SMB activity from PCAP/PCAPNG network captures. The project has two main parts:
 
-## Cấu trúc source theo chức năng
+- Filesystem reconstruction from SMB traffic: parse SMB2/SMB3 packets, rebuild directory/file metadata, recover observed content versions, export JSON, and optionally mount the reconstructed view with FUSE.
+- Semantic Command Fingerprinting (SCF): normalize SMB command sequences into semantic features and infer high-level file operations such as create, delete, list, upload, download, read, append, rename, and move.
+
+The repository also contains a reproducible evaluation harness with workload generation, ground truth JSONL, scoring, confusion matrices, FP/FN debug output, and small sample packages for submission.
+
+## Repository Layout
 
 ```text
+smb_recap/
+  __main__.py                    Preferred CLI namespace: python -m smb_recap
+
 smbmount/
-├── scf/                 # detector hành động SMB
-├── pcapfs/              # reconstruct, export/mount và benchmark file-version
-└── shared/              # parser, session/core và helper dùng chung
+  cli.py                         Backward-compatible implementation namespace
+  parser/                        PCAP/SMB parsing and TCP stream handling
+  reconstruct/                   File metadata, content, hierarchy, versioning
+  output/
+    fs_export.py                 JSON reconstruction export
+    fuse_mount.py                Read-only FUSE view of reconstructed files
+    snapshot_export.py           Snapshot view at a selected timestamp
+  scf/                           Semantic SCF normalization and rule detector
+  benchmark_parsepcap/           parse-pcap/FUSE benchmark helpers
+
+rules/
+  cmd_rules.json
+  powershell_rules.json
+  smbclient_rules.json
+  scf_builtin_rules.json
 
 scripts/
-├── scf/                 # chạy, audit và score SCF
-├── pcapfs/              # runtime, robustness và stage profiler
-└── data_generators/
-    ├── scf/             # sinh operation/ground truth/script client
-    └── pcapfs/          # sinh workload scale và PCAP biến thể
+  eval/                          SCF workload, renderer, scoring, ablation
+  eval_parsepcap/                parse-pcap/FUSE workload and benchmark scripts
+
+sample/
+  fuse_module_sample/            Small parse-pcap/FUSE reproducibility sample
+  cmd_powershell_scale50/        SCF scale-50 reproducibility sample
+
+paper/
+  main.tex                       Self-contained Elsevier LaTeX manuscript
 ```
 
-Mỗi folder chức năng có README ngắn mô tả trách nhiệm và nội dung bên trong.
+## Manuscript
 
-Phần SCF hiện tập trung vào các thao tác SMB phổ biến:
+The submission manuscript is maintained as a single self-contained LaTeX
+source file. Internal Markdown drafts and generated PDFs are intentionally not
+tracked.
 
-- create/remove directory
-- create/remove file
-- list directory
-- upload/download file
-- read/view file
-- append/write/overwrite file
-- rename/move file hoặc directory
+```bash
+tectonic paper/main.tex
+```
 
-Nếu capture chứa NTLMSSP Authenticate trong SMB `SESSION_SETUP`, SCF ánh xạ
-identity theo server và `SessionId`, rồi xuất thêm `user`, `domain`, `workstation`
-và `auth_protocol` trong timeline. Capture bắt đầu sau đăng nhập hoặc Kerberos
-không lộ identity sẽ nhận `user: null`; hệ thống không suy đoán user từ IP.
+## Environment
 
-Các rule JSON hiện nằm trong:
+### Windows / PowerShell for SCF
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\python.exe -m pip install --upgrade pip
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe -m smb_recap --help
+```
+
+Optional tools for live capture:
+
+- Wireshark/tshark
+- An SMB server/share
+- A mapped drive for `cmd.exe` and PowerShell workloads, for example `Z:`
+
+### Linux / WSL for FUSE
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install --upgrade pip
+pip install -r requirements.txt
+
+sudo apt install tshark fuse3
+python -m smb_recap --help
+```
+
+For comparison with pcapFS, install pcapFS separately and verify:
+
+```bash
+pcapfs --help
+```
+
+If `requirements.txt` has encoding issues in Linux/WSL:
+
+```bash
+iconv -f UTF-16LE -t UTF-8 requirements.txt > /tmp/smb_recap_requirements.txt
+pip install -r /tmp/smb_recap_requirements.txt
+```
+
+## Filesystem Reconstruction and FUSE
+
+`parse-pcap` reads SMB traffic from a PCAP/PCAPNG capture and exports a structured reconstruction JSON. The output includes reconstructed file entries, metadata, path history, content versions, hashes, and events observed from the network trace.
+
+Basic parse:
+
+```bash
+python -m smb_recap parse-pcap \
+  <input.pcapng> \
+  <output.json> \
+  --timestamp-mode network
+```
+
+Useful options:
+
+- `--timestamp-mode network|fs|hybrid`: choose packet timestamp, filesystem timestamp, or hybrid mode.
+- `--reader streaming|legacy`: use streaming or legacy reader. Use `streaming` for larger captures.
+- `--snapshot-at <unix_timestamp>`: export a filesystem snapshot at a selected time.
+- `--snapshot-time-source network|fs`: choose timestamp source for snapshot membership.
+- `--fuse-mount <mountpoint>`: mount the reconstructed filesystem as a read-only FUSE view.
+- `--fuse-include-deleted`: include deleted files in the FUSE view.
+- `--fuse-allow-other`: allow other users to access the mount, if enabled in system FUSE config.
+- `--fuse-debug`: print FUSE debug logs.
+
+### Run the FUSE Sample
+
+The FUSE sample is in:
+
+```text
+sample/fuse_module_sample/
+  pcaps/scale_0050_mixed.pcapng
+  ground_truth/scale_0050_mixed.json
+  expected_output.md
+  measure_runtime.sh
+```
+
+Parse the sample PCAP:
+
+```bash
+mkdir -p outputs/fuse_module_sample/manual
+
+python -m smb_recap parse-pcap \
+  sample/fuse_module_sample/pcaps/scale_0050_mixed.pcapng \
+  outputs/fuse_module_sample/manual/scale_0050_mixed.json \
+  --timestamp-mode network \
+  --reader streaming
+```
+
+Mount the reconstructed filesystem:
+
+```bash
+mkdir -p /tmp/smb_recap_recon
+
+python -m smb_recap parse-pcap \
+  sample/fuse_module_sample/pcaps/scale_0050_mixed.pcapng \
+  outputs/fuse_module_sample/manual/scale_0050_mixed.json \
+  --timestamp-mode network \
+  --reader streaming \
+  --fuse-mount /tmp/smb_recap_recon
+```
+
+In another terminal, inspect the mounted view:
+
+```bash
+find /tmp/smb_recap_recon -maxdepth 3 | head
+ls -lah /tmp/smb_recap_recon
+```
+
+Stop the FUSE mount with `Ctrl+C` in the terminal running `parse-pcap`. If needed:
+
+```bash
+fusermount3 -u /tmp/smb_recap_recon
+```
+
+Expected sample details are documented in:
+
+```text
+sample/fuse_module_sample/expected_output.md
+```
+
+Expected strict path-content score for SMB-RECAP on this sample:
+
+| Tool | TP/FP/FN | Precision | Recall | F1 |
+|---|---:|---:|---:|---:|
+| SMB-RECAP parse-pcap | 90/0/0 | 1.0000 | 1.0000 | 1.0000 |
+
+### Optional pcapFS Comparison
+
+Run pcapFS on the same sample:
+
+```bash
+mkdir -p /tmp/pcapfs_scale_0050
+
+pcapfs \
+  --timestamp-mode network \
+  --show-metadata \
+  -f \
+  sample/fuse_module_sample/pcaps/scale_0050_mixed.pcapng \
+  /tmp/pcapfs_scale_0050
+```
+
+In another terminal, score SMB-RECAP and pcapFS with the shared benchmark schema:
+
+```bash
+python -m smb_recap.benchmark_parsepcap.cli \
+  --ground-truth sample/fuse_module_sample/ground_truth/scale_0050_mixed.json \
+  --ours-json outputs/fuse_module_sample/manual/scale_0050_mixed.json \
+  --pcapfs-root /tmp/pcapfs_scale_0050 \
+  --scenario-dir bench_scale_0050_mixed \
+  --out outputs/fuse_module_sample/manual/benchmark
+```
+
+Unmount pcapFS after scoring:
+
+```bash
+fusermount3 -u /tmp/pcapfs_scale_0050
+```
+
+Expected comparison for the sample:
+
+| Tool | strict_path_content TP/FP/FN | Precision | Recall | F1 |
+|---|---:|---:|---:|---:|
+| SMB-RECAP parse-pcap | 90/0/0 | 1.0000 | 1.0000 | 1.0000 |
+| pcapFS | 80/13/10 | 0.8602 | 0.8889 | 0.8743 |
+
+### Repeated Runtime Script for FUSE Sample
+
+Run both SMB-RECAP and pcapFS:
+
+```bash
+sample/fuse_module_sample/measure_runtime.sh --repeats 5
+```
+
+Run only SMB-RECAP:
+
+```bash
+sample/fuse_module_sample/measure_runtime.sh --tool smbmount --repeats 1
+```
+
+The benchmark selector remains `smbmount` for compatibility with archived CSV files; the tool name reported in the paper is SMB-RECAP.
+
+Main outputs:
+
+```text
+outputs/fuse_module_sample/runtime_metrics.csv
+outputs/fuse_module_sample/json/
+outputs/fuse_module_sample/logs/
+outputs/fuse_module_sample/benchmark/
+```
+
+## Semantic Command Fingerprinting
+
+SCF converts SMB records into semantic features, then matches command sequences against rule JSON. The current rule files are:
 
 ```text
 rules/cmd_rules.json
@@ -43,228 +254,184 @@ rules/powershell_rules.json
 rules/smbclient_rules.json
 ```
 
-## Cài Đặt
+Semantic features include:
 
-Tạo và kích hoạt virtual environment:
-
-```powershell
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
-```
-
-Kiểm tra CLI:
-
-```powershell
-.\.venv\Scripts\python.exe -m smbmount --help
-```
-
-## Tổng Quan SCF
-
-SCF không so khớp trực tiếp raw packet cố định. Mỗi SMB request được chuẩn hóa thành semantic features như:
-
-- SMB command: `CREATE`, `READ`, `WRITE`, `SET_INFO`, `QUERY_DIRECTORY`
-- access intent: `read`, `write`, `delete`, `metadata`
-- target type: `file`, `directory`, `unknown`
-- create result: `created`, `opened`, `overwritten`
-- file information class cho rename/delete/listing
+- SMB command type: `CREATE`, `READ`, `WRITE`, `SET_INFO`, `QUERY_DIRECTORY`
+- access intent: read, write, delete, metadata
+- target type: file, directory, unknown
+- create result/disposition family
+- information class for rename/delete/list operations
 - I/O length class
 
-Những giá trị quá động như path, file id, offset, raw length và data bytes không được đưa vào fingerprint chính để rule có thể tổng quát hơn.
+Dynamic values such as raw path, FileId, offset, raw length, and content bytes are not used as the main fingerprint so that rules generalize better across runs.
 
-Một rule JSON thường có dạng:
-
-```json
-{
-  "id": "cmd_copy_upload",
-  "action": "upload file",
-  "pattern": [
-    {
-      "command": "CREATE",
-      "features": {
-        "target_type": "file"
-      },
-      "contains": {
-        "access_intents": ["write"]
-      }
-    },
-    {
-      "command": "WRITE",
-      "features": {
-        "length_class": "nonzero"
-      }
-    }
-  ],
-  "max_gap": 24,
-  "require_success": true
-}
-```
-
-## Dựng Timeline SCF
-
-Chạy SCF với rule file:
+Build a timeline:
 
 ```powershell
-.\.venv\Scripts\python.exe -m smbmount scf `
-  data\eval\pcaps\<RUN_ID>.pcapng `
-  rules\cmd_rules.json `
-  outputs\eval\timelines\<RUN_ID>_timeline.json
-```
-
-Mặc định lệnh `scf`:
-
-- ghi timeline ra JSON
-- không in bảng Rich để chạy nhanh hơn
-- in progress mỗi 10% trong bước detect
-
-Tắt progress nếu cần log sạch:
-
-```powershell
-.\.venv\Scripts\python.exe -m smbmount scf `
-  data\eval\pcaps\<RUN_ID>.pcapng `
+.\.venv\Scripts\python.exe -m smb_recap scf `
+  <input.pcapng> `
   rules\cmd_rules.json `
   outputs\eval\timelines\<RUN_ID>_timeline.json `
-  --no-progress
+  --no-print-table
 ```
 
-Nếu PCAP chứa nhiều SMB share/session (ví dụ share thí nghiệm cùng với
-SYSVOL/NETLOGON), giới hạn detector bằng khóa SMB cấp giao thức
-`SessionId:TreeId` thay vì lọc theo path:
+Useful options:
+
+- `--no-print-table`: do not print the Rich table, recommended for large captures.
+- `--print-table`: print the timeline table for manual inspection.
+- `--no-progress`: suppress 10% progress logs.
+- `--with-builtin-rules`: load built-in semantic rules in addition to the supplied rule file.
+
+Dump normalized SCF features for rule debugging:
 
 ```powershell
-.\.venv\Scripts\python.exe -m smbmount scf `
-  capture.pcapng rules\cmd_rules.json timeline.json `
-  --session-tree "<SESSION_ID>:<TREE_ID>" `
-  --no-progress
-```
-
-Có thể chạy `scf-dump` trước và nhóm các record theo `session_id`, `tree_id` để
-xác định scope của share cần đánh giá. `TreeId` có thể được tái sử dụng trong
-session khác, vì vậy ưu tiên `--session-tree` hơn `--tree-id` với capture hỗn hợp.
-
-In bảng timeline như logic cũ:
-
-```powershell
-.\.venv\Scripts\python.exe -m smbmount scf `
-  data\eval\pcaps\<RUN_ID>.pcapng `
-  rules\cmd_rules.json `
-  outputs\eval\timelines\<RUN_ID>_timeline.json `
-  --print-table
-```
-
-Kết hợp cả custom rules và built-in rules:
-
-```powershell
-.\.venv\Scripts\python.exe -m smbmount scf `
-  data\eval\pcaps\<RUN_ID>.pcapng `
-  rules\cmd_rules.json `
-  outputs\eval\timelines\<RUN_ID>_timeline.json `
-  --with-builtin-rules
-```
-
-## Dump SCF Features
-
-Khi cần viết hoặc debug rule, dump normalized SCF:
-
-```powershell
-.\.venv\Scripts\python.exe -m smbmount scf-dump `
-  data\eval\pcaps\<RUN_ID>.pcapng `
+.\.venv\Scripts\python.exe -m smb_recap scf-dump `
+  <input.pcapng> `
   outputs\eval\tshark\<RUN_ID>_scf_dump.json
 ```
 
-File dump gồm frame number, timestamp, command, path, normalized SCF string và semantic features.
+## Run the SCF Sample
 
-## Generate Workload Đánh Giá
-
-Script chính:
+The SCF reproducibility sample contains a small controlled scale-50 CMD and PowerShell run. It is in:
 
 ```text
-scripts/data_generators/scf/generate_operation_scale.py
+sample/cmd_powershell_scale50/
+  sample_pcaps/
+  ground_truth/
+  rules/
+  expected_outputs/
+  commands/
 ```
 
-Tạo workload cho CMD:
+Run CMD scale-50 sample:
 
 ```powershell
-$RUN_ID = "cmd_operation_scale_100_tshark"
-
-.\.venv\Scripts\python.exe scripts\data_generators\scf\generate_operation_scale.py `
-  --client cmd `
-  --count-per-operation 100 `
-  --run-id $RUN_ID `
-  --out-dir data\eval\generated `
-  --render `
-  --drive Z
+Set-ExecutionPolicy -Scope Process Bypass
+.\sample\cmd_powershell_scale50\commands\reproduce_cmd_scale50.ps1
 ```
 
-Tạo workload nhanh cho CMD:
+Run PowerShell scale-50 sample:
 
 ```powershell
-.\.venv\Scripts\python.exe scripts\data_generators\scf\generate_operation_scale.py `
+Set-ExecutionPolicy -Scope Process Bypass
+.\sample\cmd_powershell_scale50\commands\reproduce_powershell_scale50.ps1
+```
+
+Manual CMD scale-50 commands:
+
+```powershell
+.\.venv\Scripts\python.exe -m smb_recap scf `
+  sample\cmd_powershell_scale50\sample_pcaps\cmd_submission_scale50.pcapng `
+  sample\cmd_powershell_scale50\rules\cmd_rules.json `
+  sample\cmd_powershell_scale50\reproduced_outputs\cmd_submission_scale50_timeline.json `
+  --no-print-table --no-progress
+
+.\.venv\Scripts\python.exe scripts\eval\score_timeline.py `
+  --ground-truth sample\cmd_powershell_scale50\ground_truth\cmd_submission_scale50.jsonl `
+  --timeline sample\cmd_powershell_scale50\reproduced_outputs\cmd_submission_scale50_timeline.json `
+  --out-dir sample\cmd_powershell_scale50\reproduced_outputs\cmd_submission_scale50_metrics `
+  --time-before 1 --time-after 3
+```
+
+Manual PowerShell scale-50 commands:
+
+```powershell
+.\.venv\Scripts\python.exe -m smb_recap scf `
+  sample\cmd_powershell_scale50\sample_pcaps\powershell_submission_scale50.pcapng `
+  sample\cmd_powershell_scale50\rules\powershell_rules.json `
+  sample\cmd_powershell_scale50\reproduced_outputs\powershell_submission_scale50_timeline.json `
+  --no-print-table --no-progress
+
+.\.venv\Scripts\python.exe scripts\eval\score_timeline.py `
+  --ground-truth sample\cmd_powershell_scale50\ground_truth\powershell_submission_scale50.jsonl `
+  --timeline sample\cmd_powershell_scale50\reproduced_outputs\powershell_submission_scale50_timeline.json `
+  --out-dir sample\cmd_powershell_scale50\reproduced_outputs\powershell_submission_scale50_metrics `
+  --time-before 1 --time-after 3
+```
+
+Expected SCF sample metrics:
+
+| Sample | Precision | Recall | F1 | TP | FP | FN |
+|---|---:|---:|---:|---:|---:|---:|
+| CMD scale 50 | 0.9619 | 0.9439 | 0.9528 | 101 | 4 | 6 |
+| PowerShell scale 50 | 0.9615 | 0.9346 | 0.9479 | 100 | 4 | 7 |
+
+## Generate New SCF Workloads
+
+Use `scripts/eval/generate_operation_scale.py`.
+
+CMD:
+
+```powershell
+$RUN_ID = "cmd_sample_live"
+
+.\.venv\Scripts\python.exe scripts\eval\generate_operation_scale.py `
   --client cmd `
-  --count-per-operation 100 `
+  --count-per-operation 3 `
   --run-id $RUN_ID `
-  --out-dir data\eval\generated `
   --render `
   --drive Z `
   --fast-workload `
   --progress-every 100
 ```
 
-Tạo workload nhanh cho PowerShell:
+PowerShell:
 
 ```powershell
-$RUN_ID = "powershell_operation_scale_100_tshark"
+$RUN_ID = "powershell_sample_live"
 
-.\.venv\Scripts\python.exe scripts\data_generators\scf\generate_operation_scale.py `
+.\.venv\Scripts\python.exe scripts\eval\generate_operation_scale.py `
   --client powershell `
-  --count-per-operation 100 `
+  --count-per-operation 3 `
   --run-id $RUN_ID `
-  --out-dir data\eval\generated `
   --render `
   --drive Z `
   --fast-workload `
   --progress-every 100
 ```
 
-Tạo workload cho smbclient:
+smbclient:
 
 ```bash
-RUN_ID="smbclient_operation_scale_100_tshark"
+RUN_ID="smbclient_sample_live"
 
-python scripts/data_generators/scf/generate_operation_scale.py \
+python scripts/eval/generate_operation_scale.py \
   --client smbclient \
-  --count-per-operation 100 \
+  --count-per-operation 3 \
   --run-id "$RUN_ID" \
-  --out-dir data/eval/generated \
   --render \
-  --server 192.168.106.131 \
-  --share SMB_EVAL \
+  --server <SERVER_IP> \
+  --share <SHARE_NAME> \
   --auth-file /tmp/smb_eval.auth \
-  --local-dir /tmp/smbmount_scf_eval \
+  --local-dir /tmp/smb_recap_scf_eval \
   --progress-every 100
 ```
 
-Ghi chú:
+Generated files:
 
-- `--fast-workload` chỉ hỗ trợ `cmd` và `powershell`.
-- Không dùng `--fast-workload` thì renderer giữ logic cũ.
-- `--progress-every N` chỉ in tiến độ workload mỗi N operation.
+```text
+data/eval/generated/plans/
+data/eval/generated/ground_truth/
+data/eval/generated/ground_truth_expected/
+data/eval/generated/manifests/
+data/eval/generated/workloads/
+```
 
-## Capture Bằng tshark
+## Capture Live SMB Traffic with tshark
 
-Liệt kê interface:
+List interfaces:
 
 ```powershell
 tshark -D
 ```
 
-Capture SMB traffic tới server:
+Capture SMB traffic:
 
 ```powershell
-tshark -i <INTERFACE_ID> -f "host 192.168.106.131 and tcp port 445" -w data\eval\pcaps\$RUN_ID.pcapng
+tshark -i <INTERFACE_ID> -f "host <SERVER_IP> and tcp port 445" -w data\eval\pcaps\$RUN_ID.pcapng
 ```
 
-Chạy workload ở terminal khác.
+Run workload in another terminal.
 
 CMD:
 
@@ -284,14 +451,12 @@ smbclient:
 bash "data/eval/generated/workloads/smbclient/${RUN_ID}.sh"
 ```
 
-Sau khi workload chạy xong, dừng `tshark` bằng `Ctrl+C`.
+Stop `tshark` with `Ctrl+C`, then build and score the timeline.
 
-## Score Timeline
-
-Score timeline với ground truth:
+## Score SCF Timeline
 
 ```powershell
-.\.venv\Scripts\python.exe scripts\scf\score_timeline.py `
+.\.venv\Scripts\python.exe scripts\eval\score_timeline.py `
   --ground-truth data\eval\generated\ground_truth\$RUN_ID.jsonl `
   --timeline outputs\eval\timelines\${RUN_ID}_timeline.json `
   --out-dir outputs\eval\metrics\$RUN_ID `
@@ -299,25 +464,15 @@ Score timeline với ground truth:
   --time-after 3.0
 ```
 
-`--time-before` và `--time-after` là cửa sổ match timestamp:
+`--time-before` and `--time-after` define the match window:
 
 ```text
 ground_truth.start_time - time_before
-đến
+to
 ground_truth.end_time + time_after
 ```
 
-Nếu cửa sổ quá nhỏ, FN có thể tăng vì prediction đúng nhưng lệch thời gian. Nếu cửa sổ quá lớn, prediction của operation gần đó có thể bị match nhầm.
-
-## Output
-
-Timeline:
-
-```text
-outputs/eval/timelines/<RUN_ID>_timeline.json
-```
-
-Metrics:
+Metrics output:
 
 ```text
 outputs/eval/metrics/<RUN_ID>/metrics.json
@@ -329,109 +484,11 @@ outputs/eval/metrics/<RUN_ID>/fn_debug.json
 outputs/eval/metrics/<RUN_ID>/fp_fn_debug.json
 ```
 
-Các chỉ số chính:
+## Notes
 
-- precision
-- recall
-- F1
-- confusion matrix
-- FP/FN debug records
-
-## Tổng Quan parse-pcap/FUSE
-
-Module `parse-pcap` đọc PCAP/PCAPNG chứa SMB traffic, tái dựng cây thư mục/file, version nội dung và metadata. Kết quả có thể xuất ra JSON hoặc mount bằng FUSE để duyệt như filesystem.
-
-## Môi Trường parse-pcap/FUSE
-
-Tạo virtual environment và cài dependency:
-
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-
-sudo apt install tshark fuse3
-pcapfs --help
-```
-
-Kiểm tra CLI:
-
-```bash
-python -m smbmount parse-pcap --help
-python -m smbmount.pcapfs.benchmark.cli --help
-```
-
-## Option parse-pcap
-
-Các option chính của `python -m smbmount parse-pcap <input_pcap> <output_json>`:
-
-- `<input_pcap>`: file PCAP/PCAPNG đầu vào chứa SMB traffic.
-- `<output_json>`: file JSON đầu ra chứa cây filesystem, metadata, event và content version đã tái dựng.
-- `--timestamp-mode network`: dùng timestamp của packet để dựng timeline. Đây là mode dùng cho benchmark vì ổn định theo capture.
-- `--timestamp-mode fs`: ưu tiên timestamp lấy từ metadata filesystem trong SMB response.
-- `--timestamp-mode hybrid`: mode mặc định, kết hợp network timestamp và filesystem timestamp.
-- `--snapshot-at <time>` và `--snapshot-time-source network|fs`: xuất snapshot tại một mốc thời gian cụ thể.
-- `--fuse-mount <mountpoint>`: mount filesystem tái dựng bằng FUSE tại thư mục chỉ định; process sẽ tiếp tục chạy cho tới khi dừng bằng `Ctrl+C`.
-- `--fuse-include-deleted`: hiển thị cả file đã bị delete trong FUSE view.
-- `--fuse-allow-other` và `--fuse-debug`: bật quyền truy cập khác user hoặc log debug khi cần điều tra lỗi mount.
-
-## Chạy Nhanh parse-pcap
-
-Parse sample PCAP ra JSON:
-
-```bash
-mkdir -p outputs/fuse_module_sample/manual
-
-python -m smbmount parse-pcap \
-  sample/fuse_module_sample/pcaps/scale_0050_mixed.pcapng \
-  outputs/fuse_module_sample/manual/scale_0050_mixed.json \
-  --timestamp-mode network
-```
-
-Mount FUSE:
-
-```bash
-python -m smbmount parse-pcap \
-  sample/fuse_module_sample/pcaps/scale_0050_mixed.pcapng \
-  outputs/fuse_module_sample/manual/scale_0050_mixed.json \
-  --timestamp-mode network \
-  --fuse-mount /tmp/smbmount_recon
-```
-
-## Cấu Trúc Chính
-
-```text
-smbmount/
-  cli.py                 CLI entrypoint
-  parser/pcap_reader.py  PCAP/PCAPNG SMB extraction
-  scf/
-    detector.py          SCF rule matching and progress reporting
-    loader.py            Rule loader for JSON/TSV/built-in rules
-    normalize.py         Semantic feature normalization
-    renderer.py          Optional Rich table renderer
-    timeline.py          Timeline assembly
-
-rules/
-  cmd_rules.json
-  powershell_rules.json
-  smbclient_rules.json
-
-scripts/scf/
-  generate_operation_scale.py
-  render_cmd.py
-  render_powershell.py
-  render_smbclient.py
-  score_timeline.py
-
-outputs/eval/
-  timelines/
-  metrics/
-```
-
-## Ghi Chú Thực Nghiệm
-
-- `cmd` và `powershell` nên dùng mapped drive, ví dụ `Z:`.
-- `smbclient` chạy tốt hơn trên Linux/WSL với auth file.
-- Với scale lớn, không dùng `--print-table` khi dựng SCF timeline.
-- Với workload lớn, dùng `--fast-workload --progress-every 100` cho CMD/PowerShell.
-- PCAP và generated workload thường lớn; chỉ commit khi cần chia sẻ kết quả cụ thể.
+- `cmd` and PowerShell workloads are intended to run through a mapped SMB drive such as `Z:`.
+- `smbclient` workloads are intended for Linux/WSL with an auth file.
+- Use `--fast-workload --progress-every 100` for large CMD/PowerShell workloads.
+- Use `--no-print-table` when building large SCF timelines.
+- The pcapFS comparison is only for reconstructed content/version output. pcapFS does not emit a semantic event timeline comparable to SCF.
+- Large PCAPs, benchmark outputs, and generated workloads should not be committed unless they are intentionally curated samples.

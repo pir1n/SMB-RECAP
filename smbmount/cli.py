@@ -2,12 +2,13 @@ import click
 from rich.console import Console
 import os
 
-from smbmount.parser.pcap_reader import parse_pcap_to_json
-from smbmount.parser.pcap_reader import (
+from smbmount.shared.parser.pcap_reader import parse_pcap_to_json
+from smbmount.shared.parser.pcap_reader import (
     read_pcap_basic,
     enrich_with_request_mapping,
     enrich_with_file_metadata_mapping,
     enrich_with_query_info_timestamps,
+    enrich_with_session_identity,
 )
 from smbmount.scf.loader import load_rules
 from smbmount.scf.detector import SCFDetector
@@ -17,7 +18,7 @@ from smbmount.scf.fingerprint import fingerprint_packet
 from smbmount.scf.normalize import normalize_packet, packet_features
 
 
-from smbmount.parser.pcap_reader import write_json
+from smbmount.shared.parser.pcap_reader import write_json
 
 console = Console()
 
@@ -126,7 +127,7 @@ def parse_pcap_cmd(
     
     if fuse_mount:
         try:
-            from smbmount.output.fuse_mount import mount_reconstructed_fs
+            from smbmount.pcapfs.output.fuse_mount import mount_reconstructed_fs
         except ModuleNotFoundError as exc:
             if exc.name == "mfusepy":
                 raise click.ClickException(
@@ -304,6 +305,32 @@ def mount_pcap_cmd(
     show_default=True,
     help="Print SCF detection progress every 10 percent.",
 )
+@click.option(
+    "--tree-id",
+    "tree_ids",
+    multiple=True,
+    help="Only detect requests in these SMB TreeIds. Repeat for multiple experiment shares.",
+)
+@click.option(
+    "--exclude-tree-id",
+    "exclude_tree_ids",
+    multiple=True,
+    help="Exclude background SMB TreeIds such as SYSVOL/NETLOGON trees.",
+)
+@click.option(
+    "--session-tree",
+    "session_trees",
+    multiple=True,
+    metavar="SESSION_ID:TREE_ID",
+    help="Only detect these SMB SessionId:TreeId scopes. Safer than TreeId when a capture has multiple sessions.",
+)
+@click.option(
+    "--exclude-session-tree",
+    "exclude_session_trees",
+    multiple=True,
+    metavar="SESSION_ID:TREE_ID",
+    help="Exclude specific background SMB SessionId:TreeId scopes.",
+)
 def scf_cmd(
     input_pcap: str,
     rule_or_output: str,
@@ -311,6 +338,10 @@ def scf_cmd(
     with_builtin_rules: bool,
     print_table: bool,
     progress: bool,
+    tree_ids,
+    exclude_tree_ids,
+    session_trees,
+    exclude_session_trees,
 ):
     """
     Detect SMB activities with SCF.
@@ -347,6 +378,7 @@ def scf_cmd(
     packets = enrich_with_query_info_timestamps(
         packets
     )
+    packets = enrich_with_session_identity(packets)
 
     #
     # rules
@@ -356,7 +388,24 @@ def scf_cmd(
     #
     # detect
     #
-    detector = SCFDetector(rules)
+    def parse_session_trees(values):
+        parsed = []
+        for value in values:
+            if ":" not in value:
+                raise click.BadParameter(
+                    f"Expected SESSION_ID:TREE_ID, got {value!r}.",
+                    param_hint="--session-tree/--exclude-session-tree",
+                )
+            parsed.append(tuple(value.rsplit(":", 1)))
+        return parsed
+
+    detector = SCFDetector(
+        rules,
+        include_tree_ids=tree_ids,
+        exclude_tree_ids=exclude_tree_ids,
+        include_session_trees=parse_session_trees(session_trees),
+        exclude_session_trees=parse_session_trees(exclude_session_trees),
+    )
 
     def print_progress(percent):
         console.print(f"[cyan]SCF progress:[/cyan] {percent}%")
@@ -399,6 +448,7 @@ def scf_dump_cmd(input_pcap: str, output_file: str):
     packets = enrich_with_request_mapping(packets)
     packets = enrich_with_file_metadata_mapping(packets)
     packets = enrich_with_query_info_timestamps(packets)
+    packets = enrich_with_session_identity(packets)
 
     rows = []
 
@@ -415,6 +465,10 @@ def scf_dump_cmd(input_pcap: str, output_file: str):
             "dst_port": pkt.get("dst_port"),
             "session_id": pkt.get("smb2_session_id"),
             "tree_id": pkt.get("smb2_tree_id"),
+            "user": pkt.get("smb2_user"),
+            "domain": pkt.get("smb2_domain"),
+            "workstation": pkt.get("smb2_workstation"),
+            "auth_protocol": pkt.get("smb2_auth_protocol"),
             "message_id": pkt.get("smb2_message_id"),
             "command": pkt.get("smb2_command_name"),
             "path": pkt.get("smb2_filename"),

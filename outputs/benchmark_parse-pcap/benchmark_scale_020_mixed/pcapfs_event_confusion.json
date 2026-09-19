@@ -1,5 +1,0 @@
-{
-  "note": "pcapFS exposes reconstructed filesystem content, not semantic SMB event timeline. Event confusion is not applicable.",
-  "labels": [],
-  "matrix": []
-}

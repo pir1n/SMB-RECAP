@@ -2,6 +2,24 @@
 
 SMBmount là toolkit đọc PCAP/PCAPNG chứa SMB2/SMB3 traffic, trích xuất metadata, nhận diện hành vi bằng Semantic Command Fingerprint (SCF), dựng timeline hoạt động và đánh giá kết quả với ground truth.
 
+## Cấu trúc source theo chức năng
+
+```text
+smbmount/
+├── scf/                 # detector hành động SMB
+├── pcapfs/              # reconstruct, export/mount và benchmark file-version
+└── shared/              # parser, session/core và helper dùng chung
+
+scripts/
+├── scf/                 # chạy, audit và score SCF
+├── pcapfs/              # runtime, robustness và stage profiler
+└── data_generators/
+    ├── scf/             # sinh operation/ground truth/script client
+    └── pcapfs/          # sinh workload scale và PCAP biến thể
+```
+
+Mỗi folder chức năng có README ngắn mô tả trách nhiệm và nội dung bên trong.
+
 Phần SCF hiện tập trung vào các thao tác SMB phổ biến:
 
 - create/remove directory
@@ -11,6 +29,11 @@ Phần SCF hiện tập trung vào các thao tác SMB phổ biến:
 - read/view file
 - append/write/overwrite file
 - rename/move file hoặc directory
+
+Nếu capture chứa NTLMSSP Authenticate trong SMB `SESSION_SETUP`, SCF ánh xạ
+identity theo server và `SessionId`, rồi xuất thêm `user`, `domain`, `workstation`
+và `auth_protocol` trong timeline. Capture bắt đầu sau đăng nhập hoặc Kerberos
+không lộ identity sẽ nhận `user: null`; hệ thống không suy đoán user từ IP.
 
 Các rule JSON hiện nằm trong:
 
@@ -104,6 +127,21 @@ Tắt progress nếu cần log sạch:
   --no-progress
 ```
 
+Nếu PCAP chứa nhiều SMB share/session (ví dụ share thí nghiệm cùng với
+SYSVOL/NETLOGON), giới hạn detector bằng khóa SMB cấp giao thức
+`SessionId:TreeId` thay vì lọc theo path:
+
+```powershell
+.\.venv\Scripts\python.exe -m smbmount scf `
+  capture.pcapng rules\cmd_rules.json timeline.json `
+  --session-tree "<SESSION_ID>:<TREE_ID>" `
+  --no-progress
+```
+
+Có thể chạy `scf-dump` trước và nhóm các record theo `session_id`, `tree_id` để
+xác định scope của share cần đánh giá. `TreeId` có thể được tái sử dụng trong
+session khác, vì vậy ưu tiên `--session-tree` hơn `--tree-id` với capture hỗn hợp.
+
 In bảng timeline như logic cũ:
 
 ```powershell
@@ -141,7 +179,7 @@ File dump gồm frame number, timestamp, command, path, normalized SCF string v�
 Script chính:
 
 ```text
-scripts/eval/generate_operation_scale.py
+scripts/data_generators/scf/generate_operation_scale.py
 ```
 
 Tạo workload cho CMD:
@@ -149,7 +187,7 @@ Tạo workload cho CMD:
 ```powershell
 $RUN_ID = "cmd_operation_scale_100_tshark"
 
-.\.venv\Scripts\python.exe scripts\eval\generate_operation_scale.py `
+.\.venv\Scripts\python.exe scripts\data_generators\scf\generate_operation_scale.py `
   --client cmd `
   --count-per-operation 100 `
   --run-id $RUN_ID `
@@ -161,7 +199,7 @@ $RUN_ID = "cmd_operation_scale_100_tshark"
 Tạo workload nhanh cho CMD:
 
 ```powershell
-.\.venv\Scripts\python.exe scripts\eval\generate_operation_scale.py `
+.\.venv\Scripts\python.exe scripts\data_generators\scf\generate_operation_scale.py `
   --client cmd `
   --count-per-operation 100 `
   --run-id $RUN_ID `
@@ -177,7 +215,7 @@ Tạo workload nhanh cho PowerShell:
 ```powershell
 $RUN_ID = "powershell_operation_scale_100_tshark"
 
-.\.venv\Scripts\python.exe scripts\eval\generate_operation_scale.py `
+.\.venv\Scripts\python.exe scripts\data_generators\scf\generate_operation_scale.py `
   --client powershell `
   --count-per-operation 100 `
   --run-id $RUN_ID `
@@ -193,7 +231,7 @@ Tạo workload cho smbclient:
 ```bash
 RUN_ID="smbclient_operation_scale_100_tshark"
 
-python scripts/eval/generate_operation_scale.py \
+python scripts/data_generators/scf/generate_operation_scale.py \
   --client smbclient \
   --count-per-operation 100 \
   --run-id "$RUN_ID" \
@@ -253,7 +291,7 @@ Sau khi workload chạy xong, dừng `tshark` bằng `Ctrl+C`.
 Score timeline với ground truth:
 
 ```powershell
-.\.venv\Scripts\python.exe scripts\eval\score_timeline.py `
+.\.venv\Scripts\python.exe scripts\scf\score_timeline.py `
   --ground-truth data\eval\generated\ground_truth\$RUN_ID.jsonl `
   --timeline outputs\eval\timelines\${RUN_ID}_timeline.json `
   --out-dir outputs\eval\metrics\$RUN_ID `
@@ -320,7 +358,7 @@ Kiểm tra CLI:
 
 ```bash
 python -m smbmount parse-pcap --help
-python -m smbmount.benchmark_parsepcap.cli --help
+python -m smbmount.pcapfs.benchmark.cli --help
 ```
 
 ## Option parse-pcap
@@ -378,7 +416,7 @@ rules/
   powershell_rules.json
   smbclient_rules.json
 
-scripts/eval/
+scripts/scf/
   generate_operation_scale.py
   render_cmd.py
   render_powershell.py

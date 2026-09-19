@@ -6,33 +6,104 @@ from smbmount.scf.fingerprint import (
     packet_signatures,
 )
 from smbmount.scf.normalize import canonical_value
+from smbmount.scf.directory_tracker import DirectoryTracker
+from smbmount.scf.handle_tracker import HandleTracker
 
 
 class SCFDetector:
 
-    def __init__(self, rules):
+    def __init__(
+        self,
+        rules,
+        include_tree_ids=None,
+        exclude_tree_ids=None,
+        include_session_trees=None,
+        exclude_session_trees=None,
+    ):
         self.rules = rules
+        self.include_tree_ids = {
+            str(value) for value in (include_tree_ids or [])
+        }
+        self.exclude_tree_ids = {
+            str(value) for value in (exclude_tree_ids or [])
+        }
+        self.include_session_trees = {
+            (str(session_id), str(tree_id))
+            for session_id, tree_id in (include_session_trees or [])
+        }
+        self.exclude_session_trees = {
+            (str(session_id), str(tree_id))
+            for session_id, tree_id in (exclude_session_trees or [])
+        }
+
+    def _tree_is_in_scope(self, packet):
+        """Apply an explicit SMB tree scope without guessing from paths.
+
+        A capture can contain the experiment share together with SYSVOL,
+        NETLOGON, DFS or other background SMB trees. TreeId is assigned by the
+        SMB server and is therefore a protocol-level boundary, unlike path
+        prefixes learned from one evaluation capture.
+        """
+        session_id = packet.get("smb2_session_id")
+        session_id = None if session_id is None else str(session_id)
+        tree_id = packet.get("smb2_tree_id")
+        tree_id = None if tree_id is None else str(tree_id)
+        session_tree = (session_id, tree_id)
+        if self.include_session_trees and session_tree not in self.include_session_trees:
+            return False
+        if session_tree in self.exclude_session_trees:
+            return False
+        if self.include_tree_ids and tree_id not in self.include_tree_ids:
+            return False
+        if tree_id in self.exclude_tree_ids:
+            return False
+        return True
 
     def detect(self, packets, progress_callback=None):
+        packets = [packet for packet in packets if self._tree_is_in_scope(packet)]
         events = []
 
-        status_lookup = self._build_response_status_lookup(packets)
-        groups = self._group_requests(packets)
-        total_positions = sum(len(requests) for requests in groups.values())
-        processed_positions = 0
-        next_progress = 10
+        handle_tracker = HandleTracker()
+        handle_tracker.track(packets)
+        self.completed_states = handle_tracker.completed_operations()
+        directory_tracker = DirectoryTracker()
+        directory_tracker.track(packets)
+        self.completed_enumerations = directory_tracker.completed_enumerations()
 
+        status_lookup = self._build_response_status_lookup(packets)
         # Prefer longer rules first so short rules do not consume a longer match.
         sorted_rules = sorted(
             self.rules,
             key=lambda r: len(r.get("pattern", [])),
             reverse=True,
         )
+        cross_handle_rules = [
+            rule for rule in sorted_rules
+            if rule.get("allow_different_file_ids")
+        ]
+        handle_rules = [
+            rule for rule in sorted_rules
+            if not rule.get("allow_different_file_ids")
+        ]
+        work_groups = []
+        if handle_rules:
+            work_groups.extend(
+                (key, requests, handle_rules)
+                for key, requests in self._group_requests(packets).items()
+            )
+        if cross_handle_rules:
+            work_groups.extend(
+                (key, requests, cross_handle_rules)
+                for key, requests in self._group_session_tree_requests(packets).items()
+            )
+        total_positions = sum(len(requests) for _, requests, _ in work_groups)
+        processed_positions = 0
+        next_progress = 10
 
         if progress_callback and total_positions == 0:
             progress_callback(100)
 
-        for group_key, requests in groups.items():
+        for group_key, requests, rules_for_group in work_groups:
             requests = sorted(
                 requests,
                 key=lambda p: (
@@ -45,7 +116,7 @@ class SCFDetector:
             packet_signatures_list = packet_signatures(requests)
 
             for i in range(len(requests)):
-                for rule in sorted_rules:
+                for rule in rules_for_group:
                     match = self._match_rule(
                         rule=rule,
                         requests=requests,
@@ -61,6 +132,17 @@ class SCFDetector:
                     seq = match["seq"]
                     statuses = match["statuses"]
 
+                    event_path = self.extract_path(seq)
+                    event_target_path = self.extract_target_path(seq)
+                    # Explorer creates a default-name object and immediately
+                    # renames it.  A create rule spanning that same handle
+                    # represents the final object, not the transient name.
+                    if (
+                        any(token in str(rule.get("action") or "").lower() for token in ("creation", "upload"))
+                        and event_target_path
+                    ):
+                        event_path = event_target_path
+
                     events.append({
                         "timestamp": self.safe_float(seq[0].get("timestamp")),
                         "src_ip": seq[0].get("src_ip"),
@@ -69,14 +151,27 @@ class SCFDetector:
                         "dst_port": seq[0].get("dst_port"),
                         "session_id": seq[0].get("smb2_session_id"),
                         "tree_id": seq[0].get("smb2_tree_id"),
+                        "user": seq[0].get("smb2_user"),
+                        "domain": seq[0].get("smb2_domain"),
+                        "workstation": seq[0].get("smb2_workstation"),
+                        "auth_protocol": seq[0].get("smb2_auth_protocol"),
 
                         "rule_id": rule.get("id"),
                         "action": rule.get("action"),
                         "description": rule.get("description"),
 
-                        "path": self.extract_path(seq),
-                        "target_path": self.extract_target_path(seq),
+                        "path": event_path,
+                        "target_path": event_target_path,
                         "file_id": self.extract_file_id(seq),
+                        "handle_generation": seq[0].get("handle_generation"),
+                        "operation_state_id": seq[0].get("operation_state_id"),
+
+                        "query_entry_count": self._sequence_last_value(seq, "smb2_query_entry_count"),
+                        "query_returned_names": self._sequence_last_value(seq, "smb2_query_aggregate_returned_names") or self._sequence_last_value(seq, "smb2_query_returned_names"),
+                        "query_page_index": self._sequence_last_value(seq, "smb2_query_page_index"),
+                        "query_end_of_search": self._sequence_last_value(seq, "smb2_query_end_of_search"),
+                        "query_response_status": self._sequence_last_value(seq, "smb2_query_response_status"),
+                        "query_total_bytes": self._sequence_last_value(seq, "smb2_query_aggregate_total_bytes") or self._sequence_last_value(seq, "smb2_query_total_bytes"),
 
                         "frames": [p.get("frame_number") for p in seq],
                         "commands": [p.get("smb2_command_name") for p in seq],
@@ -117,6 +212,30 @@ class SCFDetector:
                 return None
 
             seq = [requests[idx] for idx in indices]
+
+            # `same_file_id: false` permits rules to operate when a dissector
+            # cannot recover every handle.  It must not permit a sequence that
+            # positively contains two different FileIds: those commands are
+            # known to address different SMB opens.
+            if (
+                self._sequence_has_conflicting_file_ids(seq)
+                and not rule.get("allow_different_file_ids")
+            ):
+                return None
+
+            # A session/tree may use several TCP transports with SMB 3
+            # Multichannel.  Crossing a transport boundary is valid only when
+            # the commands refer to the same server-issued file handle.  This
+            # prevents an unrelated CREATE on channel A from being paired with
+            # SET_INFO/QUERY_DIRECTORY on channel B merely because a rule opts
+            # out of its ordinary same_file_id check.
+            if (
+                self._sequence_crosses_transport_channels(seq)
+                and not self._sequence_same_file_id(seq)
+                and not rule.get("allow_cross_transport")
+            ):
+                return None
+
             statuses = self._statuses_for_sequence(seq, status_lookup)
 
             if rule.get("require_success") and self._sequence_success(statuses) is False:
@@ -250,11 +369,88 @@ class SCFDetector:
                 e.get("frames", [0])[0] if e.get("frames") else 0,
             ),
         )
+        events = self._suppress_subsumed_events(events)
+        events = self._suppress_rename_phase_of_create_or_copy(events)
         events = self._merge_duplicate_bursts(events)
+        events = self._suppress_duplicate_download_phases(events)
         events = self._suppress_subordinate_download_reads(events)
         events = self._suppress_subordinate_directory_listings(events)
         events = self._suppress_subordinate_io(events)
         return events
+
+    def _suppress_rename_phase_of_create_or_copy(self, events):
+        """Do not emit Explorer's final-name phase as a second user action."""
+        suppressed = set()
+        for idx, event in enumerate(events):
+            if not self._is_rename_event(event):
+                continue
+            target = self._canonical_path(event.get("target_path"))
+            frames = {frame for frame in event.get("frames", []) if frame is not None}
+            if not target or not frames:
+                continue
+            for other_idx, other in enumerate(events):
+                if other_idx == idx:
+                    continue
+                text = f"{other.get('action') or ''} {other.get('rule_id') or ''}".lower()
+                if not any(token in text for token in ("creation", "create_", "upload")):
+                    continue
+                if self._canonical_path(other.get("path")) != target:
+                    continue
+                other_frames = {frame for frame in other.get("frames", []) if frame is not None}
+                if frames.intersection(other_frames):
+                    suppressed.add(idx)
+                    break
+        return [event for idx, event in enumerate(events) if idx not in suppressed]
+
+    def _suppress_subsumed_events(self, events):
+        """Drop a short rule hit already represented by a longer rule hit.
+
+        Custom and builtin rules can both identify the same operation.  For
+        example, CREATE->SET_INFO rename and a SET_INFO-only fallback share the
+        same terminal frame.  Keeping both turns one real operation into a TP
+        plus an FP during evaluation.
+        """
+        suppressed = set()
+
+        for idx, event in enumerate(events):
+            frames = {frame for frame in event.get("frames", []) if frame is not None}
+            if not frames:
+                continue
+
+            family = self._event_family(event)
+            for other_idx, other in enumerate(events):
+                if other_idx == idx or self._event_family(other) != family:
+                    continue
+                other_frames = {
+                    frame for frame in other.get("frames", []) if frame is not None
+                }
+                if frames < other_frames:
+                    suppressed.add(idx)
+                    break
+
+        return [
+            event
+            for idx, event in enumerate(events)
+            if idx not in suppressed
+        ]
+
+    def _event_family(self, event):
+        text = f"{event.get('action') or ''} {event.get('rule_id') or ''}".lower()
+        for family in (
+            "rename",
+            "delete",
+            "directory listing",
+            "download",
+            "upload",
+            "append",
+            "overwrite",
+            "read",
+            "write",
+            "creation",
+        ):
+            if family in text:
+                return family
+        return text
 
     def _merge_duplicate_bursts(self, events, window=0.25):
         merged = []
@@ -264,7 +460,15 @@ class SCFDetector:
             key = self._dedup_key(event)
             ts = self.safe_float(event.get("timestamp"))
             bucket = None if ts is None else int(ts / window)
-            bucket_key = (key, bucket)
+            # Repeated explicit `dir` commands can legitimately occur within
+            # 250 ms.  Merge only duplicate parser hits for the same listing
+            # frames, not distinct QUERY_DIRECTORY operations in one bucket.
+            listing_frames = (
+                tuple(event.get("frames", []))
+                if self._is_directory_listing_event(event)
+                else None
+            )
+            bucket_key = (key, bucket, listing_frames)
             candidate = buckets.get(bucket_key)
 
             if candidate is None:
@@ -285,6 +489,47 @@ class SCFDetector:
             event.pop("_dedup_key", None)
 
         return merged
+
+    def _suppress_duplicate_download_phases(self, events, window=0.25):
+        """Collapse the two rule hits emitted by one buffered CMD download.
+
+        A CMD ``copy`` from the share can open and read the same source through
+        a buffered handle and then a regular handle.  The two fingerprints are
+        useful for coverage, but together represent one user-level operation.
+        Restrict suppression to the known ordered rule pair, same path, and a
+        short time window so independent downloads remain distinct.
+        """
+        suppressed = set()
+
+        for idx, event in enumerate(events):
+            if event.get("rule_id") != "cmd_copy_download_file_buffered":
+                continue
+
+            path = self._canonical_path(event.get("path"))
+            timestamp = self.safe_float(event.get("timestamp"))
+            if not path or timestamp is None:
+                continue
+
+            for other_idx in range(idx + 1, len(events)):
+                other = events[other_idx]
+                other_timestamp = self.safe_float(other.get("timestamp"))
+                if other_timestamp is None:
+                    continue
+                if other_timestamp - timestamp > window:
+                    break
+                if other.get("rule_id") != "cmd_copy_download_file":
+                    continue
+                if self._canonical_path(other.get("path")) != path:
+                    continue
+
+                suppressed.add(other_idx)
+                break
+
+        return [
+            event
+            for idx, event in enumerate(events)
+            if idx not in suppressed
+        ]
 
     def _suppress_subordinate_io(self, events, window=0.75):
         suppressed = set()
@@ -325,20 +570,40 @@ class SCFDetector:
             path = self._canonical_path(event.get("path"))
             ts = self.safe_float(event.get("timestamp"))
 
-            # CMD/PowerShell frequently query the run root as metadata while
-            # executing another operation. Treat shallow share/root listings as
-            # protocol artifacts, not user-level list-directory commands.
-            if path and len(path.split("/")) <= 1:
-                suppressed.add(idx)
+            # A shallow path may be an explicit `dir` target.  Do not discard
+            # it solely because it is the share/run root.  Support-command
+            # suppression below requires contextual evidence from a nearby
+            # rename/delete instead of path depth.
+
+            if ts is None:
                 continue
 
-            if ts is None or not path:
+            # Windows may first enumerate the share root to resolve a child
+            # target, then enumerate that target a few milliseconds later.
+            # The parent page is protocol support, not a second `dir` action.
+            if not path:
+                returned_names = {
+                    str(name).lower()
+                    for name in event.get("query_returned_names") or []
+                }
+                for other_idx, other in enumerate(events):
+                    if other_idx == idx or not self._is_directory_listing_event(other):
+                        continue
+                    other_ts = self.safe_float(other.get("timestamp"))
+                    other_path = self._canonical_path(other.get("path"))
+                    if other_ts is None or not other_path:
+                        continue
+                    if not (0 <= other_ts - ts <= 0.25):
+                        continue
+                    if other_path.rsplit("/", 1)[-1] in returned_names:
+                        suppressed.add(idx)
+                        break
                 continue
 
             for other_idx, other in enumerate(events):
                 if other_idx == idx:
                     continue
-                if not (self._is_rename_event(other) or self._is_delete_event(other)):
+                if not self._is_mutating_event(other):
                     continue
 
                 other_ts = self.safe_float(other.get("timestamp"))
@@ -347,7 +612,27 @@ class SCFDetector:
 
                 other_path = self._canonical_path(other.get("path"))
                 other_target = self._canonical_path(other.get("target_path"))
-                if path in {other_path, other_target}:
+                related_paths = {value for value in (other_path, other_target) if value}
+                same_object = path in related_paths
+                child_object = (
+                    len(path.split("/")) > 1
+                    and any(value.startswith(path + "/") for value in related_paths)
+                )
+                direct_child = any(
+                    value.rsplit("/", 1)[0] == path
+                    for value in related_paths
+                    if "/" in value
+                )
+                returned_names = {
+                    str(name).lower()
+                    for name in event.get("query_returned_names") or []
+                }
+                empty_enumeration = bool(returned_names) and returned_names <= {".", ".."}
+                protocol_support_probe = empty_enumeration and direct_child
+                if same_object or (
+                    child_object
+                    and (self._is_rename_event(other) or self._is_delete_event(other))
+                ) or protocol_support_probe:
                     suppressed.add(idx)
                     break
 
@@ -369,20 +654,60 @@ class SCFDetector:
             if not self._is_read_event(event):
                 continue
 
-            path = self._canonical_path(event.get("path"))
-            ts = self.safe_float(event.get("timestamp"))
-            if ts is None or not path:
+            read_path = self._canonical_path(event.get("path"))
+            read_ts = self.safe_float(event.get("timestamp"))
+
+            if read_ts is None or not read_path:
                 continue
 
             for download_idx, download in downloads:
                 if download_idx == idx:
                     continue
-                if self._canonical_path(download.get("path")) != path:
+
+                download_path = self._canonical_path(
+                    download.get("path")
+                )
+                if download_path != read_path:
                     continue
-                download_ts = self.safe_float(download.get("timestamp"))
+
+                download_ts = self.safe_float(
+                    download.get("timestamp")
+                )
                 if download_ts is None:
                     continue
-                if abs(download_ts - ts) <= window:
+
+                # Time chỉ dùng để thu hẹp candidate.
+                # Không dùng path + time làm bằng chứng suppress cuối cùng.
+                if abs(download_ts - read_ts) > window:
+                    continue
+
+                read_file_id = event.get("file_id")
+                download_file_id = download.get("file_id")
+
+                same_handle = (
+                    read_file_id is not None
+                    and download_file_id is not None
+                    and str(read_file_id) == str(download_file_id)
+                )
+
+                read_frames = {
+                    frame
+                    for frame in event.get("frames", [])
+                    if frame is not None
+                }
+                download_frames = {
+                    frame
+                    for frame in download.get("frames", [])
+                    if frame is not None
+                }
+
+                shared_frame = bool(
+                    read_frames.intersection(download_frames)
+                )
+
+                # Chỉ suppress khi có bằng chứng hai detection
+                # thực sự mô tả cùng SMB operation.
+                if same_handle or shared_frame:
                     suppressed.add(idx)
                     break
 
@@ -411,6 +736,13 @@ class SCFDetector:
     def _is_delete_event(self, event):
         return "deletion" in str(event.get("action") or "").lower()
 
+    def _is_mutating_event(self, event):
+        text = f"{event.get('action') or ''} {event.get('rule_id') or ''}".lower()
+        return any(token in text for token in (
+            "creation", "create_", "upload", "append", "overwrite",
+            "write", "rename", "move", "deletion", "delete_",
+        ))
+
     def _dedup_key(self, event):
         return (
             event.get("rule_id"),
@@ -428,6 +760,29 @@ class SCFDetector:
                 fid = fid.hex()
             file_ids.append(str(fid))
         return len(set(file_ids)) == 1
+
+    def _sequence_has_conflicting_file_ids(self, seq):
+        file_ids = set()
+        for pkt in seq:
+            fid = pkt.get("smb2_file_id") or pkt.get("mapped_file_id")
+            if fid is None:
+                continue
+            if isinstance(fid, bytes):
+                fid = fid.hex()
+            file_ids.add(str(fid))
+        return len(file_ids) > 1
+
+    def _sequence_crosses_transport_channels(self, seq):
+        channels = {
+            (
+                pkt.get("src_ip"),
+                pkt.get("dst_ip"),
+                pkt.get("src_port"),
+                pkt.get("dst_port"),
+            )
+            for pkt in seq
+        }
+        return len(channels) > 1
 
     def _canonical_path(self, path):
         if path is None:
@@ -453,8 +808,50 @@ class SCFDetector:
 
         return groups
 
+    def _group_session_tree_requests(self, packets):
+        """Broad grouping only for rules that explicitly opt into cross-handle matching."""
+        groups = defaultdict(list)
+        for pkt in packets:
+            if pkt.get("smb2_is_response") is not False:
+                continue
+            groups[(
+                "session-tree",
+                pkt.get("smb2_session_id"),
+                pkt.get("smb2_tree_id"),
+            )].append(pkt)
+        return groups
+
     def _request_group_key(self, pkt):
+        # SMB 3 Multichannel can distribute commands from one logical tree
+        # connection over several TCP connections.  FileId is the SMB-layer
+        # handle that safely joins CREATE with READ/WRITE/SET_INFO across those
+        # channels.  SessionId + TreeId alone is too broad because one tree can
+        # have many concurrent file operations.
+        #
+        # Ports deliberately remain part of _request_response_key(): request
+        # and response correlation by MessageId is transport-channel scoped.
+        state_id = pkt.get("operation_state_id")
+        if state_id is not None:
+            return ("operation-state",) + tuple(state_id)
+
+        file_id = pkt.get("smb2_file_id") or pkt.get("mapped_file_id")
+        if isinstance(file_id, bytes):
+            file_id = file_id.hex()
+
+        if file_id is not None:
+            return (
+                "smb-handle",
+                pkt.get("src_ip"),
+                pkt.get("dst_ip"),
+                pkt.get("smb2_session_id"),
+                pkt.get("smb2_tree_id"),
+                str(file_id),
+            )
+
+        # Some commands do not carry a FileId.  Do not merge those commands
+        # across channels without a protocol-level correlation identifier.
         return (
+            "transport",
             pkt.get("src_ip"),
             pkt.get("dst_ip"),
             pkt.get("src_port"),
@@ -462,6 +859,14 @@ class SCFDetector:
             pkt.get("smb2_session_id"),
             pkt.get("smb2_tree_id"),
         )
+
+    @staticmethod
+    def _sequence_last_value(seq, field):
+        for packet in reversed(seq):
+            value = packet.get(field)
+            if value is not None:
+                return value
+        return None
 
     def _request_response_key(self, pkt):
         return (
@@ -704,6 +1109,10 @@ class SCFDetector:
                     "dst_port": create_pkt.get("dst_port"),
                     "session_id": create_pkt.get("smb2_session_id"),
                     "tree_id": create_pkt.get("smb2_tree_id"),
+                    "user": create_pkt.get("smb2_user"),
+                    "domain": create_pkt.get("smb2_domain"),
+                    "workstation": create_pkt.get("smb2_workstation"),
+                    "auth_protocol": create_pkt.get("smb2_auth_protocol"),
 
                     "rule_id": "delete_on_close",
                     "action": f"deletion of {target_type} by delete-on-close",
